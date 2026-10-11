@@ -2,7 +2,7 @@
 
 Status: Draft, documentation only; no tests implemented or executed. These supplement, not replace, the numbered Given/When/Then scenarios in [spec.md](spec.md). Source/actor/impact trace: [behavior-ledger.md](behavior-ledger.md). Pending owner decisions: [decision-register.md](decision-register.md). Content fixtures: [test-corpus.md](test-corpus.md). Timing, samples and denominators: [measurement-contract.md](measurement-contract.md).
 
-A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, D-006's private access policy, D-007's automatic guard mode and D-008's no-action/no-charge rules and D-011's conditional token-continuity intent, their exact scope and limits apply now; remaining D-007 contracts and actual import mappings are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
+A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, D-006's private access policy, D-007's automatic guard mode and D-008's no-action/no-charge rules and D-011's conditional token-continuity intent, their exact scope and limits apply now; D-009's scoped security normalization and D-012's Standard counting/sample/window definitions are selected via owner delegation, not independent factual/evaluation or whole-spec approval; remaining D-007 contracts and actual import mappings are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
 
 ## Governance
 
@@ -10,7 +10,7 @@ A case with an unresolved D-006–D-013 dependency is not a complete approved te
 | --- | --- | --- |
 | AC-GOV-01 — Immutable scope | Given ai_bot6 and the server/checkouts as read-only targets, when this documentation change is reviewed, then the write set contains only approved ai_bot_v2 GitHub documents and no source/server/Docker/migration operations. | FR-001, FR-060 |
 | AC-GOV-02 — Discovery accounting | Given every discovered source branch including unsafe or intended-but-broken paths, when the inventory is reviewed, then revision/evidence, actor, proposal, owner, impacts, transition and at least one acceptance case are recorded; uncovered behavior stays unresolved. | FR-002, FR-003, FR-004, FR-005 |
-| AC-GOV-03 — Approval gates | Given no explicit whole-spec and later plan approval, when any implementation or dependent planning is proposed, then it remains blocked; individual answers/docs publication do not approve scope, migration or deletion activation. | FR-006 |
+| AC-GOV-03 — Approval gates | Given no explicit whole-spec and later plan approval, when any implementation or dependent planning is proposed, then it remains blocked; individual answers, delegated recommendation selections and docs publication do not approve the complete scope/plan, migration execution or deletion activation. | FR-006 |
 
 ## BR-001 — Discovery, identity, menus and health
 
@@ -98,7 +98,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-008--roles-su
 | AC-BR008-01 — Role matrix | Given all actor roles including removed and anonymous admins, when private/global/group actions are attempted, then authority is current and limited to the approved scope. |
 | AC-BR008-02 — Spoofed authority | Given forwarded/bot/sender-chat or forged superadmin input, when a privileged path is invoked, then it is denied with a redacted audit result. |
 | AC-BR008-03 — Membership mutation | Given current authorized superadmin membership changes and repeated targets, when applied, then the approved membership and bootstrap precedence yields an explicit result. |
-| AC-BR008-04 — Audit failure | Given accepted/denied privileged attempts and an unavailable audit sink, when processed, then D-009's approved failure disposition is enforced without raw text or secret leakage. |
+| AC-BR008-04 — Audit failure | Given accepted/denied privileged attempts and an unavailable audit sink, when processed, then the separately reviewed bounded D-009 failure disposition is enforced without raw text, secret leakage, silent lost evidence or invented completion. Security normalization selection alone does not resolve the outage oracle; this case remains BLOCKED until that contract is defined. |
 
 ## BR-009 — Scoped settings, language and menus
 
@@ -208,7 +208,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-018--operatio
 | Case | Given / When / Then contract |
 | --- | --- |
 | AC-BR018-01 — Health states | Given startup/alive/unready/degraded states and synthetic secret/private markers, when health/alerts are emitted, then distinctions are correct and markers absent. |
-| AC-BR018-02 — Sink failure | Given logging/metrics/error-sink outage or backpressure, when work executes, then D-009-approved safe disposition preserves privacy and accepted work. |
+| AC-BR018-02 — Sink failure | Given logging/metrics/error-sink outage or backpressure, when work executes, then a separately reviewed bounded D-009 safe disposition preserves privacy and accepted durable work without silently claiming delivery, approval or unlimited buffering. The outage oracle remains BLOCKED; scoped security normalization is not this contract. |
 | AC-BR018-03 — Recurring concurrency | Given two workers/restarts triggering the same recurring business item, when processed, then business effects are at most once and work is bounded/observable. |
 | AC-BR018-04 — Recovery alerts | Given unknown reply/warning/delete and restored service, when recovery runs, then SC-011's disposition and SC-012's owned alert meet their clocks without automatic repeat. |
 

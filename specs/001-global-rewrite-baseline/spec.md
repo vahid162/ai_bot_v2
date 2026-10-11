@@ -22,7 +22,8 @@ Publication of this draft does not approve its scope or authorize implementation
 The branch-level evidence ledger, supplementary cases, synthetic corpus seed and
 proposed measurement contracts are linked below. Static discovery and case
 pointers do not prove exhaustive coverage, approved scope or passing evaluation;
-material owner choices and corpus/workload approval remain open.
+material behavior contracts, corpus approval and final bounded workload manifests
+remain open despite the selected recommendation subsets.
 
 ## Clarifications
 
@@ -93,6 +94,15 @@ material owner choices and corpus/workload approval remain open.
   guessed or repaired by fabricated events. This selects D-011's token-continuity
   intent only, not other entity imports, retention, migration execution, legacy
   deletion, whole-spec/plan approval or implementation.
+
+- Owner instruction (2026-10-11): “بقیه ی موارد رو هم طبق Recommended پیش ببر”
+  delegates selection of remaining recommendations for GitHub-only documentation.
+  On that authority, D-009's documented security-normalization baseline and D-012's
+  Standard synthetic reference/counting/sample/window definitions are selected
+  below. These are agent-selected recommendations under owner delegation, not
+  answers to questions that were never asked. Actual schema/traffic/provider facts,
+  independent corpus labels, corpus sign-off/results, deletion activation and
+  complete specification/plan approval are not supplied by this instruction.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -536,7 +546,9 @@ Changes and Retirements, requires explicit owner approval. The five earlier
 answers, D-006's explicit private-conversation deny rule, the D-007 automatic
 forward/caption mode rule and D-008's no-action/no-charge rule are approved within
 their stated limits. Remaining interaction/import, content/grace/manual-action
-and other token-policy choices are not. D-011 now selects validated wallet/ledger
+and other token-policy choices are not. Owner delegation selects D-009's stated
+security normalization and D-012's Standard measurement definitions, not the
+remaining contracts/evidence or the whole scope. D-011 now selects validated wallet/ledger
 continuity only, conditional on separately approved actual mappings and exact
 reconciliation; other entity imports remain undecided. Mixed records expose
 proposed security/product differences rather than silently treating
@@ -545,24 +557,24 @@ register. Exact source spans, impacts, owner status and case IDs are in the ledg
 
 | ID | Legacy capability or element | Proposed classification | Source evidence | Required outcome |
 |----|------------------------------|-------------------------|-----------------|------------------|
-| BR-001 | Start, help, identity, scoped command menus, and health journeys | Preserve discovery; Change health disclosure (proposal) | [Exact evidence and case links](behavior-ledger.md#br-001--discovery-identity-menus-and-health) | Equivalent discoverability and safe responses by user scope |
+| BR-001 | Start, help, identity, scoped command menus, and health journeys | Preserve discovery proposal; D-009 safe health normalization selected via delegation | [Exact evidence and case links](behavior-ledger.md#br-001--discovery-identity-menus-and-health) | Equivalent discoverability and safe responses by user scope |
 | BR-002 | Private AI questions, `/ask`, reply input, typing state, and direct answers | Preserve input capability; Change route/context inconsistency (proposal) | [Exact evidence and case links](behavior-ledger.md#br-002--private-questions-ask-and-chunked-replies) | One isolated, localized outcome per accepted request |
 | BR-003 | Group AI enablement, mention/all modes, administrator-only mode, throttling, and autocleanup | Preserve modes; role/address and user-message cleanup contracts pending | [Exact evidence and case links](behavior-ledger.md#br-003--group-conversation-and-cleanup) | Per-group policy with no response outside eligible triggers |
 | BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; approved D-001/D-004; reset differences pending | [Exact evidence and case links](behavior-ledger.md#br-004--sessions-history-clear-and-export) | Fresh initial AI context; default-off text storage, explicit owner opt-in after notice, per-message 30-day deletion, and owner-scoped export or earlier clear |
-| BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve feedback/report utility; Change scope/privacy and broken paths (proposal) | [Exact evidence and case links](behavior-ledger.md#br-005--feedback-unknown-reporting-and-review) | Traceable feedback without cross-tenant disclosure |
-| BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve access controls; approved D-006 explicit deny precedence; global mutation/UI/import details remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-006--direct-message-access-and-user-listing) | Deny-by-default access with explicit, auditable exceptions |
-| BR-007 | Private management panel, group binding, active-group selection, deep-link management, and force-reply editing | Preserve private management; Change stale authorization and prompt binding (proposal) | [Exact evidence and case links](behavior-ledger.md#br-007--private-management-and-bound-prompts) | Fresh authorization and isolated administrator context |
-| BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve scoped roles; Change incomplete audit and authorization (proposal) | [Exact evidence and case links](behavior-ledger.md#br-008--roles-superadmins-and-privileged-audit) | Least privilege, current-role verification, and complete audit |
-| BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve settings; Change false-save success and callback scope (proposal) | [Exact evidence and case links](behavior-ledger.md#br-009--scoped-settings-language-and-menus) | Validated settings with predictable scope and menus |
+| BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve feedback/report utility proposal; D-009 scope/privacy selected via delegation; broken paths pending | [Exact evidence and case links](behavior-ledger.md#br-005--feedback-unknown-reporting-and-review) | Traceable feedback without cross-tenant disclosure |
+| BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve access controls; approved D-006 explicit deny precedence; D-009 current superadmin global-mutation security selected via delegation; UI/import details remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-006--direct-message-access-and-user-listing) | Deny-by-default access with explicit, auditable exceptions |
+| BR-007 | Private management panel, group binding, active-group selection, deep-link management, and force-reply editing | Preserve private management proposal; D-009 current authorization/original prompt target selected via delegation | [Exact evidence and case links](behavior-ledger.md#br-007--private-management-and-bound-prompts) | Fresh authorization and isolated administrator context |
+| BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve scoped roles proposal; D-009 current authorization/redacted audit selected via delegation; outage contract open | [Exact evidence and case links](behavior-ledger.md#br-008--roles-superadmins-and-privileged-audit) | Least privilege, current-role verification, and complete audit |
+| BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve settings proposal; D-009 no false save/current callback scope selected via delegation | [Exact evidence and case links](behavior-ledger.md#br-009--scoped-settings-language-and-menus) | Validated settings with predictable scope and menus |
 | BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve classifier capability; Change unsafe output parsing; content eligibility pending | [Exact evidence and case links](behavior-ledger.md#br-010--adsguard-classification-and-eligibility) | One explainable decision per eligible logical item |
 | BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Approved D-002/D-005 and D-007 automatic guard mode rule; remaining eligibility/grace/manual-mute contracts pending | [Exact evidence and case links](behavior-ledger.md#br-011--modes-forwardcaption-guards-profiles-and-mute) | Exact per-group enforcement; exhaustion never promotes warning or no-action to deletion; automatic deletion requires zero false deletions in the approved test corpus and separate owner activation approval |
 | BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve durable work; approved D-003; Change state-reset/cache hazards (proposal) | [Exact evidence and case links](behavior-ledger.md#br-012--pending-moderation-and-album-recovery) | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
-| BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve tools; Change route authorization/aliases and privacy (proposal) | [Exact evidence and case links](behavior-ledger.md#br-013--examples-allowlists-and-diagnostics) | Tenant-scoped tools; diagnostics do not moderate content, change policy or spend tokens; ancillary effects declared |
+| BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve tools proposal; D-009 scoped authorization selected via delegation; exact aliases/privacy lifecycles pending | [Exact evidence and case links](behavior-ledger.md#br-013--examples-allowlists-and-diagnostics) | Tenant-scoped tools; diagnostics do not moderate content, change policy or spend tokens; ancillary effects declared |
 | BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve wallets; numeric grant/carry/period/eligibility policy pending | [Exact evidence and case links](behavior-ledger.md#br-014--wallet-balance-weekly-grants-and-carry) | One grant per tenant/user/week and accurate balance |
 | BR-015 | Token spending, logical-message deduplication, and ledger history | Preserve ledger invariants; approved D-008 no-action/no-charge Change; failed-outcome/expiry and other token policies remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-015--token-spending-and-ledger-outcomes) | At most one approved charge; zero AdsGuard no-action debits; non-negative balance and reconcilable ledger |
 | BR-016 | Database-first configuration with deployment fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-016--configuration-precedence-and-startup-seeding) | One uniform precedence chain with validation and safe defaults |
 | BR-017 | Persian, English, Arabic, Turkish, and Russian selectors and fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-017--localization-coverage-and-fallback) | Preserve selectors while requiring complete catalogs and no raw-key fallback |
-| BR-018 | Structured logging, metrics, health reporting, optional error reporting, provider warmup, and recurring cleanup | Preserve observable operations proposal; failure/retention policies pending | [Exact evidence and case links](behavior-ledger.md#br-018--operations-health-and-recurring-work) | Redacted, actionable operations with idempotent jobs |
+| BR-018 | Structured logging, metrics, health reporting, optional error reporting, provider warmup, and recurring cleanup | Preserve observable operations proposal; D-009 redacted health selected via delegation; failure/retention contracts pending | [Exact evidence and case links](behavior-ledger.md#br-018--operations-health-and-recurring-work) | Redacted, actionable operations with idempotent jobs |
 | BR-019 | Legacy operational data and schema history | Change; D-001 history exclusion and D-011 validated wallet/ledger continuity intent approved; actual maps and other imports remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-019--candidate-imports-and-schema-drift) | Import only validated business data into one approved data contract |
 | BR-020 | Schema upgrades during application startup and competing migration entry points | Retire competing ownership proposal | [Exact evidence and case links](behavior-ledger.md#br-020--migration-ownership) | One separately controlled, observable migration owner |
 | BR-021 | Committed credentials, mutable release inputs, host-specific paths, fixed identifiers, and shared global deployment assumptions | Retire unsafe values/couplings proposal | [Exact evidence and case links](behavior-ledger.md#br-021--unsafe-and-nonportable-release-inputs) | Rotated secrets and isolated, portable project configuration |
@@ -611,11 +623,16 @@ architecture or implementing tests:
   definitions and a maintenance window. No measured legacy peak or passing
   results are available. Distinguish interactive requests from passive moderation:
   no extra acknowledgment spam is authorized. That counting interpretation,
-  profiles and sample/window values still require owner approval.
+  D-012's Standard substitute, counting/clocks, sample sizes and drill-window
+  definitions are now selected via owner-delegated recommendation; corpus coverage,
+  independent gold labels and final bounded manifests remain separately reviewed.
+  These selected definitions are not measurements or passing results.
 - [Decision register](decision-register.md): accepted D-001–D-005, D-006's private
   access policy, the D-007 automatic guard mode rule and D-008's no-action/no-charge
   rule; remaining D-006 interaction/import, D-007 contracts, other D-008 token
-  policies and D-009–D-013 remain wholly or partly pending. D-011 selects validated
+  policies and D-009–D-013 remain wholly or partly pending. D-009's security
+  normalization and D-012's Standard reference definitions are selected via owner
+  delegation, not whole-spec approval. D-011 selects validated
   wallet/ledger continuity intent only; actual mappings and other entity imports
   remain separately gated. It does not authorize executing imports,
   deletion activation, the complete specification or the future plan.
@@ -752,7 +769,11 @@ above is unchanged historical evidence, not the new approved policy.
 - **FR-016**: The product MUST distinguish regular users, group administrators,
   anonymous group administrators, and superadmins with deny-by-default privileges.
 - **FR-017**: Authorization MUST be re-evaluated against current scope for every
-  privileged command, callback, force-reply, and delayed action.
+  privileged command, callback, force-reply, and delayed action. A force-reply or
+  callback MUST remain bound to its original actor, target tenant and operation;
+  switching active group MUST NOT silently retarget an outstanding interaction.
+  Revoked, expired or mismatched authority MUST deny it without cross-scope reads
+  or writes. Exact expiry/interaction names remain D-010/D-012.
 - **FR-018**: A verified administrator MUST be able to open a private group picker,
   select an active manageable group, and see which group a subsequent action will
   affect.
@@ -884,7 +905,9 @@ above is unchanged historical evidence, not the new approved policy.
   tenant or chat override, global managed value, deployment-provided value, then a
   safe built-in default.
 - **FR-043**: Configuration values MUST be typed, bounded, validated before use,
-  and rejected without altering the prior value when invalid.
+  and rejected without altering the prior value when invalid. Failed persistence
+  MUST NOT be acknowledged as a saved change; only confirmed committed values
+  may receive success confirmation, without inventing a retry result.
 - **FR-044**: Configuration changes MUST be tenant-isolated, auditable, reversible,
   and consistently visible to subsequent work without requiring a source change.
 - **FR-045**: Launch readiness MUST include complete user-visible catalogs for
@@ -1107,11 +1130,22 @@ above is unchanged historical evidence, not the new approved policy.
 - **SC-002**: Before cutover, 100% of approved P1 acceptance scenarios pass against
   representative legacy-derived fixtures, and every intentional difference has
   explicit project-owner approval.
-- **SC-003**: Under the agreed reference workload, at least 99% of accepted user
-  requests show progress or a clear acknowledgment within 2 seconds, and at least
-  95% reach an answer or safe terminal outcome within 20 seconds, excluding a
-  declared upstream outage. Unresolved operator-review items are reported
-  separately and MUST NOT count as confirmed answers or safe terminal outcomes.
+- **SC-003**: Under D-012's selected Standard synthetic workload (50 tenants,
+  20 users each; 5 steady and 25 burst logical journeys/second), at least 99% of
+  eligible interactive admissions show confirmed progress/acknowledgment within
+  2 seconds, and at least 95% reach a confirmed answer or approved safe terminal
+  outcome within 20 seconds. Interactive journeys are the declared conversation,
+  wallet, administration and explicit history/feedback mix (70%); passive AdsGuard
+  has separate decision/action clocks and MUST NOT receive acknowledgment spam.
+  Measure each of three frozen runs independently using measurement-contract.md:
+  include queue/retry time and unknown/lost work in denominators, never infer
+  Telegram completion from enqueue/dedupe, never turn extra drain time into a
+  timely pass, and never pass healthy valid questions with fast errors alone.
+  Upstream outages are predeclared separate fault runs, not post-hoc exclusions.
+  Unresolved operator-review items remain reported separately and MUST NOT count
+  as confirmed answers or safe terminal outcomes. This selected controlled
+  reference is NOT measured real Telegram/provider capacity; final input/rate/
+  resource manifests and actual evaluation remain separate gates.
 - **SC-004**: In authorization and adversarial testing, 100% of unauthorized
   privileged attempts are denied, and zero tests disclose or modify another
   tenant's configuration, conversation, moderation, token, or audit data. Privacy
@@ -1164,15 +1198,20 @@ above is unchanged historical evidence, not the new approved policy.
   Unknown mappings, fabricated balancing events or unexplained differences cannot
   pass; other entity imports are not implied.
 - **SC-008**: A full backup restoration and cutover rollback drill completes within
-  the owner-approved maintenance window and restores all release-critical user,
+  the D-012 selected 60-minute combined test window, from operator go through
+  verified readiness including reconciliation and traffic gating, and restores all
+  release-critical user,
   tenant, moderation, token, and audit invariants while enforcing conversation
   consent, expiry, and earlier clearing before restored history becomes available.
 - **SC-009**: 100% of user-visible keys used by approved launch journeys are
   complete and format-valid in Persian, English, Arabic, Turkish, and Russian, with
   zero raw keys or developer-only messages visible in acceptance testing.
-- **SC-010**: At least 90% of representative users and group administrators
-  complete their primary conversation or management journey on the first attempt
-  without operator assistance.
+- **SC-010**: At least 45 of 50 representative native/fluent participants complete
+  one assigned primary first-use journey without operator assistance, with at
+  least 9 of 10 in each launch locale. Each locale includes five regular users and
+  five group administrators; report both role cohorts and every attempted,
+  abandoned or assisted failure using the selected measurement contract. No
+  stronger per-role passing threshold is inferred; no study has been run.
 - **SC-011**: During interruption and duplicate-delivery tests, every accepted
   durable item reaches a verified completion, safe authorized resumption, or
   durably recorded operator-review disposition within 5 minutes of service
@@ -1188,10 +1227,16 @@ above is unchanged historical evidence, not the new approved policy.
 - **SC-013**: A release and rollback can each be completed from reviewed
   project-scoped inputs within 30 minutes, without installing host-global tools or
   changing unrelated server services.
-- **SC-014**: The approved release workload supports at least twice the measured
-  legacy 30-day peak, or an owner-approved equivalent reference workload when
-  legacy measurements are unavailable, while meeting SC-003 and producing no lost
-  accepted work.
+- **SC-014**: With no measured legacy 30-day peak available, the selected Standard
+  substitute MUST also pass at 2× arrival rates, tenant/user population and
+  synthetic dataset while preserving users per tenant, mix, payload bounds,
+  duplicate percentage and clock/dependency contract. Its 100 tenants/2,000 users,
+  10 steady/50 burst journeys per second produce 21,600 unique offered measured
+  journeys plus 4,320 duplicate deliveries, versus 10,800 plus 2,160 at base.
+  Every frozen base and 2× run MUST meet SC-003 with zero lost accepted work or
+  unexpected rejection of valid reference input. This is not 2× an observed legacy
+  peak or evidence of actual upstream capacity; final manifests and passing
+  evaluations remain future gates.
 
 ## Assumptions
 
@@ -1289,18 +1334,24 @@ above is unchanged historical evidence, not the new approved policy.
   completion or a human-resolution deadline. Internal grants, spends, and ledger
   reconciliation retain their existing deduplication invariants; uncertainty does
   not imply an automatic refund or reversal.
-- SC-003, SC-008, SC-010, and SC-014 remain proposed targets pending an
-  owner-approved workload, maintenance window, participant/sample definition, and
-  measured legacy peak or approved substitute. SC-005's zero-false-deletion test
-  criterion is owner-approved, but the independently labelled corpus, tested
-  decision scope, and coverage definition still require approval. These
-  proposed definitions are now recorded in measurement-contract.md and
-  test-corpus.md, but their profiles, coverage, independent labels, denominator
-  interpretation, samples and window are not approved. Those definitions must be
-  approved before specification approval; actual
-  passing evaluations and separate deletion activation approval are later
-  implementation/release gates, not results produced by this document. No
-  production values or real-world error guarantees have been inferred.
+- Under the owner's recommendation delegation, D-009's documented security
+  normalization is selected: current scoped authorization for reads/writes,
+  callbacks/prompts/jobs; original target-bound replies; superadmin-only global
+  writes; scoped unknown review; no false save confirmation; redacted health.
+  Exact interaction/bounds, audit/telemetry-outage disposition, review ownership
+  and evidence lifecycles still require concrete reviewed contracts. Security
+  invariants are not weakened and no silent failure/bypass is approved.
+- Under the same delegation, select D-012's Standard synthetic substitute and
+  existing numerical counting/clocks, three independent base/2× repetitions,
+  100×20 race trials, 50-person/locale first-use study and 60-minute combined
+  restore/rollback test window; separate release/rollback tests remain 30 minutes
+  each. These are definition choices, NOT RUN/PASS or real capacity claims. The
+  2× profile doubles rates, tenant/user population and synthetic data, not an
+  unknown legacy peak. Final payload/rate/resource/queue/grace/route manifests,
+  corpus population/coverage and independent labels still need reviewed evidence.
+  Corpus owner sign-off, actual passing evaluations and separate deletion
+  activation are later gates; delegation does not supply them. Full spec and
+  architecture/migration plan remain unapproved, with no code/server permission.
 
 ### Dependencies
 

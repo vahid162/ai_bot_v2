@@ -4,13 +4,13 @@ Status: Draft proposals, reviewed 2026-10-11. Decision owner for every record: p
 
 ## Reading this ledger
 
-Evidence below is static source-path verification, not an executed runtime test. A registered command, unreachable branch, comment or intended helper call does not prove a working journey. Preserve means preserving the approved observable capability, not every unsafe source branch. Mixed capability/change records deliberately expose differences rather than hiding them under Preserve. D-001–D-005, D-006's private access policy, D-007's automatic forward/caption mode and D-008's no-action/no-charge rules and D-011's conditional token-continuity intent are approved within their stated limits; remaining D-007 contracts and every other preserve/change/retire proposal or surfaced subbehavior await owner scope approval. Publishing this ledger is not approval. No source/server data was inspected or changed.
+Evidence below is static source-path verification, not an executed runtime test. A registered command, unreachable branch, comment or intended helper call does not prove a working journey. Preserve means preserving the approved observable capability, not every unsafe source branch. Mixed capability/change records deliberately expose differences rather than hiding them under Preserve. D-001–D-005, D-006's private access policy, D-007's automatic forward/caption mode and D-008's no-action/no-charge rules and D-011's conditional token-continuity intent are approved within their stated limits. Owner delegation additionally selects D-009's documented security normalization and D-012's Standard measurement definitions; their scope limits and remaining contracts/evidence are in the register. Remaining D-007 contracts and other preserve/change/retire proposals or surfaced subbehaviors still await explicit disposition/full scope approval. Publishing this ledger is not approval. No source/server data was inspected or changed.
 
 The 23 families are an indexed discovery inventory, not proof that all observable behavior has been discovered or that SC-001 passes. Each record lists actor, exact evidence, proposal, impact, communication and verification. Newly discovered differences must be appended and approved. Application implementation, architecture choice, corpus execution, migration and deployment remain outside this document change.
 
 ## BR-001 — Discovery, identity, menus and health
 
-Actors: user, group administrator, superadmin. Owner: project owner. Approval: pending scope approval.
+Actors: user, group administrator, superadmin. Owner: project owner. Approval: D-009 unsafe health disclosure normalization selected via owner delegation only; remaining interaction, outage, lifecycle or full capability-scope choices stay open.
 
 Observed: Group start gives a short ready message; private start rotates the chat reference and opens home. Menus differ by scope. whoami reports the caller's identity. Health queries dependencies and may expose exception/provider details.
 
@@ -74,13 +74,13 @@ Verification: AC-BR004-01, AC-BR004-02, AC-BR004-03, AC-BR004-04; US2.6/8–10; 
 
 ## BR-005 — Feedback, unknown reporting and review
 
-Actors: answer owner/voter; scoped administrator. Owner: project owner. Approval: pending scope approval.
+Actors: answer owner/voter; scoped administrator. Owner: project owner. Approval: D-009 tenant-scoped and privacy-preserving review normalization selected via owner delegation only; remaining interaction, outage, lifecycle or full capability-scope choices stay open.
 
 Observed: Private/group feedback differs, with per-user deduplication. Raw unknown questions are captured. Report-by-ID and unknown listing lack complete owner/tenant constraints. One unknown-reply helper call disagrees with the helper signature; intended behavior is not verified successful behavior.
 
 Evidence: [telegram_bot/bot.py:578–580](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/bot.py#L578-L580); [telegram_bot/user_commands.py:229–265](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L229-L265); [telegram_bot/user_commands.py:1896–1976](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L1896-L1976); [telegram_bot/shared_utils.py:1786–1886](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L1786-L1886); [telegram_bot/admin_commands.py:469–510](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/admin_commands.py#L469-L510); [telegram_bot/shared_utils.py:2045–2082](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L2045-L2082).
 
-Classification: Preserve capability; Change global/raw-content review and broken paths (proposal).
+Classification: Preserve feedback/report capability; D-009 selects scoped privacy-preserving review normalization via delegation. Broken routes/aliases and exact review lifecycle remain separately open.
 
 User/data/security impact: Keep feedback/report utility, bind authorization to actor/tenant and do not preserve raw unknown text outside approved consent/expiry. Aliases, voting and plain-private feedback differences are D-010.
 
@@ -90,15 +90,15 @@ Verification: AC-BR005-01, AC-BR005-02, AC-BR005-03, AC-BR005-04; US2.7/10; US3.
 
 ## BR-006 — Direct-message access and user listing
 
-Actors: private user, superadmin; group administrator has no implied global power. Owner: project owner. Approval: D-006 explicit private-conversation deny policy approved; remaining interaction/import/user-list/global mutation differences await their separate scope approvals.
+Actors: private user, superadmin; group administrator has no implied global power. Owner: project owner. Approval: D-006 explicit private-conversation deny policy approved; remaining interaction/import/user-list details remain separately reviewed; D-009 selects current superadmin-only global mutation security via delegation.
 
 Observed: dm toggles require private superadmin, but allow/block paths can let a group admin change global allowed_dm. block deletes an allow row, not an overriding denial: global-on or environment allow can still permit access. User-list query/render fields disagree.
 
 Evidence: [telegram_bot/admin_commands.py:61–86](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/admin_commands.py#L61-L86); [telegram_bot/admin_commands.py:129–175](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/admin_commands.py#L129-L175); [telegram_bot/admin_commands.py:289–466](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/admin_commands.py#L289-L466); [telegram_bot/shared_utils.py:1533–1558](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L1533-L1558).
 
-Classification: Preserve access-control capability; approved Change D-006 replacing allow-revocation-only block with explicit denial; global mutation/interaction/import details remain separately gated.
+Classification: Preserve access-control capability; approved Change D-006 replacing allow-revocation-only block with explicit denial; D-009 current superadmin-only global mutation security selected via delegation; interaction/import details remain separately gated.
 
-User/data/security impact: Explicit private-conversation denial overrides ordinary global/environment/managed allowances until current superadmin explicit unblock. Plain allow/global changes, restart and stale admission do not bypass it; delayed private dispatch re-checks access, unknown earlier Telegram effects follow D-003. Unblock is not a new allowance. No group moderation, role revocation, history erasure or Telegram platform blocking is authorized. Historical missing/deleted allow rows are not inferred denial: initial access imports remain D-011. Restrict global mutations to approved superadmin scope; list/UI fixes remain scoped pending work.
+User/data/security impact: Explicit private-conversation denial overrides ordinary global/environment/managed allowances until current superadmin explicit unblock. Plain allow/global changes, restart and stale admission do not bypass it; delayed private dispatch re-checks access, unknown earlier Telegram effects follow D-003. Unblock is not a new allowance. No group moderation, role revocation, history erasure or Telegram platform blocking is authorized. Historical missing/deleted allow rows are not inferred denial: initial access imports remain D-011. Restrict global mutations to current superadmin scope under delegated D-009 normalization; list/UI/interaction fixes remain scoped pending work.
 
 Transition communication: Explain that /block now means explicit private-conversation denial, unlike legacy allow revocation, and only current superadmin explicit unblock clears it; ordinary allow/global changes cannot. Publish approved unblock interaction and initial access-state mapping separately before any later authorized activation. No source/server data changes now.
 
@@ -106,13 +106,13 @@ Verification: AC-BR006-01, AC-BR006-02, AC-BR006-03, AC-BR006-04; US2.4/11; US3.
 
 ## BR-007 — Private management and bound prompts
 
-Actors: current scoped group administrator. Owner: project owner. Approval: pending scope approval.
+Actors: current scoped group administrator. Owner: project owner. Approval: D-009 current authorization and original-target prompt binding selected via owner delegation only; remaining interaction, outage, lifecycle or full capability-scope choices stay open.
 
 Observed: Deep links bind a group after verification; an active-group picker is stored per user. Some reads lack fresh role checks. Force-reply editing stores field/module but not a fixed group or expected prompt, then writes to the currently active group. Comments about deleting old panels do not prove implementation.
 
 Evidence: [telegram_bot/user_commands.py:295–350](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L295-L350); [telegram_bot/user_commands.py:412–448](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L412-L448); [telegram_bot/user_commands.py:563–608](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L563-L608); [telegram_bot/user_commands.py:656–849](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L656-L849); [telegram_bot/user_commands.py:1065–1132](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L1065-L1132); [telegram_bot/panel_ui.py:524–620](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/panel_ui.py#L524-L620); [telegram_bot/shared_utils.py:1228–1285](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L1228-L1285).
 
-Classification: Preserve management; Change stale-read/write and prompt-target flaws (proposal).
+Classification: Preserve management capability; D-009 Change selected via delegation: current scoped authorization and original actor/tenant/operation-bound prompts. Remaining interaction bounds/full scope stay open.
 
 User/data/security impact: Fresh authorization for read and write; a prompt must not silently target a newly selected group. Data binding and expiry details belong to the later approved plan, not inferred legacy defaults.
 
@@ -122,13 +122,13 @@ Verification: AC-BR007-01, AC-BR007-02, AC-BR007-03, AC-BR007-04; US3.1/2/4; FR-
 
 ## BR-008 — Roles, superadmins and privileged audit
 
-Actors: regular/admin/anonymous-admin/superadmin/operator. Owner: project owner. Approval: pending scope approval.
+Actors: regular/admin/anonymous-admin/superadmin/operator. Owner: project owner. Approval: D-009 current scoped role/authorization and redacted audit normalization selected via owner delegation only; remaining interaction, outage, lifecycle or full capability-scope choices stay open.
 
 Observed: Current membership checks generally fail closed. Anonymous group authority is sender-chat scoped, not private superadmin authority. Superadmins are database-first with environment bootstrap. Separate legacy user-admin flags exist. Audit writes can swallow failures.
 
 Evidence: [telegram_bot/admin_commands.py:42–125](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/admin_commands.py#L42-L125); [telegram_bot/admin_commands.py:963–1098](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/admin_commands.py#L963-L1098); [telegram_bot/shared_utils.py:1289–1348](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L1289-L1348); [telegram_bot/shared_utils.py:1420–1439](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L1420-L1439); [telegram_bot/shared_utils.py:1479–1522](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L1479-L1522); [telegram_bot/shared_utils.py:706–751](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L706-L751).
 
-Classification: Preserve roles; Change incomplete audit and inconsistent authorization (proposal).
+Classification: Preserve scoped roles; D-009 selects current scoped authorization and redacted audit normalization via delegation. Audit outage/review bounds and full scope remain separate pending contracts.
 
 User/data/security impact: Do not promote imported role flags or environment identity to unchecked current authority. D-009 covers audit-sink failure behavior and approved role reconciliation.
 
@@ -138,13 +138,13 @@ Verification: AC-BR008-01, AC-BR008-02, AC-BR008-03, AC-BR008-04; US3.3/4; US8.2
 
 ## BR-009 — Scoped settings, language and menus
 
-Actors: group administrator; superadmin for global settings. Owner: project owner. Approval: pending scope approval.
+Actors: group administrator; superadmin for global settings. Owner: project owner. Approval: D-009 current callback scope and no false save confirmation selected via owner delegation only; remaining interaction, outage, lifecycle or full capability-scope choices stay open.
 
 Observed: Chat/Ads controls expose bounds, but those observed numbers are not approved new defaults. Language selectors expose five choices. Some persistence failures are swallowed before success output; some private-language callbacks lack equivalent private-scope checks.
 
 Evidence: [telegram_bot/panel_ui.py:247–278](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/panel_ui.py#L247-L278); [telegram_bot/panel_ui.py:355–504](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/panel_ui.py#L355-L504); [telegram_bot/panel_ui.py:746–889](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/panel_ui.py#L746-L889); [telegram_bot/admin_commands.py:180–285](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/admin_commands.py#L180-L285); [telegram_bot/admin_commands.py:523–609](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/admin_commands.py#L523-L609); [telegram_bot/shared_utils.py:995–1007](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L995-L1007); [telegram_bot/user_commands.py:978–1060](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L978-L1060).
 
-Classification: Preserve controls; Change false-success and callback scope flaws (proposal).
+Classification: Preserve controls; D-009 Change selected via delegation: no false-success confirmations and current scoped callbacks. Exact menus/aliases/bounds and full scope stay open.
 
 User/data/security impact: Reject invalid values without changing valid ones; do not confirm an unsaved setting. Group mode choices never activate automatic deletion. D-009/D-010 govern normalized surfaces.
 
@@ -202,13 +202,13 @@ Verification: AC-BR012-01, AC-BR012-02, AC-BR012-03, AC-BR012-04, AC-BR012-05; U
 
 ## BR-013 — Examples, allowlists and diagnostics
 
-Actors: scoped group administrator; private superadmin for debug. Owner: project owner. Approval: pending scope approval.
+Actors: scoped group administrator; private superadmin for debug. Owner: project owner. Approval: D-009 uniform current scoped diagnostic authorization selected via owner delegation only; remaining interaction, outage, lifecycle or full capability-scope choices stay open.
 
 Observed: Compound stats/simulate uses a guard but standalone registered tools lack the same body guard. Some advertised compound add/notad aliases are not dispatched. Probe/simulation can send a diagnostic response and update ancillary records: legacy 'side-effect free' is not literally no writes/network.
 
 Evidence: [telegram_bot/ads_commands.py:216–246](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_commands.py#L216-L246); [telegram_bot/ads_commands.py:279–308](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_commands.py#L279-L308); [telegram_bot/ads_commands.py:1652–1812](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_commands.py#L1652-L1812); [telegram_bot/ads_commands.py:1926–1969](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_commands.py#L1926-L1969); [telegram_bot/ads_commands.py:2061–2377](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_commands.py#L2061-L2377); [telegram_bot/ads_commands.py:2379–2629](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_commands.py#L2379-L2629); [telegram_bot/ads_guard.py:1767–1787](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L1767-L1787); [telegram_bot/ads_guard.py:1835–1954](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L1835-L1954).
 
-Classification: Preserve tools; Change route authorization/aliases and privacy (proposal).
+Classification: Preserve tools; D-009 selects uniform current scoped diagnostic authorization via delegation. Exact aliases/content/lifecycles remain D-010/D-013 and full scope pending.
 
 User/data/security impact: Uniform fresh authorization and approved aliases; examples/raw text need approved provenance/lifecycle. Diagnostic replies are allowed but must not moderate user content/change policy/spend tokens.
 
@@ -282,13 +282,13 @@ Verification: AC-BR017-01, AC-BR017-02, AC-BR017-03; US7.1/4; FR-045, FR-046, FR
 
 ## BR-018 — Operations, health and recurring work
 
-Actors: operator, authorized diagnostic user, release reviewer. Owner: project owner. Approval: pending scope approval.
+Actors: operator, authorized diagnostic user, release reviewer. Owner: project owner. Approval: D-009 safe redacted health/diagnostic normalization selected via owner delegation only; remaining interaction, outage, lifecycle or full capability-scope choices stay open.
 
 Observed: Context logging, narrow token redaction, optional reporting/exporter, provider metrics/warmup and cleanup registrations exist. Narrow filtering is not proof of complete privacy redaction or multiworker safety. Service health can disclose internals.
 
 Evidence: [telegram_bot/logging_setup.py:47–100](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/logging_setup.py#L47-L100); [telegram_bot/shared_utils.py:21–78](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/shared_utils.py#L21-L78); [telegram_bot/bot.py:82–182](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/bot.py#L82-L182); [telegram_bot/bot.py:266–307](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/bot.py#L266-L307); [telegram_bot/bot.py:413–430](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/bot.py#L413-L430); [telegram_bot/bot.py:468–550](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/bot.py#L468-L550); [telegram_bot/user_commands.py:2095–2170](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/user_commands.py#L2095-L2170); [telegram_bot/tokens/jobs.py:12–58](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/tokens/jobs.py#L12-L58); [telegram_bot/ads_album_jobs.py:14–58](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_album_jobs.py#L14-L58).
 
-Classification: Preserve observable operations; no implicit approval of current scheduler safety.
+Classification: Preserve observable operations; D-009 safe redacted health/diagnostic normalization selected via delegation. No implicit approval of current scheduler safety, sink-outage or retention contracts.
 
 User/data/security impact: Safe dependency feedback and owned redacted alerts; separately approved operational retention and failure policy. Recurring work never bypasses unknown-result holds.
 
