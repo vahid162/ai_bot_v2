@@ -30,6 +30,11 @@ the requirements checklist records those limits.
   version with empty history? → A: Start the new version with empty conversation
   history. This does not authorize deleting legacy data or migrating other entity
   types.
+- Q: When a user's tokens are exhausted, should AdsGuard respect the group's
+  warning or no-action mode, or delete the message as in the legacy version?
+  → A: Respect the group setting; delete only in deletion mode. Token exhaustion
+  does not authorize deletion in warning or no-action mode, and existing
+  authorization, exemption, and classification safeguards still apply.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -146,7 +151,8 @@ actions and therefore needs precise, independently verifiable behavior.
 
 **Independent Test**: Run a labeled corpus of text, captions, replies, forwards,
 contact-like content, allowlisted content, and albums through each policy mode,
-including provider failure and repeated delivery.
+including provider failure, exhausted wallets in each mode, and repeated delivery
+of both single messages and albums.
 
 **Acceptance Scenarios**:
 
@@ -169,6 +175,19 @@ including provider failure and repeated delivery.
 6. **Given** classification is unavailable, malformed, or below the approved
    confidence threshold, **When** policy is evaluated, **Then** the system does
    not perform a destructive action and records an operator-visible reason.
+7. **Given** eligible advertising and an exhausted wallet in warning mode,
+   **When** the configured policy is applied to a single message or album,
+   **Then** only the configured warning is applied, no message is deleted, and
+   repeated delivery produces no duplicate warning or token charge.
+8. **Given** eligible advertising and an exhausted wallet in no-action mode,
+   **When** the configured policy is evaluated for a single message or album,
+   **Then** no moderation action occurs; exhaustion does not authorize a warning,
+   deletion, mute, or token charge.
+9. **Given** an exhausted wallet in deletion mode, **When** a single message or
+   album is evaluated, **Then** deletion is permitted only if the configured
+   policy, current authorization, exemptions, and approved classification-quality
+   gates allow it; exhaustion alone is not a deletion trigger, and repeated
+   delivery must not duplicate the action or charge.
 
 ---
 
@@ -239,8 +258,10 @@ concurrent requests for the same user in two groups.
    is requested, **Then** the balance decreases once and repeat attempts return the
    same outcome without a second charge.
 4. **Given** insufficient balance or a disabled token feature, **When** spending is
-   requested, **Then** no negative balance is possible and the user receives
-   localized guidance.
+   requested, **Then** no token is charged, no negative balance is possible, and
+   the user receives localized guidance. An insufficient balance does not change
+   the effective AdsGuard action mode: warning remains warning, no-action remains
+   no-action, and deletion still requires the normal policy safeguards.
 5. **Given** the same user participates in two groups, **When** balances are
    viewed, **Then** each tenant's wallet, grant, and ledger remain independent.
 
@@ -324,7 +345,8 @@ and rollback under the approved production-equivalent security boundary.
 - A configuration value changes while requests or pending moderation actions are
   already in flight.
 - Weekly grant, lazy grant, token spend, and duplicate cleanup run concurrently
-  across multiple workers.
+  across multiple workers, or a wallet remains exhausted when AdsGuard evaluates
+  warning, no-action, or deletion policy for a single message or album.
 - A delayed moderation worker dies after claiming an item but before completing its
   external action or recording completion.
 - A language catalog is unavailable, contains a formatting mismatch, or receives an
@@ -360,7 +382,7 @@ become binding.
 | BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve | `admin_commands.py` and `shared_utils.py` | Least privilege, current-role verification, and complete audit |
 | BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve | `panel_ui.py`, `bot.py`, and admin commands | Validated settings with predictable scope and menus |
 | BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve | `ads_guard.py` and AdsGuard command registration | One explainable decision per eligible logical item |
-| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Preserve | `ads_guard.py`, `ads_commands.py`, and `panel_ui.py` | Exact per-group enforcement with safe non-destructive failure |
+| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Preserve except owner-approved Change removing the token-exhaustion deletion override | `ads_guard.py`, `ads_commands.py`, and `panel_ui.py` | Exact per-group enforcement; exhausted wallets never promote warning or no-action to deletion; existing safety gates still apply |
 | BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve | `ads_pending_jobs.py` and `ads_album_jobs.py` | Recoverable, idempotent action with bounded retry |
 | BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve | `ads_commands.py` registrations | Tenant-scoped admin tools; diagnostic actions remain side-effect free |
 | BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve | `tokens/handlers.py`, `tokens/jobs.py`, and `tokens/models.py` | One grant per tenant/user/week and accurate balance |
@@ -381,9 +403,10 @@ an owner-approved decision.
 The table is an inventory, not a completed traceability ledger. Before approval,
 each entry needs an exact source location at the pinned revision, acceptance
 scenario references, the deciding owner, and the impact/transition details required
-by FR-005. Capability classifications remain proposals; the first-cutover history
-exclusion recorded in Clarifications is an owner-approved decision, not approval
-of the full capability inventory.
+by FR-005. Capability classifications remain proposals except the owner-approved
+first-cutover history exclusion and the BR-011 token-exhaustion mode-precedence
+Change recorded in Clarifications. These decisions do not approve the full
+capability inventory or change BR-015's grant, spending, or ledger invariants.
 
 #### Verified Legacy AdsGuard / Token Interaction
 
@@ -398,10 +421,17 @@ identified these branches relevant to BR-011 and BR-015:
 | Action is `delete` | Skips the token-spend branch and continues the deletion policy |
 | Effective token switches disabled | Skips spending and continues the ordinary moderation policy |
 
-This is source evidence, not an approved rewrite outcome. The existing wallet
-scenarios do not fully specify these moderation consequences. Owner approval and
-acceptance coverage are required before dependent planning; selecting different
-outcomes requires an explicit `Change` decision.
+The table remains historical source evidence. The owner-approved BR-011 `Change`
+removes the legacy insufficient-balance deletion override: warning mode warns
+only, no-action mode performs no moderation action, and deletion is permitted
+only in deletion mode with the existing authorization, exemption, and approved
+classification-quality safeguards. US4 scenarios 7–9, US6 scenario 4, FR-024,
+FR-028, FR-040, and SC-005 verify this difference for single messages, albums, and
+repeated delivery. Group administrators and affected users must be told that
+exhaustion no longer causes implicit deletion before this change is activated;
+legacy data is not modified and wallet integrity controls remain unchanged.
+This clarification does not approve unsolicited exhaustion notices, mute
+escalation, the other observed token branches, or the full specification.
 
 ### Functional Requirements
 
@@ -476,7 +506,9 @@ outcomes requires an explicit `Change` decision.
 
 - **FR-024**: Each group MUST have independent AdsGuard enablement, action mode,
   confidence threshold, request frequency, training-example limit, and cleanup
-  policy.
+  policy. Insufficient token balance MUST NOT override the effective action mode:
+  warning permits only a warning, no-action permits no moderation action, and
+  deletion is permitted only in deletion mode subject to the normal safeguards.
 - **FR-025**: AdsGuard MUST evaluate all approved eligible content forms and MUST
   apply administrator, user, domain, reply, contact-like, and other approved
   exemptions before any destructive action.
@@ -487,7 +519,8 @@ outcomes requires an explicit `Change` decision.
   classification MUST NOT trigger deletion or another destructive action.
 - **FR-028**: Warning, deletion, mute-related, informational, rules, and wallet
   interactions MUST be authorized, localized, bounded, and applied at most once per
-  logical content item.
+  logical content item. Token exhaustion MUST NOT introduce a destructive action
+  or escalate the configured moderation mode for either a single message or album.
 - **FR-029**: Delayed moderation work MUST survive process interruption, have
   exclusive ownership while executing, recover abandoned claims, use bounded
   retry, and expose terminal failure for operator action.
@@ -518,7 +551,8 @@ outcomes requires an explicit `Change` decision.
   most once even when requests, callbacks, or updates repeat concurrently.
 - **FR-040**: Wallet balances MUST never become negative, and every grant, spend,
   correction, or approved reversal MUST have an immutable, reconcilable ledger
-  event.
+  event. An insufficient-balance spending attempt MUST NOT debit the wallet or
+  create a successful-spend event; it MUST NOT authorize a moderation-mode override.
 - **FR-041**: Users MUST be able to view the current tenant balance and, when a
   future grant can change it, a localized indication of the next grant window.
 
@@ -694,7 +728,9 @@ outcomes requires an explicit `Change` decision.
 - **SC-005**: Across the approved moderation corpus, every exempt or
   insufficient-confidence item avoids destructive action, every expected action
   occurs at most once, and repeated delivery creates zero duplicate warnings,
-  deletions, or charges.
+  deletions, or charges. Exhausted-wallet tests for single messages and albums
+  produce zero deletions in warning or no-action mode, no moderation action in
+  no-action mode, and no successful token debit on insufficient-balance attempts.
 - **SC-006**: Across concurrent grant and spending tests, wallet balances never
   become negative, each eligible weekly grant occurs at most once, each logical
   spend occurs at most once, and ledger totals reconcile exactly to wallet changes.
@@ -760,11 +796,14 @@ outcomes requires an explicit `Change` decision.
 - Detailed capacity limits, retention durations, and cutover windows will use
   measured legacy evidence where available and explicit owner-approved baselines
   otherwise.
-- AdsGuard's token-exhaustion behavior and automatic-deletion quality gates remain
-  unapproved. [NEEDS CLARIFICATION: Should the verified legacy token/moderation
-  branches be preserved or changed, and what independently measured classification
-  quality and false-positive limits permit automatic deletion?] A provider's
-  confidence value alone does not settle the acceptable product error rate.
+- The owner has approved respecting AdsGuard's configured mode when tokens are
+  exhausted: warning only warns, no-action performs no moderation action, and
+  deletion remains limited to deletion mode with the normal safeguards. This
+  intentionally changes the legacy exhaustion override; other token branches and
+  automatic-deletion quality gates remain unapproved.
+  [NEEDS CLARIFICATION: What independently measured classification quality and
+  false-positive limits permit automatic deletion?] A provider's confidence value
+  alone does not settle the acceptable product error rate.
 - Recovery targets distinguish deduplicated internal ledger changes from an
   external action whose result is unknown. For example, a reply or warning may
   reach Telegram before a worker stops without recording completion.
