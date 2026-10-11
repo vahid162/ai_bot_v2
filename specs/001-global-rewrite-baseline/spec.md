@@ -41,6 +41,11 @@ the requirements checklist records those limits.
   it remains unknown, record it for operator review without automatic retry.
   An unresolved result is not confirmed success or confirmed non-execution;
   referral alone does not authorize manual repetition.
+- Q: How should new conversation text be stored and retained? → A: Store user
+  questions and assistant answers only after the owner explicitly opts in with
+  policy notice; automatically delete each message 30 days after its original
+  creation. The owner can clear eligible history earlier or export it. This
+  decision does not set token-ledger or audit-record retention.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -84,7 +89,9 @@ or group's conversation.
 
 **Independent Test**: Use isolated private and group accounts to exercise start,
 help, direct questions, `/ask`, reply, mention, session, feedback, clear, and export
-journeys while verifying tenant and user isolation.
+journeys while verifying tenant and user isolation. Include default-off storage,
+explicit opt-in after notice, per-message 30-day expiry, early clearing, and
+non-resurrection of content after recovery.
 
 **Acceptance Scenarios**:
 
@@ -106,10 +113,12 @@ journeys while verifying tenant and user isolation.
    provider data, or cross-session history. Unknown Telegram delivery follows
    scenario 7 rather than triggering a repeated reply or fallback notice.
 6. **Given** a user requests history export or clearing, **When** ownership is
-   verified, **Then** only that user's eligible history in the selected scope is
-   exported or cleared and the result is confirmed. At the first cutover, this
-   history starts empty; subsequent eligible exchanges in the new deployment
-   remain subject to the approved retention policy.
+   verified, **Then** only that user's eligible retained, unexpired history in the
+   selected scope is exported or cleared and the result is confirmed. At the first
+   cutover this history starts empty; it remains empty until explicit opt-in.
+   An empty history receives an explicit empty result rather than a backfilled
+   export. Clearing makes its text unavailable to later history, export, or AI
+   context; it does not delete token-ledger or audit records.
 7. **Given** Telegram may have sent a reply before the connection or worker stops
    without recording completion, **When** recovery checks the available evidence,
    **Then** confirmed completion is not repeated, confirmed non-execution is
@@ -117,6 +126,23 @@ journeys while verifying tenant and user isolation.
    for operator review without automatically resending the reply or a fallback
    notice. A delivery attempt or deduplication record alone is not proof that the
    user received a reply.
+8. **Given** a user has not explicitly opted in to history storage, **When** an
+   eligible question and answer are processed, **Then** no conversation text or
+   context-bearing reference is persisted as history; answering does not require
+   history opt-in. The storage policy is explained before a choice, and neither a
+   group administrator nor a default setting can opt in on the user's behalf.
+9. **Given** the user explicitly opts in after policy notice, **When** a subsequent
+   eligible exchange is created in the chosen owner and tenant scope, **Then**
+   only new permitted questions and answers are retained with each message's
+   original creation time and expiry at 30 days. Previously unconsented messages
+   are not backfilled. The user can turn future storage off and separately clear
+   existing eligible history or request an owner-scoped export.
+10. **Given** retained user or assistant text reaches 30 days from its original
+    creation, **When** expiry, context selection, or export is evaluated, **Then**
+    the text is automatically deleted and is no longer available as history,
+    export, or AI context. Reads, edits, exports, and repeated processing do not
+    restart its retention clock; metadata-only audit and ledger records are not
+    removed by this expiry.
 
 ---
 
@@ -349,6 +375,11 @@ and rollback under the approved production-equivalent security boundary.
 4. **Given** a security, availability, queue-age, or reconciliation threshold is
    breached, **When** monitoring evaluates it, **Then** an actionable, redacted
    alert points to an owned recovery procedure.
+5. **Given** a backup contains conversation text that has since expired or been
+   cleared, **When** restoration or recovery is rehearsed, **Then** the text is
+   excluded or deleted before history, export, or AI context becomes available;
+   recovery does not resurrect the conversation or erase separately governed
+   token-ledger and audit records.
 
 ### Edge Cases
 
@@ -382,7 +413,9 @@ and rollback under the approved production-equivalent security boundary.
   timestamps, invalid encodings, negative balances, conflicting tenant ownership,
   or schema variants not present in the approved mapping.
 - A backup is incomplete, stale, encrypted with an unavailable key, or cannot be
-  restored within the approved cutover window.
+  restored within the approved cutover window, or contains conversation text that
+  has since been cleared or reached its 30-day expiry during an in-flight request,
+  export, or recovery. Access and recovery must not resurrect that text.
 - Secret scanning detects a credential-like value in legacy data, documentation,
   build input, logs, or release artifacts.
 - Audit, metrics, or error-reporting sinks are unavailable or apply backpressure.
@@ -402,7 +435,7 @@ become binding.
 | BR-001 | Start, help, identity, scoped command menus, and health journeys | Preserve | `bot.py` and user command registrations | Equivalent discoverability and safe responses by user scope |
 | BR-002 | Private AI questions, `/ask`, reply input, typing state, and direct answers | Preserve | `user_commands.py` | One isolated, localized outcome per accepted request |
 | BR-003 | Group AI enablement, mention/all modes, administrator-only mode, throttling, and autocleanup | Preserve | `user_commands.py` and `panel_ui.py` | Per-group policy with no response outside eligible triggers |
-| BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; first-cutover history exclusion approved by owner | `user_commands.py` and `shared_utils.py` | Empty initial history and fresh AI context; owner-scoped continuity, export, and deletion for new-deployment history |
+| BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; owner approved empty first-cutover history and opt-in 30-day new-history policy | `user_commands.py` and `shared_utils.py` | Fresh initial AI context; default-off text storage, explicit owner opt-in after notice, per-message 30-day deletion, and owner-scoped export or earlier clear |
 | BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve | callback registrations and user/admin commands | Traceable feedback without cross-tenant disclosure |
 | BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve | `admin_commands.py` | Deny-by-default access with explicit, auditable exceptions |
 | BR-007 | Private management panel, group binding, active-group selection, deep-link management, and force-reply editing | Preserve | `user_commands.py` and `panel_ui.py` | Fresh authorization and isolated administrator context |
@@ -431,8 +464,8 @@ The table is an inventory, not a completed traceability ledger. Before approval,
 each entry needs an exact source location at the pinned revision, acceptance
 scenario references, the deciding owner, and the impact/transition details required
 by FR-005. Capability classifications remain proposals except the owner-approved
-first-cutover history exclusion and the BR-011 token-exhaustion mode-precedence
-Change recorded in Clarifications. The owner also clarified unknown-result
+BR-004 first-cutover history exclusion and opt-in 30-day new-history policy, and
+the BR-011 token-exhaustion mode-precedence Change recorded in Clarifications. The owner also clarified unknown-result
 recovery for replies and BR-012 moderation work; this policy is not evidence of a
 verified legacy difference. These decisions do not approve the full capability
 inventory or change BR-015's grant, spending, or ledger invariants.
@@ -497,11 +530,18 @@ escalation, the other observed token branches, or the full specification.
   all-eligible-message conversation behavior, plus an optional
   administrators-only restriction and bounded response frequency.
 - **FR-011**: Conversation context MUST be isolated by tenant, user, and applicable
-  topic or session so that content cannot cross those boundaries.
+  topic or session so that content cannot cross those boundaries. Retained history
+  used as context MUST satisfy FR-058's owner opt-in, scope, and expiry rules;
+  cleared or expired text and context-bearing references MUST NOT restore it.
+  Without history opt-in, processing the current exchange MUST NOT create durable
+  conversation history.
 - **FR-012**: Users MUST be able to clear and export only the conversation history
-  they own and are permitted to access, with an explicit result. For the new
-  deployment, this starts empty at the first cutover; legacy history MUST NOT
-  appear through these journeys.
+  they own and are permitted to access, with an explicit result. Exports MUST
+  include only eligible retained, unexpired text; empty history MUST produce an
+  explicit empty result. Users MUST be able to clear history before its automatic
+  30-day expiry and turn off future text storage. Clearing MUST NOT erase
+  token-ledger or audit records. For the new deployment, history starts empty at
+  the first cutover; legacy history MUST NOT appear through these journeys.
 - **FR-013**: Accepted requests MUST provide timely progress indication without
   producing unbounded or orphaned activity indicators.
 - **FR-014**: Provider timeout, invalid output, rate limit, or outage MUST result in
@@ -510,7 +550,9 @@ escalation, the other observed token branches, or the full specification.
   reply nor a fallback notice may be sent automatically to resolve the ambiguity.
 - **FR-015**: Users MUST be able to record positive or negative feedback and report
   an unknown answer; administrators MUST be able to review only unknown items
-  within their authorized scope.
+  within their authorized scope. Feedback or unknown-item records MUST NOT bypass
+  FR-058 by retaining unconsented, cleared, or expired conversation text; eligible
+  non-content metadata remains distinct from raw conversation content.
 
 #### Identity, Administration, and Tenancy
 
@@ -653,7 +695,25 @@ escalation, the other observed token branches, or the full specification.
   rotated before its integration is enabled.
 - **FR-058**: Personal and conversation data MUST have approved collection,
   retention, export, correction, and deletion rules and MUST be minimized in logs,
-  diagnostics, fixtures, and provider exchanges.
+  diagnostics, fixtures, and provider exchanges. New conversation-text storage
+  MUST be off by default and require the owning user's explicit opt-in after a
+  localized notice explains storage, retention, context use, export, and clearing,
+  including the distinction between turning off future storage and clearing
+  already retained history. Group, global, or administrator settings MUST NOT
+  substitute for that choice.
+  Retention MUST be scoped to the owner and tenant; later opt-in MUST NOT backfill
+  earlier unconsented text. Every stored question or answer MUST be automatically
+  deleted at its original creation time plus 30 days (30 × 24 hours in UTC), or
+  earlier when its owner clears it. Reads, edits, exports, and retries MUST NOT
+  extend that lifetime. Expired or cleared text MUST NOT remain available through
+  history, AI context, exports, feedback, diagnostics, or restored copies.
+  Recovery MUST enforce consent, expiry, and clearing before exposing restored
+  history. Separate ledger and audit retention MUST NOT become a store for raw
+  conversation text. This policy does not set ledger or audit retention, approve provider-
+  managed text retention or a backup retention duration, or authorize deletion of
+  original Telegram messages. Any provider or backup text-retention contract MUST
+  be separately reviewed before its content path is enabled and MUST NOT bypass
+  the approved history policy.
 - **FR-059**: Audit evidence MUST be tamper-evident and privacy-preserving, and its
   retention MUST be distinct from optional conversation-history retention.
 - **FR-060**: Specification, build, test, migration, and runtime tooling MUST remain
@@ -711,7 +771,9 @@ escalation, the other observed token branches, or the full specification.
 ### Key Entities
 
 - **User**: A Telegram participant with identity, locale hints, direct-message
-  access state, and tenant-specific participation.
+  access state, tenant-specific participation, and an explicit owner-scoped
+  history-storage choice with policy-notice acknowledgment; absence of a choice
+  means text storage is off.
 - **Tenant / Group**: The isolation boundary for members, administrators, policy,
   configuration, conversation behavior, moderation, tokens, and reporting.
 - **Role Assignment**: A current, scoped authorization relationship for regular
@@ -720,11 +782,15 @@ escalation, the other observed token branches, or the full specification.
   administrator and one currently selected manageable group, including expiry and
   authorization state.
 - **Conversation Session**: An owner- and tenant-scoped continuity boundary with
-  lifecycle, provider correlation, and eligible new-deployment history. The first
+  lifecycle, provider correlation, and eligible new-deployment history. Durable
+  conversation text and context-bearing references require the owner's opt-in;
+  expired or cleared text cannot be restored by a session reference. The first
   cutover uses fresh conversational context; no legacy context-bearing reference
   may restore an old conversation.
-- **Conversation Record**: A user or assistant exchange retained according to
-  approved privacy and history policy.
+- **Conversation Record**: An eligible user question or assistant answer stored
+  only after its owner explicitly opts in after notice, with owner, tenant,
+  original creation time, and expiry 30 days later. The owner can clear it earlier;
+  access, edits, exports, and retries do not reset expiry.
 - **Feedback / Unknown Item**: A response evaluation or unresolved question linked
   to an eligible session, tenant, actor, report state, and audit history.
 - **Configuration Value**: A typed value with scope, precedence, revision, actor,
@@ -779,7 +845,11 @@ escalation, the other observed token branches, or the full specification.
   separately and MUST NOT count as confirmed answers or safe terminal outcomes.
 - **SC-004**: In authorization and adversarial testing, 100% of unauthorized
   privileged attempts are denied, and zero tests disclose or modify another
-  tenant's configuration, conversation, moderation, token, or audit data.
+  tenant's configuration, conversation, moderation, token, or audit data. Privacy
+  tests create zero durable history-text records without explicit owner opt-in,
+  verify automatic deletion at each message's 30-day boundary or earlier clearing,
+  and expose zero expired or cleared records through history, exports, AI context,
+  or restore. Those checks preserve separately governed ledger and audit records.
 - **SC-005**: Across the approved moderation corpus, every exempt or
   insufficient-confidence item avoids destructive action, every expected action
   occurs at most once, and repeated delivery creates zero duplicate warnings,
@@ -796,7 +866,8 @@ escalation, the other observed token branches, or the full specification.
   unexplained difference.
 - **SC-008**: A full backup restoration and cutover rollback drill completes within
   the owner-approved maintenance window and restores all release-critical user,
-  tenant, moderation, token, and audit invariants.
+  tenant, moderation, token, and audit invariants while enforcing conversation
+  consent, expiry, and earlier clearing before restored history becomes available.
 - **SC-009**: 100% of user-visible keys used by approved launch journeys are
   complete and format-valid in Persian, English, Arabic, Turkish, and Russian, with
   zero raw keys or developer-only messages visible in acceptance testing.
@@ -840,12 +911,13 @@ escalation, the other observed token branches, or the full specification.
   until its complete catalog passes acceptance.
 - The owner has decided that the first cutover starts with empty conversation
   history and fresh conversational context. Legacy history is intentionally
-  excluded without deleting or modifying the old data. BR-004 still proposes
-  history/export/clear capabilities for conversations created by the new bot;
-  other entity-import decisions remain separate.
-  [NEEDS CLARIFICATION: What collection, retention, deletion, and user-notice rules
-  apply to conversation content created by the new deployment?] Starting empty
-  does not settle these future-history privacy rules.
+  excluded without deleting or modifying the old data; other entity-import
+  decisions remain separate. For new conversation text, the owner approved
+  default-off storage, explicit user opt-in after notice, automatic deletion of
+  each message 30 days after its original creation, and owner-scoped export or
+  earlier clearing. The decision does not approve a provider retention contract,
+  a backup retention duration, or other personal-data lifecycles; those remain
+  separate approval obligations and must not bypass the approved history policy.
 - Legacy data access will use sanitized snapshots or controlled exports. Live
   production credentials and raw secrets are neither required nor permitted for
   specification and test work.
@@ -854,9 +926,9 @@ escalation, the other observed token branches, or the full specification.
   internal model becomes a user contract.
 - When an undocumented legacy behavior is discovered, it is added to the
   classification ledger rather than inferred as approved.
-- Detailed capacity limits, retention durations, and cutover windows will use
-  measured legacy evidence where available and explicit owner-approved baselines
-  otherwise.
+- Detailed capacity limits, retention durations for data outside the approved
+  30-day conversation-text policy, and cutover windows will use measured legacy
+  evidence where available and explicit owner-approved baselines otherwise.
 - The owner has approved respecting AdsGuard's configured mode when tokens are
   exhausted: warning only warns, no-action performs no moderation action, and
   deletion remains limited to deletion mode with the normal safeguards. This
@@ -892,5 +964,7 @@ escalation, the other observed token branches, or the full specification.
   superadmin scenarios.
 - Independently rotated deployment credentials before any affected integration is
   enabled.
-- Approved privacy, retention, service-level, maintenance-window, and data-residency
-  targets before architecture-plan approval.
+- Approved provider-processing, backup-content, other personal-data retention,
+  service-level, maintenance-window, and data-residency contracts before
+  architecture-plan approval; none may bypass the approved opt-in 30-day history
+  policy.
