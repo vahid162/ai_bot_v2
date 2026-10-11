@@ -35,6 +35,12 @@ the requirements checklist records those limits.
   → A: Respect the group setting; delete only in deletion mode. Token exhaustion
   does not authorize deletion in warning or no-action mode, and existing
   authorization, exemption, and classification safeguards still apply.
+- Q: If a disconnect leaves the result of a Telegram reply, warning, or deletion
+  unknown, should the system retry automatically or check the result and escalate?
+  → A: Check the result first using trustworthy evidence actually available. If
+  it remains unknown, record it for operator review without automatic retry.
+  An unresolved result is not confirmed success or confirmed non-execution;
+  referral alone does not authorize manual repetition.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -95,13 +101,22 @@ journeys while verifying tenant and user isolation.
    private user, **When** a message arrives, **Then** no AI request is made and any
    guidance shown is safe, localized, and rate-limited.
 5. **Given** the answer provider times out or returns unusable output, **When** the
-   request completes, **Then** the user receives a safe outcome without duplicated
-   messages, leaked provider data, or cross-session history.
+   request completes, **Then** the system records a safe outcome and provides
+   localized guidance when delivery is safe, without duplicated messages, leaked
+   provider data, or cross-session history. Unknown Telegram delivery follows
+   scenario 7 rather than triggering a repeated reply or fallback notice.
 6. **Given** a user requests history export or clearing, **When** ownership is
    verified, **Then** only that user's eligible history in the selected scope is
    exported or cleared and the result is confirmed. At the first cutover, this
    history starts empty; subsequent eligible exchanges in the new deployment
    remain subject to the approved retention policy.
+7. **Given** Telegram may have sent a reply before the connection or worker stops
+   without recording completion, **When** recovery checks the available evidence,
+   **Then** confirmed completion is not repeated, confirmed non-execution is
+   eligible for normal authorized recovery, and a still-unknown result is recorded
+   for operator review without automatically resending the reply or a fallback
+   notice. A delivery attempt or deduplication record alone is not proof that the
+   user received a reply.
 
 ---
 
@@ -166,9 +181,14 @@ of both single messages and albums.
 3. **Given** a media album arrives as several updates, **When** it is classified
    and acted upon, **Then** it is treated as one logical item with at most one
    warning, one charge, and one final policy outcome.
-4. **Given** a delayed action worker stops after claiming work, **When** another
-   worker recovers the item, **Then** the action resumes safely without duplicate
-   deletion, warning, or charge.
+4. **Given** a delayed action worker stops before recording the result of a
+   warning or deletion, **When** another worker checks trustworthy available
+   evidence, **Then** confirmed completion is not repeated, confirmed
+   non-execution permits normal bounded recovery with current authorization and
+   policy checks, and a still-unknown result is held for operator review without
+   automatic retry. This applies to single messages and each affected album item;
+   a partially completed album is not replayed as a whole, and no second token
+   charge occurs.
 5. **Given** an administrator runs probe, statistics, or threshold simulation,
    **When** results are displayed, **Then** no real moderation action or token
    spend occurs.
@@ -307,7 +327,8 @@ jobs or releases without duplicate user-visible effects or host-wide changes.
 isolated deployment, and recoverable background work.
 
 **Independent Test**: Exercise startup, shutdown, dependency outage, provider
-timeout, worker interruption, duplicate update delivery, backup restore, release,
+timeout, worker interruption before and after an external effect, lost
+acknowledgments, duplicate updates, operator-review holds, backup restore, release,
 and rollback under the approved production-equivalent security boundary.
 
 **Acceptance Scenarios**:
@@ -315,9 +336,13 @@ and rollback under the approved production-equivalent security boundary.
 1. **Given** a critical dependency is unavailable, **When** readiness is checked,
    **Then** the service reports not ready without leaking credentials or private
    messages while unrelated host services remain unaffected.
-2. **Given** an update or job is retried after interruption, **When** processing
-   resumes, **Then** correlation and deduplication make the outcome traceable and
-   prevent duplicated user-visible effects.
+2. **Given** an update or job is recovered after interruption, **When** its
+   external result is checked, **Then** available trustworthy evidence determines
+   confirmed completion, confirmed non-execution, or an unresolved operator-review
+   state. Unknown replies, warnings, or deletions are not automatically retried;
+   restarts, repeated updates, and abandoned-claim recovery preserve that hold.
+   Correlation and deduplication remain traceable but do not prove external
+   execution or authorize another token charge.
 3. **Given** a release or rollback, **When** the operator follows the approved
    procedure, **Then** only project-scoped resources change and no global host tool
    installation is required.
@@ -347,8 +372,10 @@ and rollback under the approved production-equivalent security boundary.
 - Weekly grant, lazy grant, token spend, and duplicate cleanup run concurrently
   across multiple workers, or a wallet remains exhausted when AdsGuard evaluates
   warning, no-action, or deletion policy for a single message or album.
-- A delayed moderation worker dies after claiming an item but before completing its
-  external action or recording completion.
+- A reply, warning, or deletion may reach Telegram before the connection or worker
+  stops without recording completion, including a partly completed album. Recovery
+  checks available evidence and holds unresolved items for operator review without
+  automatic retry, including after another restart or repeated update.
 - A language catalog is unavailable, contains a formatting mismatch, or receives an
   unsupported locale tag.
 - A legacy export contains duplicate identities, orphaned rows, impossible
@@ -383,7 +410,7 @@ become binding.
 | BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve | `panel_ui.py`, `bot.py`, and admin commands | Validated settings with predictable scope and menus |
 | BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve | `ads_guard.py` and AdsGuard command registration | One explainable decision per eligible logical item |
 | BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Preserve except owner-approved Change removing the token-exhaustion deletion override | `ads_guard.py`, `ads_commands.py`, and `panel_ui.py` | Exact per-group enforcement; exhausted wallets never promote warning or no-action to deletion; existing safety gates still apply |
-| BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve | `ads_pending_jobs.py` and `ads_album_jobs.py` | Recoverable, idempotent action with bounded retry |
+| BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve proposal; owner clarified unknown-result recovery | `ads_pending_jobs.py` and `ads_album_jobs.py` | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
 | BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve | `ads_commands.py` registrations | Tenant-scoped admin tools; diagnostic actions remain side-effect free |
 | BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve | `tokens/handlers.py`, `tokens/jobs.py`, and `tokens/models.py` | One grant per tenant/user/week and accurate balance |
 | BR-015 | Token spending, logical-message deduplication, and ledger history | Preserve | `tokens/models.py` | Exactly-once charge, non-negative balance, auditable ledger |
@@ -405,8 +432,10 @@ each entry needs an exact source location at the pinned revision, acceptance
 scenario references, the deciding owner, and the impact/transition details required
 by FR-005. Capability classifications remain proposals except the owner-approved
 first-cutover history exclusion and the BR-011 token-exhaustion mode-precedence
-Change recorded in Clarifications. These decisions do not approve the full
-capability inventory or change BR-015's grant, spending, or ledger invariants.
+Change recorded in Clarifications. The owner also clarified unknown-result
+recovery for replies and BR-012 moderation work; this policy is not evidence of a
+verified legacy difference. These decisions do not approve the full capability
+inventory or change BR-015's grant, spending, or ledger invariants.
 
 #### Verified Legacy AdsGuard / Token Interaction
 
@@ -460,8 +489,10 @@ escalation, the other observed token branches, or the full specification.
 - **FR-008**: Private-message access MUST follow the approved global policy and
   explicit allow/block decisions, with denial that reveals no protected data.
 - **FR-009**: Authorized users MUST be able to submit questions through ordinary
-  eligible messages, `/ask`, and supported reply journeys and receive one
-  correlated outcome.
+  eligible messages, `/ask`, and supported reply journeys. Each accepted request
+  MUST have one correlated outcome: a confirmed reply, a safe failure outcome, or
+  an unresolved operator-review state under FR-064. An unresolved delivery MUST
+  NOT be reported as a received reply.
 - **FR-010**: Each group MUST independently support disabled, explicit-address, and
   all-eligible-message conversation behavior, plus an optional
   administrators-only restriction and bounded response frequency.
@@ -475,7 +506,8 @@ escalation, the other observed token branches, or the full specification.
   producing unbounded or orphaned activity indicators.
 - **FR-014**: Provider timeout, invalid output, rate limit, or outage MUST result in
   a safe localized outcome and MUST NOT duplicate replies or expose provider
-  internals.
+  internals. If Telegram delivery is unknown, FR-064 applies: neither a repeated
+  reply nor a fallback notice may be sent automatically to resolve the ambiguity.
 - **FR-015**: Users MUST be able to record positive or negative feedback and report
   an unknown answer; administrators MUST be able to review only unknown items
   within their authorized scope.
@@ -522,11 +554,17 @@ escalation, the other observed token branches, or the full specification.
   logical content item. Token exhaustion MUST NOT introduce a destructive action
   or escalate the configured moderation mode for either a single message or album.
 - **FR-029**: Delayed moderation work MUST survive process interruption, have
-  exclusive ownership while executing, recover abandoned claims, use bounded
-  retry, and expose terminal failure for operator action.
+  exclusive ownership while executing, recover abandoned claims, and expose
+  terminal failure for operator action. Recovery MUST check trustworthy available
+  evidence before repeating a warning or deletion: confirmed completion MUST NOT
+  be repeated; confirmed non-execution permits bounded retry only with current
+  authorization and policy safeguards; a still-unknown result MUST be recorded for
+  operator review and MUST NOT be retried automatically. FR-064 applies.
 - **FR-030**: A media album MUST be aggregated and deduplicated as one logical
   moderation item while preserving the identifiers required to apply or recover
-  the final action.
+  the final action. Known and unknown outcomes of its affected message identifiers
+  MUST remain distinguishable; recovery MUST NOT replay completed or unresolved
+  parts of an album in violation of FR-029.
 - **FR-031**: Administrators MUST be able to list, add, and remove group-scoped
   user and domain allowlist entries with validation and audit.
 - **FR-032**: Administrators MUST be able to add positive and negative examples,
@@ -627,13 +665,25 @@ escalation, the other observed token branches, or the full specification.
   dependency-degraded states without receiving secrets or raw private content.
 - **FR-062**: Warmup, weekly grant, cleanup, album, pending moderation, and other
   recurring work MUST be idempotent, bounded, observable, and safe across multiple
-  workers.
+  workers. Recurring execution, abandoned-claim recovery, or duplicate updates
+  MUST NOT bypass an unresolved external-result hold under FR-064.
 - **FR-063**: User requests, provider calls, privileged actions, migrations, and
   jobs MUST be correlated through redacted logs, metrics, traces, and actionable
   alerts.
 - **FR-064**: Dependency outage, quota exhaustion, overload, shutdown, and restart
   MUST degrade safely, preserve accepted durable work, and avoid duplicate
-  user-visible outcomes.
+  user-visible outcomes. If the execution result of a Telegram reply, warning, or
+  deletion is unknown, recovery MUST first check trustworthy evidence actually
+  available. A still-unknown result MUST remain durably recorded for authorized
+  operator review without automatic retry, inferred success, or inferred
+  non-execution. The record MUST retain logical identity, tenant scope, minimal
+  non-content correlation evidence, and the review reason. A timeout or internal
+  deduplication record alone MUST NOT prove the external result. Read-only
+  reconciliation checks remain permitted; the no-retry rule applies to repeating
+  the external action while its execution result remains unknown. Referral does
+  not itself authorize manual replay, a destructive action, or a token refund; any
+  separately authorized follow-up MUST remain audited and preserve current
+  authorization, policy, and ledger deduplication safeguards.
 - **FR-065**: Each release MUST be repeatable from reviewed project inputs and MUST
   include owned deployment, backup, restore, incident-response, reconciliation,
   and rollback procedures that do not depend on mutable host state.
@@ -690,14 +740,18 @@ escalation, the other observed token branches, or the full specification.
 - **Media Album**: A tenant-scoped logical content item composed of one or more
   message identifiers and a bounded aggregation lifecycle.
 - **Pending Moderation Action**: Durable, exclusively owned work with target,
-  schedule, attempts, status, recovery state, and terminal outcome.
+  schedule, attempts, status, recovery state, and terminal outcome. Recovery
+  distinguishes confirmed completion, confirmed non-execution, and an unresolved
+  external result held for operator review; an unresolved result is not success
+  or permission to repeat the action.
 - **Wallet**: A non-negative balance uniquely owned by one tenant and one user.
 - **Weekly Grant**: An idempotent grant eligibility and outcome for one tenant,
   user, and grant period.
 - **Ledger Event**: An immutable grant, spend, correction, or reversal with amount,
   cause, deduplication reference, actor when applicable, and time.
 - **Deduplication Record**: A scoped identity proving that a logical request, job,
-  moderation action, grant, or spend has already been accepted.
+  moderation action, grant, or spend has already been accepted. Acceptance alone
+  does not prove Telegram execution or delivery.
 - **Audit Event**: A redacted, tamper-evident record of a privileged attempt or
   security-relevant outcome.
 - **Localization Catalog**: A versioned set of complete user-visible messages,
@@ -721,7 +775,8 @@ escalation, the other observed token branches, or the full specification.
 - **SC-003**: Under the agreed reference workload, at least 99% of accepted user
   requests show progress or a clear acknowledgment within 2 seconds, and at least
   95% reach an answer or safe terminal outcome within 20 seconds, excluding a
-  declared upstream outage.
+  declared upstream outage. Unresolved operator-review items are reported
+  separately and MUST NOT count as confirmed answers or safe terminal outcomes.
 - **SC-004**: In authorization and adversarial testing, 100% of unauthorized
   privileged attempts are denied, and zero tests disclose or modify another
   tenant's configuration, conversation, moderation, token, or audit data.
@@ -748,9 +803,15 @@ escalation, the other observed token branches, or the full specification.
 - **SC-010**: At least 90% of representative users and group administrators
   complete their primary conversation or management journey on the first attempt
   without operator assistance.
-- **SC-011**: During interruption and duplicate-delivery tests, accepted durable
-  work recovers within 5 minutes of service restoration and produces zero duplicate
-  user-visible or ledger effects.
+- **SC-011**: During interruption and duplicate-delivery tests, every accepted
+  durable item reaches a verified completion, safe authorized resumption, or
+  durably recorded operator-review disposition within 5 minutes of service
+  restoration, with zero duplicate user-visible or ledger effects. For unresolved
+  Telegram replies, warnings, or deletions, tests verify zero automatic repeat
+  attempts while the external result remains unknown, including through restarts
+  and duplicate updates. If sufficient evidence is unavailable within the recovery
+  target, a durable review disposition is valid; referral is not proof of external
+  completion and does not set a five-minute deadline for human resolution.
 - **SC-012**: Every simulated critical dependency, security, queue-age, migration,
   or reconciliation failure produces an owned, actionable alert within 5 minutes
   without exposing private content or credentials.
@@ -804,13 +865,15 @@ escalation, the other observed token branches, or the full specification.
   [NEEDS CLARIFICATION: What independently measured classification quality and
   false-positive limits permit automatic deletion?] A provider's confidence value
   alone does not settle the acceptable product error rate.
-- Recovery targets distinguish deduplicated internal ledger changes from an
-  external action whose result is unknown. For example, a reply or warning may
-  reach Telegram before a worker stops without recording completion.
-  [NEEDS CLARIFICATION: For externally uncertain sends or moderation actions,
-  should recovery reconcile first, wait for operator review, or retry under an
-  explicitly accepted duplicate-risk policy?] The no-duplicate targets are draft
-  targets, not evidence that this failure case has been resolved.
+- The owner has approved checking available trustworthy evidence for a Telegram
+  reply, warning, or deletion whose result is unknown, then holding a still-unknown
+  result for operator review without automatic retry. Unknown is neither completed
+  nor confirmed not executed; referral does not authorize manual repetition. No
+  Telegram result-lookup or external exactly-once guarantee is assumed. SC-011
+  measures a recovered disposition or review referral, not guaranteed external
+  completion or a human-resolution deadline. Internal grants, spends, and ledger
+  reconciliation retain their existing deduplication invariants; uncertainty does
+  not imply an automatic refund or reversal.
 - SC-003, SC-005, SC-008, SC-010, and SC-014 are proposed targets pending an
   owner-approved workload, independently labelled moderation corpus and quality
   limits, maintenance window, participant/sample definition, and measured legacy
