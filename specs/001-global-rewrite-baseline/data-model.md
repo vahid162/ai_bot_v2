@@ -29,7 +29,7 @@ gate must close before enabling persistence, not just before production.
 | Conversation: Answer/FeedbackMetadata | logical answer ID, exact confirmed chunk IDs, scope, actor vote/report, creation/expiry | no text; vote owner/private or current named groupmember; one immutable scoped vote; ordinary metadata30d. |
 | Tokens: Wallet | tenant_id,user_id,balance,revision,checkpoint reference | unique tenant+user; balance>=0; no balance<=carry CHECK (valid above-cap balances retained). |
 | Tokens: GrantOutcome | tenant,user,UTC Monday period, GRANTED/SKIPPED_CAP, source identity, event reference | unique tenant+user+period; settled once; only current week; skip and grant both terminal. |
-| Tokens: LedgerEvent | event_id,tenant/user,kind,exact delta,before/after,original_at,import_at,linked proof, idempotency_key | immutable; grant+1/spend-1; correction linked/proved/current SA; unique scope key; balance mutation/event/outcome atomic. |
+| Tokens: LedgerEvent | event_id, tenant/user, origin, kind, exact delta, proved before/after, original_at, import_at, linked proof, idempotency_key | New V2 events require exact before/after; validated imported historical records preserve only source-proved fields, never invent snapshots. Immutable; grant +1/spend -1; correction linked/proved/current SA; scoped key and atomic new balance/event/outcome. |
 | Tokens: LedgerCheckpoint | tenant/user,covered boundary,balance,counts,provenance hash,current-period/safety fence,independent reconciliation | NON_EVENT, never fabricated balancing delta; exact proof precedes detail purge. |
 | Tokens: PaidOutcome | source_epoch,tenant,original actor,logical kind/message-or-album ID,outcome,receipt/event ref,settled_at | one terminal identity for DEBIT_CONFIRMED/NO_ACTION/INSUFFICIENT/DISABLED/EXEMPT/NON_AD/GUARD_ONLY/UNKNOWN_HELD; edits/grants cannot reopen. |
 | Ads: LogicalItem/MemberEvidence | original identity/date,known member IDs,latest revision nonce,eligibility/classification category/finite score,policy revision | no raw text;<=10album;protected/UNKNOWN members never silently deleted; structure alone not AD. |
@@ -76,6 +76,28 @@ Failure or concurrent clear makes entry unreachable; cleanup removes staged/orph
 content. Each read/context/export/late answer checks current controls and min expiry.
 Clear increments durable generations before erasure, suppressing late writes/effects;
 metadata unavailable blocks content use. CONTENT failure cannot restore text from backup.
+
+
+RequiredEvidence readiness requires synchronously durable METADATA plus independently
+verified signed checkpoint coverage of the exact admission and relevant critical
+control/state revision BEFORE privileged evaluation, success acknowledgment or ANY
+dependent external effect. The witness covers actual critical-state/checkpoint
+digests and acknowledgment boundaries, not merely an audit-chain head.
+
+COMMITTED_UNWITNESSED is pending, never effective new allowance/grant authority,
+consent permission, deletion activation, success or replay permission. Restrictive
+denial/revocation/clear takes the safe effect immediately: block affected work,
+never keep using stale permissive state while witness is unavailable. Reconciliation
+uses canonical original identities; it does not infer rollback or nonexecution.
+A witnessed manifest binds scoped commit/batch identity; relevant ledger/grant/paid/
+effect outcomes; source/receiver fences; current policy/denial/revocation/consent/
+clear/activation revisions; and audit-chain boundary. Recovery independently
+reconciles actual canonical records against that manifest and durable copy.
+Missing or conflicting proof blocks affected promotion; an audit-head signature
+alone cannot certify wallet/control state. Cross-store publication, cursor
+acknowledgment and all dependent dispatch require
+this same barrier. A failed witness after a DB commit leaves recorded pending state,
+not fabricated success or a repeated mutation.
 
 ## External state and claim transitions
 

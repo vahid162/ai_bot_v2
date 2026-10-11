@@ -71,7 +71,11 @@ is fenced. New critical admissions/effects stop when proof/durable standby is ab
 [PG synchronous replication](https://www.postgresql.org/docs/18/warm-standby.html#SYNCHRONOUS-REPLICATION).
 Simultaneous destruction/corruption of both domains is outside this proposedRPO0
 envelope; disclose it and fail closed, never recover stale authority/ledger as PASS.
-Remote WAL of METADATA only, encrypted bounded backups<=30d, tested restore.
+After promotion, do not acknowledge new critical writes/effects until a verified
+independent synchronous peer and witness/fencing contract are re-established.
+A surviving single copy permits controlled reconciliation, not pretending two-copy
+RPO0 is still available. Remote WAL of METADATA only, encrypted backups <=30d,
+tested restore.
 Same-host reference standby tests protocol, NOT independent host-loss resilience.
 Independent placement, fencing, archival capacity and cost are not existing server facts.
 

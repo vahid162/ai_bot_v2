@@ -58,7 +58,7 @@ new consentOFF and examplesempty. Import pendingeffects as non-executable safety
 history/NO_REPLAY only, never runnablejobs.
 
 Wallet reconciliation is exact pertenant/user and total: proved originalbalance,
-immutablelinked sourceevents, legitimate above-capbalance, current weekgranted/skipped
+immutable linked source events (only source-proved historical fields; no fabricated before/after snapshots), legitimate above-cap balance, current weekgranted/skipped
 proof and all terminal paid/externalsafetyoutcomes. Checkpoint is NON_EVENT with
 independentcounts/hash/provenance, never balancingdelta. No retrorefund/rewrite or
 absentrow=unpaid/grantmissing shortcut. Redactedhistoricalaudit is not currentauthority.
@@ -72,7 +72,7 @@ shrink to exclude an unexplained affectedwallet. No rehearsal executed.
 
 METADATA RPO0 proposal covers one independent primarydomain loss/partition with
 surviving synchronizedcopy and verifiedfencing/currentacknowledgedcheckpoint.
-No async/localfallback. Backups<=30d METADATA-only; dailyordinaryRPO<=24h is not
+No async/local fallback. After promotion, new critical writes/effects stay gated until a verified independent synchronous peer and witness are re-established. Backups<=30d METADATA-only; dailyordinaryRPO<=24h is not
 critical RPO0. Restore must recover complete latestcriticalproof, currentdenials/
 rolesrevocations/consentclear/deletionactivation/unknownholds and sourcefences before
 exposure. Missingproof→unready/failclosed, lostconsentOFF. Purgeexpiredordinarydata

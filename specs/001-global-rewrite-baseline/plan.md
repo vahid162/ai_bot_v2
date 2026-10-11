@@ -90,7 +90,7 @@ Independent content writes use idempotent staged publication, not distributed 2P
 One bootstrap composition root wires dependencies; domain imports only domain/stdlib.
 
 Processing: bounded physical validation -> reserve volatile capacity -> durable
-metadata admission/required evidence and cursor -> unified scoped application
+metadata admission/required evidence and cursor -> verified independent witness barrier -> unified scoped application
 gates -> async transient provider call -> current policy/generation recheck ->
 durable effect intent -> external call -> exact confirmed/unknown receipt ->
 terminal outcome and (when eligible) warning-only debit. No DB transaction spans

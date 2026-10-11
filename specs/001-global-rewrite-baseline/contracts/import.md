@@ -16,6 +16,13 @@ counts byentity+tenant, original/target keybindings, transformationreason, integ
 errors and unresolveddifferences. Independently sum counts and verified financial
 totals; no invented balancing grant, missingrow=grant assumption or dedupe=paid proof.
 
+New V2 ledger events require exact before/after and delta consistency. Imported
+historical events preserve only source-proved fields and explicit provenance;
+missing per-event balance snapshots are not invented. Any reconstructed historical
+value requires separately approved exact ordering/opening-state evidence. Approval
+defines the representation without rewriting originals or adding balancing deltas;
+unresolved financial/safety meaning still blocks promotion.
+
 The selected D-011 table is authoritative: minimal validated users/tenants/settings/
 explicitallow-deny/tenantallowlists and proved wallet/immutableledger/currentperiod/
 safetyoutcomes are conditional. Freshroles/current SA bootstrap reviewed separately.

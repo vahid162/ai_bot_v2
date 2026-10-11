@@ -37,6 +37,16 @@ Deadlines/pools/retries are finite in operations.md; ambiguousPOST execution is 
 confirmednonexecution. No silent provider/regionfallback or automatic repeat with
 a new session after uncertainty. Typedproviderfailure never leaks rawpayload.
 
+## Wire safety
+
+Before allocation/JSON parsing, enforce <=256 KiB response including decoded/
+decompressed bytes and finite structural complexity. Serialize <=1 MiB request
+including bounded fewshots/context; oversize fails explicitly without silently
+truncating user input or selected examples. Drop unsafe optional fields before
+further use; no unbounded complete-body buffering. Oversize/malformed post-send
+response is UNKNOWN, no retry/raw diagnostics/persistent body. Semantic16,000UTF16
+answer limits apply in addition, not in place of the wire cap.
+
 ## Required closure evidence
 
 Named maintained-deployment/fork owner+securitypatch/SBOM/provenance scope, explicit

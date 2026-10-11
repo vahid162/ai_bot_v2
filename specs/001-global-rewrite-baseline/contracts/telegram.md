@@ -32,6 +32,12 @@ Durable envelope contains scope/identity/revision/route/noncontent evidence only
 Lost body beforedispatch→INPUT_UNAVAILABLE/noeffect safe disposition; afterdispatch
 intent→UNKNOWNreview. Never re-fetch/re-generate old raw content to bypass privacy.
 
+Bound getUpdates to100 updates/32MiB aggregate wire AND decoded bytes before JSON
+allocation, and each structured update to approved256KiB; other method receipts
+<=256 KiB. Limit JSON depth <=32 and <=4,096 fields per update and decompression; oversized/invalid response
+is typed failure, no raw dump. Polling failure cannot advance cursor; post-send
+method ambiguity is UNKNOWN. Exact caps and healthy real responses require tests.
+
 ## Routing, actor and binding
 
 One parser strips actual command prefix once, preserves body, rejects foreignbot
@@ -66,8 +72,11 @@ No generic Telegram getMessage/resultlookup or exactly-once is promised.
 Proven nonexecution only:<=3totalattempts/30s fromfirstattempt, waits1s then3s plus
 boundedpositive0–20%jitter; currentgates/remaindeadline; requiredRetryAfter must fit,
 otherwise safe terminal/review, never dispatch earlier. UNKNOWN stops immediately.
-Transportresult and tokendebit remain separate; confirmedADwarning plus currentwarn
-and unsetpaididentity alone can authorize potential1-unit atomiccharge.
+Transportresult and tokendebit remain separate; confirmed AD warning is necessary but not sufficient for a potential one-unit debit.
+Both global and tenant token switches must be ON, current named actor/wallet/tenant
+eligibility verified, mode still warn at settlement, atomic balance >=1, and no
+already-settled paid identity. Every other settled outcome remains terminal and
+cannot be retro-charged.
 
 Final renderedanswer<=16000UTF16units,<=6orderedchunks<=3000each includingnotice;
 safeplainescaped output, completecharacter/entity boundaries. Eachchunk has stable

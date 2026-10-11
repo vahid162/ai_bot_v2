@@ -119,3 +119,12 @@ Future release includes exact reviewedcommit/task/requirementtrace, test results
 security/privacy/schema/lock/imageimpact, namedowners/alternates, rollback/runbooks,
 frozenmanifest and approval. No metric screenshot or count substitutes for rawredacted
 timed evidence. Actual execution results remain NOT RUN in this draft.
+
+## Independent design review record
+
+Three read-only reviewers checked transport/provider, storage/migration and
+security/delivery. Clarifications integrated: witnessed publication before privileged
+processing/all dependent effects, source-proved-only historical ledger snapshots,
+new critical writes gated after failover until sync redundancy is restored, and
+pre-decode bounded wire/decompression/JSON responses, and complete warning-debit prerequisites. This is document review,
+not test execution, owner approval or evidence-gate closure.

@@ -82,6 +82,22 @@ leaseloss stops ingressunready. Theseceilings aren't healthycapacity proof.
 [HTTPX timeouts](https://www.python-httpx.org/advanced/timeouts/),
 [limits](https://www.python-httpx.org/advanced/resource-limits/).
 
+
+## Wire-response bounds before decoding
+
+Proposed adapter limits: provider response <=256 KiB, provider serialized request
+<=1 MiB including all context/examples; Telegram getUpdates limit <=100 and aggregate
+response <=32 MiB, each structured update <=256 KiB; other method receipts <=256 KiB.
+Enforce byte limits while reading, before JSON allocation/decoding. Limit BOTH wire
+and decoded/decompressed bytes (request identity encoding; unexpected compression
+does not bypass caps), structural depth <=32 and <=4,096 fields per provider response/update before materializing
+untrusted optional data. No unbounded HTTP read followed by semantic truncation.
+Oversize/malformed provider or method response after possible POST execution is
+typed UNKNOWN and NO_REPLAY; do not log/persist raw body or retry it. A safe polling
+read failure does not advance cursor. Input/answer product limits still apply;
+outbound serialization that exceeds its bound fails explicitly, no silent input/
+example truncation. These are proposed safety caps requiring real adapter tests.
+
 ## Data, authorization and secrets
 
 Scopedrepositories plus PG RLS defaultdeny; runtime notowner/superuser/BYPASSRLS,
@@ -105,10 +121,20 @@ swap/snapshot exclusion require futureverified deploymentcontract, nothostchange
 
 Audit: append-onlyredacted canonical chain/signingkeyversion, keyoutsideDB. Independent
 project-scopedappend-onlysignedcheckpoint witness observes everycriticalbatch before
-acknowledgment/privilegedexternaldispatch. Witnesscredentialretention separated;
+privileged evaluation, success acknowledgment or any dependent external dispatch. Witnesscredentialretention separated;
 witnessunavailableblocksrequiredaffectedadmission/dispatch. Commit-before-witness
 failure remains recorded/unacknowledgedpendingreconciliation, not inventedrollback.
-Chain alone doesn't detect undetectedtailremoval or fullycompromisedsigningapp.
+Witness coverage includes exact admission and critical control/state/checkpoint
+digests, not audit head alone. COMMITTED_UNWITNESSED remains pending; never enables
+new authority, consent permission, grants or deletion. Restrictive deny/revocation/
+clear blocks dependent work immediately rather than retaining stale allowance.
+The signed critical manifest binds scoped batch identity, ledger/grant/paid/effect
+outcomes, source/receiver fences, policy/denial/revocation/consent/clear/activation
+revisions and audit-chain boundary. Recovery independently reconciles canonical
+records against witnessed digests and the surviving durable copy. Exact encoding/
+storage/verification remains G-05 design and G-06 execution evidence.
+Canonical reconciliation never infers rollback, nonexecution or replay permission.
+Chain alone doesn't detect undetected tail removal or fully compromised signing app.
 Witnessprotects evidence, doesnotrepair ledger; exactdeployment/storage identity
 and all-inresource/cost needG-05 review.
 
