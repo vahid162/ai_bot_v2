@@ -1,8 +1,8 @@
 # Additional acceptance-case definitions
 
-Status: Draft, documentation only; no tests implemented or executed. These supplement, not replace, the numbered Given/When/Then scenarios in [spec.md](spec.md). Source/actor/impact trace: [behavior-ledger.md](behavior-ledger.md). Pending owner decisions: [decision-register.md](decision-register.md). Content fixtures: [test-corpus.md](test-corpus.md). Timing, samples and denominators: [measurement-contract.md](measurement-contract.md).
+Status: Draft, documentation only; no tests implemented or executed. These supplement, not replace, the numbered Given/When/Then scenarios in [spec.md](spec.md). Source/actor/impact trace: [behavior-ledger.md](behavior-ledger.md). Decision/approval gates: [decision-register.md](decision-register.md). Content fixtures: [test-corpus.md](test-corpus.md). Timing, samples and denominators: [measurement-contract.md](measurement-contract.md).
 
-A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, D-006's private access policy, D-007's automatic guard mode and D-008's no-action/no-charge rules and D-011's conditional token-continuity intent, their exact scope and limits apply now; D-009's scoped security normalization and D-012's Standard counting/sample/window definitions are selected via owner delegation, not independent factual/evaluation or whole-spec approval; remaining D-007 contracts and actual import mappings are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
+The exact working D-006–D-013 oracles are now selected in [recommended-contracts.md](recommended-contracts.md), not guessed or recorded as unasked answers. Their whole-spec approval and actual import/processor/gold evidence remain separate. Historical accepted decisions retain their original scope. The 93 supplementary cases below are definitions only, NOT RUN; factual setup/evaluation dependencies may still be BLOCKED. This continuation resolves policy-only BLOCKED wording, not actual test execution. No unsupported Telegram result lookup, real deployment identity or external exactly-once guarantee is assumed.
 
 ## Governance
 
@@ -29,10 +29,10 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-002--private-
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR002-01 — Input routes | Given an authorized actor and supported plain/ask/reply/caption input, when submitted once, then one correlated logical response follows the approved route contract and global chat OFF prevents provider calls. |
-| AC-BR002-02 — Prompt validation | Given a stale, wrong-owner or command reply, when a question prompt is answered, then it cannot mutate settings or trigger unintended AI work. |
+| AC-BR002-01 — Input routes | Given authorized plain-private, /ask arguments/reply-text-caption/boundprompt, when submitted, then all use one scoped pipeline; arguments take precedence, empty /ask opens prompt with no provider call and global/group OFF or current admin-only denial blocks all routes. |
+| AC-BR002-02 — Prompt validation | Given a five-minute prompt bound to actor/tenant/topic/exact ID/operation/generation, when stale, wrong-owner, foreign-command or reset-generation input arrives, then it is rejected and cannot fall through to AI or mutate settings. Expiry at equality rejects new submission; admitted work still needs a safe disposition. |
 | AC-BR002-03 — Provider failure | Given timeout, malformed output or rate limit, when a request is processed, then progress ends in a safe localized disposition without leaking internals. |
-| AC-BR002-04 — Partial reply | Given a multi-chunk reply with an unknown chunk outcome, when recovery or redelivery occurs, then completed/unknown chunks are not replayed and the unresolved disposition is recorded. |
+| AC-BR002-04 — Partial reply | Given output at final rendered 16,000UTF16 bound and <=6 chunks<=3,000 each including truncation notice, when one chunk is unknown, then known/unknown chunks never repeat, no alternate fallback notice resolves ambiguity, and final chunk feedback appears only if confirmed. |
 
 ## BR-003 — Group conversation and cleanup
 
@@ -41,9 +41,9 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-003--group-co
 | Case | Given / When / Then contract |
 | --- | --- |
 | AC-BR003-01 — Group matrix | Given two groups and topics with disabled/mention/all and administrator-only settings, when addressed/unaddressed member/admin inputs arrive, then only the approved eligible combinations call AI and no context crosses scope. |
-| AC-BR003-02 — Forward eligibility | Given manual and automatic discussion forwards, when each reaches group chat, then the approved D-010 eligibility rule applies consistently across plain and ask routes. |
+| AC-BR003-02 — Forward eligibility | Given manual forwards and verified automatic discussion posts, when plain or /ask processing occurs, then only attributable manually forwarded eligible text/captions can call AI; exact group/topic/current-role gates apply and origins never grant authority. |
 | AC-BR003-03 — Frequency boundary | Given a configured group/topic response gap, when eligible inputs arrive just before/at/after the boundary, then the documented throttle applies only in that scope. |
-| AC-BR003-04 — Cleanup targets | Given cleanup enabled/disabled and bot/user message targets, when cleanup runs, then only D-007-approved targets/actions occur; unknown deletion results are held, not automatically repeated. |
+| AC-BR003-04 — Cleanup targets | Given user-original and positively identified bot-owned cleanup targets, when old settings/aliases/presets request deletion, then original-user AI/command auto-cleanup is unsupported/retired and no implicit delete/mute occurs. Bot-owned housekeeping only OFF or30–3600s; unknown deletion remains held. |
 
 ## BR-004 — Sessions, history, clear and export
 
@@ -51,7 +51,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-004--sessions
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR004-01 — Owner export | Given consenting/nonconsenting owners in two groups/topics, when export/clear is attempted by owners and other users/admins, then only eligible owner text is accessible or removed and empty results are explicit. |
+| AC-BR004-01 — Owner export | Given owned/foreign/borrowed-source history and independently authorized self-service, when /start, /clear, opt-out or export is invoked, then /start resets context not history/consent; /clear removes owned eligible text and invalidates generation; borrowed exchange stays transient absent EVERY owner eligible consent; export private-only, no public/false-success fallback. DM chat denial does not revoke independent self-service. |
 | AC-BR004-02 — Consent boundary | Given storage off, later opt-in and later opt-out, when exchanges occur, then no earlier text is backfilled, no unconsented history persists, and opt-out stops future storage without pretending to clear retained history. |
 | AC-BR004-03 — Lifetime boundary | Given stored messages and earlier clear, when original creation plus 30×24h UTC is reached or restored copies are read, then expired/cleared text cannot reappear in history, context, export, feedback or diagnostics. |
 | AC-BR004-04 — Fresh context | Given excluded legacy history and context-bearing references, when first cutover/start/clear/ask/private routes run, then no old conversation is restored and D-010-approved reset semantics are consistent. |
@@ -62,8 +62,8 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-005--feedback
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR005-01 — Feedback identity | Given concurrent repeated or forged callbacks, when voting occurs, then the approved vote rule is enforced for the actor/answer and unrelated users cannot overwrite it. |
-| AC-BR005-02 — Unknown journey | Given an unknown answer, when reporting and viewing guidance through each approved input route, then the registered journey has an explicit outcome rather than an unverified helper path. |
+| AC-BR005-01 — Feedback identity | Given confirmed answer and private owner/named current group member/anonymous/outsider, when vote arrives, then private owner or named current member may cast one immutable vote scoped to logical answer/topic; identical repeats idempotent, conflicting second/unknown-answer votes rejected. |
+| AC-BR005-02 — Unknown journey | Given a known logical answer, when owner/foreignactor reports unknown, then owner-only bound report accepted idempotently without numeric-ID guessing, unconsented text or old-context retention; ordinary metadata30d. |
 | AC-BR005-03 — Scoped report | Given a report ID from another user/tenant, when a report or review is attempted, then protected data is neither disclosed nor modified and repeated valid reports remain idempotent. |
 | AC-BR005-04 — Privacy review | Given unconsented/expired/cleared text, when feedback or unknown review runs, then it retains no raw text and admins see only currently authorized records. |
 
@@ -75,8 +75,8 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-006--direct-m
 | --- | --- |
 | AC-BR006-01 — Access truth table | Given explicit private denial and all eight global-on/off × environment-allow yes/no × managed-allow yes/no combinations, when ordinary private/ask/reply or not-yet-executed queued provider/answer work dispatches, then denial wins in every combination. If denial is absent, no allowance means deny and any approved allowance remains subject to ordinary feature/access gates. Unblock alone grants no allowance. Restart/ordinary allow/global changes cannot clear denial; earlier unknown Telegram effects stay held. |
 | AC-BR006-02 — Global authorization | Given group/admin/forged/stale-superadmin actors, when global allow/block/unblock/dm actions are attempted, then only current authorized superadmin scope can change the explicit private denial. Unauthorized attempts produce no mutation and are audited; group role or a visible menu grants no global authority. |
-| AC-BR006-03 — Access targets | Given malformed/cross-scope targets, repeated authorized block/unblock and a prior failed write, when access is changed, then validated idempotent audited outcomes preserve unrelated users, failed writes are not reported as success, and only an explicit authorized unblock clears denial. A normal allow is not unblock, and a missing historical allow row is not inferred block/import permission. Exact interaction naming/migration oracle remains D-010/D-011. |
-| AC-BR006-04 — User list | Given empty and populated approved user-list fields, when an authorized list is requested, then fields render safely and no wrong-scope/raw-content values are returned. |
+| AC-BR006-03 — Access targets | Given malformed/cross-scope targets, repeated authorized block/unblock and a prior failed write, when access is changed, then validated idempotent audited outcomes preserve unrelated users, failed writes are not reported as success, and only an explicit authorized unblock clears denial. A normal allow is not unblock, and a missing historical allow row is not inferred block/import permission. The new D-010 private numeric-target panel supplies the interaction; D-011 actual sanitized mapping approval remains a factual gate. |
+| AC-BR006-04 — User list | Given current superadmin private DM-policy panel and numeric target, when explicit-denial unblock is bound-confirmed, then denial alone clears, no allowance granted; stale/forged/group-admin confirmation denied/audited. No /unblock alias is invented. |
 
 ## BR-007 — Private management and bound prompts
 
@@ -87,7 +87,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-007--private-
 | AC-BR007-01 — Group binding | Given valid/invalid deep links and two administrators/groups, when management is opened, then only manageable groups are selectable and active scope is explicit per actor. |
 | AC-BR007-02 — Revoked role | Given a previously authorized panel whose actor loses the role, when read or mutation is attempted, then it fails safely without data disclosure or mutation. |
 | AC-BR007-03 — Group switch race | Given a prompt for group A and later selection of B, when the old prompt is answered, then it cannot write B or another actor's state. |
-| AC-BR007-04 — Prompt integrity | Given stale, wrong-owner, wrong-message or unknown-field replies, when editing is attempted, then no setting is changed and it cannot fall through as an unintended AI question. |
+| AC-BR007-04 — Prompt integrity | Given prompts exactly before/at/after5min and panel 15-minute idle/1habsolute, wrong actor/topic/ID/generation or groupA→B switch, when used, then original binding and fresh authorization decide; expired new actions reject, no retarget or AI fallthrough. |
 
 ## BR-008 — Roles, superadmins and privileged audit
 
@@ -98,7 +98,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-008--roles-su
 | AC-BR008-01 — Role matrix | Given all actor roles including removed and anonymous admins, when private/global/group actions are attempted, then authority is current and limited to the approved scope. |
 | AC-BR008-02 — Spoofed authority | Given forwarded/bot/sender-chat or forged superadmin input, when a privileged path is invoked, then it is denied with a redacted audit result. |
 | AC-BR008-03 — Membership mutation | Given current authorized superadmin membership changes and repeated targets, when applied, then the approved membership and bootstrap precedence yields an explicit result. |
-| AC-BR008-04 — Audit failure | Given accepted/denied privileged attempts and an unavailable audit sink, when processed, then the separately reviewed bounded D-009 failure disposition is enforced without raw text, secret leakage, silent lost evidence or invented completion. Security normalization selection alone does not resolve the outage oracle; this case remains BLOCKED until that contract is defined. |
+| AC-BR008-04 — Audit failure | Given accepted/denied privileged attempts and mandatory audit/business-outcome unavailable, when admission is attempted, then affected new admission/dispatch blocks before processing/effect, with no fake recorded denial/success/raw buffer. Rawnetworkarrival is not admission. Inflight effect with lostoutcome becomes UNKNOWN hold, never repeat. A fallback notice requires its own safe tracking; all-sink outage cannot pass coverage. |
 
 ## BR-009 — Scoped settings, language and menus
 
@@ -117,10 +117,10 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-010--adsguard
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR010-01 — Eligibility matrix | Given roles, user/domain/reply/contact exemptions and two tenants, when content is evaluated, then only approved eligible paths reach classification/enforcement and scope cannot leak. |
-| AC-BR010-02 — Output confidence | Given null/malformed/missing/below/equal/above-threshold classification output, when policy runs, then D-007-approved boundary logic applies and missing/untrusted evidence cannot authorize destruction. |
+| AC-BR010-01 — Eligibility matrix | Given currentadmin/userallowlist/exact all-host domain/short-reply exemptions and malformed/unavailable lookup, when evaluated, then D-007 scope/exemption rules apply, mixed unallowed hosts no exemption, and unknown actor/scope/exemption proof blocks destruction/debit rather than assuming non-exempt. |
+| AC-BR010-02 — Output confidence | Given AD/NOT_AD and score below/equal/above0.90 plus missing/bool/string/NaN/infinity/out-of-range, when policy runs, then valid AD qualifies at>=0.90; invalid becomes UNKNOWN with no destruction/debit. No structural violation supplies missing evidence. |
 | AC-BR010-03 — Reachable content | Given fresh and edited text/captions, manual/automatic forwards and each media kind, when routed, then each D-010-approved form has a tested reachable outcome rather than relying on an internal branch alone. |
-| AC-BR010-04 — Album ordering | Given reordered, duplicate and late captions for one album, when aggregation finishes, then one scoped logical classification identity and member outcomes are preserved. |
+| AC-BR010-04 — Album ordering | Given reordered/duplicate/late/legitimate/unknown album members and collection2squiet/5sabsolute/>10members, when settling/recovery occurs, then one stable identity plus exact member outcomes persists; uncertain/incomplete/oversize blocks destruction and late/protected members never append to old delete set. |
 
 ## BR-011 — Modes, forward/caption guards, profiles and mute
 
@@ -128,10 +128,10 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-011--modes-fo
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR011-01 — Mode and wallet | Given modes off/none/warn/delete, token switches and sufficient/exhausted wallets for singles/albums, when a trusted eligible ad is processed, then D-002 governs exhaustion and D-008's no-action branch has zero AdsGuard spend/debit or successful-spend event. Duplicate/edit/queued/recovered work and current-mode checks cannot charge a no-action evaluation. No invalid spend is successful; warning/deletion charges and other economic rules remain pending. |
-| AC-BR011-02 — Forward and caption guards | Given eligible disallowed forwards or captionless singles/albums under each mode/profile, when automatic guard/grace work evaluates or executes, then current disabled/off and no-action states have no moderation action, warning never deletes user content, and deletion mode only permits deletion with current eligibility/authorization/exemptions and D-005 quality plus separate owner activation. Profiles and queued/recovered jobs cannot bypass a change away from deletion mode; unknown prior results stay held under D-003. Exact eligibility/grace/notice oracles remain pending in D-007. |
-| AC-BR011-03 — Caption race | Given caption edit/reply before/at/after grace and concurrent execution, when cancel/recovery occurs, then at most one authorized effect follows current mode and known/unknown result separation; a queued deletion cannot execute after switching to off/none/warn. The exact grace/edit/cancel boundary oracle remains pending; this approved mode rule does not invent it. |
-| AC-BR011-04 — Manual mute | Given forged/stale/exempt/authorized mute targets including an album, when invoked, then only D-007-approved associated actions occur and partial/unknown external effects are not repeated. |
+| AC-BR011-01 — Mode and wallet | Given all modes/switches/balances singles/albums, when eligible AD processing occurs, then none/off/delete have0charge, warn onlyconfirmed advertising warning costs 1 with current warn/both ON/atomic balance>=1. Exhaustedwarn still warns without deletion/implicitgrant; unknown warning no NEW debit/repeat, proven committed debit immutable; guard-only/exempt/NON_AD/AI0. |
+| AC-BR011-02 — Forward and caption guards | Given structural forwards/captionless singles/albums and all mode/preset/gate states, when guard/grace executes, then off/none no notice, warn no user deletion, delete only if independently qualifying AD plus all current D-005/authority/exemption safeguards. Structural violation ALONE neverdeletes. Free none/medium-strictwarn presets neveractivate; no replayunknown. |
+| AC-BR011-03 — Caption race | Given caption original creation+300s or forward+120s, correction justbefore/equal/afterdeadline and before/after external authorization, when execution races, then accepted correction atdeadline wins, correction beforeauthorization cancels stale structuralreason; independently valid AD remains eligible. Edits/restarts do not reset clock; alreadyunknown effects stayheld. |
+| AC-BR011-04 — Manual mute | Given explicitmute confirmation current actor/target/bot permission/exemptions and1–168h/default24h, when invoked, then onlyauthorizedmute occurs with NO associated usermessage/album/reply deletion in anymode. Unknownmute follows D-003 safety; warning/exhaustion never implicitlymutes. |
 | AC-BR011-05 — Deletion gate | Given absent/failed/out-of-scope/revoked evidence or activation for new/queued/recovered work, when automatic deletion would run, then zero attempts occur; only matching approved evidence and separate owner activation can permit it. |
 
 ## BR-012 — Pending moderation and album recovery
@@ -165,8 +165,8 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-014--wallet-b
 | Case | Given / When / Then contract |
 | --- | --- |
 | AC-BR014-01 — Balance scope | Given balance aliases in group/private/no-active-group contexts, when queried, then only the caller's approved tenant wallet is shown with an explicit missing-context outcome. |
-| AC-BR014-02 — Grant race | Given lazy/scheduled/concurrent triggers around the D-008-approved period boundary, when grants execute, then at most one eligible grant event changes that tenant/user/period. |
-| AC-BR014-03 — Carry and eligibility | Given balances at/above/below the approved cap and already-granted users, when grant/spend/grant repeats, then no second grant occurs and D-008's eligibility/cap-reduction policy is explicit. |
+| AC-BR014-02 — Grant race | Given verified non-bot member, both switches ON, explicitbalance/scheduled checks aroundMonday00UTC, when concurrent checks run, then exactlyone current week +1 orSKIPPED_CAP; AI/Ads/spend no implicit grant, no historical-period catch-up. Imported current week proof prevents secondgrant. |
+| AC-BR014-03 — Carry and eligibility | Given carry 1 bounded0–100 with below/equal/abovebalance, when firsteligible check and later spend/check/capreduction occur, then grant neverraisesabove cap, capskip closesweek, above-capvalidbalance preserved withoutburn/clamp, subsequentspend never reopens. |
 | AC-BR014-04 — Switches and next grant | Given global/group enablement combinations, when lookup or grants run, then approved effective state and localized next-window information are correct without unintended grant/debit. |
 
 ## BR-015 — Token spending and ledger outcomes
@@ -175,11 +175,11 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-015--token-sp
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR015-01 — Spend concurrency | Given repeated concurrent logical singles/albums, when AdsGuard's effective mode is no-action before an uncommitted debit, then zero attributable token spend/debit or successful-spend events occur with any balance/switches, including duplicate/edit, restart and queued/recovered processing. Current mode prevents stale charging and a recorded no-action outcome is not retro-charged. Independent authorized grants may change balance separately; other approved consuming journeys still have at most one matching debit/ledger event. Warning/deletion/later-distinct-journey oracles remain pending. |
+| AC-BR015-01 — Spend concurrency | Given100 trials × 20 concurrent deliveries ofsame warning/message/album identity, when confirmed eligible warning and debit race current mode/switch/wallet changes, then at most one 1-token debit matchesimmutable ledger; all no-charge modes/outcomes0 and nonechange beforecommit forbidsdebit. Grant outcomes distinct; no retrocharge after later balance grant or edit. |
 | AC-BR015-02 — Failed spend replay | Given zero balance and an insufficient attempt, when redelivered before or after a later grant, then the original attempt never becomes a fictitious success or unapproved retroactive charge. |
-| AC-BR015-03 — Long replay | Given an old logical spend after cleanup/restart/restore, when redelivered, then the approved replay contract prevents a second charge and identifies the original outcome. |
+| AC-BR015-03 — Long replay | Given cleanup365d/restoredmissing proof/<=24hpre-fence message/fresh old-period job, when redelivered, then trustedoriginalorigin/current week fences and reconciledcriticalcheckpoint prevent duplicate effects. Epoch/timestamp neverrelabels oldinput; missing proof blocksaffected readiness. Details purge onlyafterdemonstratedbarrier. |
 | AC-BR015-04 — Scoped keys | Given equal logical keys in different tenants/users, when spent, then each approved wallet outcome remains isolated. |
-| AC-BR015-05 — Corrections | Given failed/unknown external outcomes and a proposed correction/reversal, when reconciled, then only separately authorized events affect balances and ledger totals exactly match all changes. |
+| AC-BR015-05 — Corrections | Given proven erroneous original event versus unknown external result, when current superadmin exactlinkedcompensation is explicitlyconfirmed, then onlyprovedauthorizedimmutablecorrection mayadjustbalance nonnegatively/audited. Unknown alone givesno refund/replay; old committeddebit never silentlyresets. |
 
 ## BR-016 — Configuration precedence and startup seeding
 
@@ -208,9 +208,9 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-018--operatio
 | Case | Given / When / Then contract |
 | --- | --- |
 | AC-BR018-01 — Health states | Given startup/alive/unready/degraded states and synthetic secret/private markers, when health/alerts are emitted, then distinctions are correct and markers absent. |
-| AC-BR018-02 — Sink failure | Given logging/metrics/error-sink outage or backpressure, when work executes, then a separately reviewed bounded D-009 safe disposition preserves privacy and accepted durable work without silently claiming delivery, approval or unlimited buffering. The outage oracle remains BLOCKED; scoped security normalization is not this contract. |
+| AC-BR018-02 — Sink failure | Given mandatory audit/outcome/correlationproducer failure or optionalexporter failure, when work arrives, then required-evidence failure blocksaffected admission/dispatch; optionaldeliveryalone degraded onlyifrequiredboundedredactedproduction/safetytrackinghealthy. No raw buffer, faked coverage or unknown fallback. Inflightoutcome loss UNKNOWNhold; alertproduction/delivery trackedseparately. |
 | AC-BR018-03 — Recurring concurrency | Given two workers/restarts triggering the same recurring business item, when processed, then business effects are at most once and work is bounded/observable. |
-| AC-BR018-04 — Recovery alerts | Given unknown reply/warning/delete and restored service, when recovery runs, then SC-011's disposition and SC-012's owned alert meet their clocks without automatic repeat. |
+| AC-BR018-04 — Recovery alerts | Given unknownreply/warning/delete and recovery, when restored, then durableowneddisposition<=300s withoutrepeat; criticalalertproduction<=300s, deliveryfailure NOT_DELIVERED. Activeunknown30d archivesunresolved NO_REPLAY, compact365d purge onlyprovedbarriers. Runnablequeue120s; gracewaitingstartsclock atdue. |
 
 ## BR-019 — Candidate imports and schema drift
 
@@ -222,7 +222,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-019--candidat
 | AC-BR019-02 — Ownership conflict | Given missing/conflicting owner/tenant/role relationships, when mapped, then no ambiguous row is promoted or treated as current authority. |
 | AC-BR019-03 — Complete accounting | Given every candidate source row, when rehearsal is authorized, then exactly one disposition and reason is counted per source identity with independent totals. |
 | AC-BR019-04 — Excluded history | Given legacy history/provider references and source checksum, when cutover is rehearsed, then no old text/context is restored and legacy source checksums remain unchanged. |
-| AC-BR019-05 — Business reconciliation | Given D-011 selected validated wallet/ledger continuity plus separately approved actual sanitized schema/identity mappings, necessary linked grant/dedupe evidence and actual opening-baseline evidence, when a future authorized import is repeated and lazy/scheduled grants or replay follow, then source balances and mapped associated ledger records reconcile exactly per tenant/user, without a second grant/debit or false successful-spend outcome from mere row existence. Missing/conflicting evidence is rejected/quarantined and blocks promotion/cutover; never fabricate balances or balancing events. Historic debits are not rewritten/refunded. Other entity imports, including allowlist/pending work, still require separate selection/mapping; unknown external effects remain held and history/context/secrets are excluded. No import or tests run now. |
+| AC-BR019-05 — Business reconciliation | Given conditional D-011 selected per-entity import intentions and separatelyapproved actualsanitized maps/counts/authority/outcomes, when authorized futureimport/repeat/restore checksrun, then exact tenant/userwalletledgerreconciliation pluslinkedcurrentgrant/fenceproof prevents duplicate/fake success. Minimalidentities/settings/proved DM/tenant allowlistsconditional; rolesrebuilt, history/context/consent/examples excluded/empty, pending safety NO_EXECUTE/NO_REPLAY. Ambiguity blockspromotion, no fabricated balancing events; no actualimport/test now. |
 
 ## BR-020 — Migration ownership
 
@@ -337,4 +337,4 @@ Each of the 65 existing requirements has explicit supplementary case pointers. T
 
 ## Required future result record
 
-Each executed case must identify specification/case/corpus revision, approved decision oracle, actor/scope, declared setup, fault injection, expected/observed effects, timestamps, ledger reconciliation where applicable, redacted evidence and reviewer. Mark PASS/FAIL/BLOCKED/NOT RUN explicitly; unknown external outcome is not PASS for confirmed delivery. A pending oracle is BLOCKED, never guessed. Cross-scope and privacy cases use synthetic markers. P1 cutover coverage includes all relevant US1–US5 cases and their critical governance/security/recovery dependencies, even if a dependency sits under a P2 family. Evaluation and deployment require later explicit authorization.
+Each executed case must identify specification/case/corpus revision, approved decision oracle, actor/scope, declared setup, fault injection, expected/observed effects, timestamps, ledger reconciliation where applicable, redacted evidence and reviewer. Mark PASS/FAIL/BLOCKED/NOT RUN explicitly; unknown external outcome is not PASS for confirmed delivery. A missing factual setup or unapproved oracle is BLOCKED, never guessed; policy selection alone is not PASS. Cross-scope and privacy cases use synthetic markers. P1 cutover coverage includes all relevant US1–US5 cases and their critical governance/security/recovery dependencies, even if a dependency sits under a P2 family. Evaluation and deployment require later explicit authorization.

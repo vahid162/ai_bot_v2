@@ -4,7 +4,7 @@
 
 **Created**: 2026-08-17
 
-**Status**: Draft
+**Status**: Consolidated recommendation draft — awaiting whole-specification approval
 
 **Last Reviewed**: 2026-10-11
 
@@ -22,8 +22,10 @@ Publication of this draft does not approve its scope or authorize implementation
 The branch-level evidence ledger, supplementary cases, synthetic corpus seed and
 proposed measurement contracts are linked below. Static discovery and case
 pointers do not prove exhaustive coverage, approved scope or passing evaluation;
-material behavior contracts, corpus approval and final bounded workload manifests
-remain open despite the selected recommendation subsets.
+working policy contracts and finite reference bounds are now selected in
+[recommended-contracts.md](recommended-contracts.md). Actual corpus/gold labels,
+external agreements, actual import mappings, measured results and whole-specification
+approval remain distinct gates; see [review-summary.md](review-summary.md).
 
 ## Clarifications
 
@@ -97,12 +99,17 @@ remain open despite the selected recommendation subsets.
 
 - Owner instruction (2026-10-11): “بقیه ی موارد رو هم طبق Recommended پیش ببر”
   delegates selection of remaining recommendations for GitHub-only documentation.
-  On that authority, D-009's documented security-normalization baseline and D-012's
-  Standard synthetic reference/counting/sample/window definitions are selected
-  below. These are agent-selected recommendations under owner delegation, not
+  On that authority, remaining working D-006–D-013 contracts are now selected
+  in recommended-contracts.md and integrated below. Previously selected D-009
+  security normalization and D-012 Standard definitions remain unchanged. These are agent-selected recommendations under owner delegation, not
   answers to questions that were never asked. Actual schema/traffic/provider facts,
   independent corpus labels, corpus sign-off/results, deletion activation and
   complete specification/plan approval are not supplied by this instruction.
+
+- Recommendation completion (2026-10-11): no new questions asked or invented
+  answers recorded. Routes, moderation, wallet, bounds, import intentions and
+  lifecycles are selected for consolidated review, not approved production facts.
+  Whole-spec/plan/corpus/activation approval remains separate.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -306,8 +313,8 @@ simulation does not execute moderation actions or spend tokens.
    **Then** no moderation action occurs and this AdsGuard journey creates zero
    token debit or successful-spend events. Repeated processing cannot turn that
    recorded no-charge outcome into a spend; unrelated authorized grants remain
-   separate. Warning/deletion charging and later distinct-journey eligibility
-   are not decided by this rule.
+   separate. The delegated D-008 working contract additionally charges only a
+   confirmed eligible warning, never delete, and never reopens this identity.
 9. **Given** an exhausted wallet in deletion mode, **When** a single message or
    album is evaluated, **Then** deletion is permitted only if the configured
    policy, current authorization, exemptions, the FR-027 quality gate, and separate
@@ -407,7 +414,8 @@ concurrent requests for the same user in two groups.
    same outcome without a second charge.
 4. **Given** insufficient balance or a disabled token feature, **When** spending is
    requested, **Then** no token is charged, no negative balance is possible, and
-   the user receives localized guidance. An insufficient balance does not change
+   localized guidance is confined to an explicit balance/eligible warning journey,
+   never unsolicited off/none moderation. An insufficient balance does not change
    the effective AdsGuard action mode: warning remains warning, no-action remains
    no-action, and deletion still requires the normal policy safeguards.
 5. **Given** the same user participates in two groups, **When** balances are
@@ -419,7 +427,8 @@ concurrent requests for the same user in two groups.
    ledger event is recorded. Profiles, stale admission, duplicate/edit processing,
    restart and recovery cannot bypass the no-charge rule. Independent authorized
    grants may still change the wallet; this decision neither refunds an already
-   committed/historical charge nor approves warning/deletion charging.
+   committed/historical charge. Delegated D-008 additionally selects confirmed
+   eligible warning-only charging, distinct from this historical answer.
 
 ---
 
@@ -559,23 +568,23 @@ register. Exact source spans, impacts, owner status and case IDs are in the ledg
 |----|------------------------------|-------------------------|-----------------|------------------|
 | BR-001 | Start, help, identity, scoped command menus, and health journeys | Preserve discovery proposal; D-009 safe health normalization selected via delegation | [Exact evidence and case links](behavior-ledger.md#br-001--discovery-identity-menus-and-health) | Equivalent discoverability and safe responses by user scope |
 | BR-002 | Private AI questions, `/ask`, reply input, typing state, and direct answers | Preserve input capability; Change route/context inconsistency (proposal) | [Exact evidence and case links](behavior-ledger.md#br-002--private-questions-ask-and-chunked-replies) | One isolated, localized outcome per accepted request |
-| BR-003 | Group AI enablement, mention/all modes, administrator-only mode, throttling, and autocleanup | Preserve modes; role/address and user-message cleanup contracts pending | [Exact evidence and case links](behavior-ledger.md#br-003--group-conversation-and-cleanup) | Per-group policy with no response outside eligible triggers |
-| BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; approved D-001/D-004; reset differences pending | [Exact evidence and case links](behavior-ledger.md#br-004--sessions-history-clear-and-export) | Fresh initial AI context; default-off text storage, explicit owner opt-in after notice, per-message 30-day deletion, and owner-scoped export or earlier clear |
-| BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve feedback/report utility proposal; D-009 scope/privacy selected via delegation; broken paths pending | [Exact evidence and case links](behavior-ledger.md#br-005--feedback-unknown-reporting-and-review) | Traceable feedback without cross-tenant disclosure |
+| BR-003 | Group AI enablement, mention/all modes, administrator-only mode, throttling, and autocleanup | Preserve conversation modes; Change uniform fresh role/address gates; Retire hidden user cleanup (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-003--group-conversation-and-cleanup) | Per-group policy with no response outside eligible triggers |
+| BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; D-001/D-004; Change uniform reset/clear and transient borrowed exchange (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-004--sessions-history-clear-and-export) | Fresh initial AI context; default-off text storage, explicit owner opt-in after notice, per-message 30-day deletion, and owner-scoped export or earlier clear |
+| BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve feedback/report utility; Change uniform routes, scoped review and finite metadata (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-005--feedback-unknown-reporting-and-review) | Traceable feedback without cross-tenant disclosure |
 | BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve access controls; approved D-006 explicit deny precedence; D-009 current superadmin global-mutation security selected via delegation; UI/import details remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-006--direct-message-access-and-user-listing) | Deny-by-default access with explicit, auditable exceptions |
 | BR-007 | Private management panel, group binding, active-group selection, deep-link management, and force-reply editing | Preserve private management proposal; D-009 current authorization/original prompt target selected via delegation | [Exact evidence and case links](behavior-ledger.md#br-007--private-management-and-bound-prompts) | Fresh authorization and isolated administrator context |
 | BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve scoped roles proposal; D-009 current authorization/redacted audit selected via delegation; outage contract open | [Exact evidence and case links](behavior-ledger.md#br-008--roles-superadmins-and-privileged-audit) | Least privilege, current-role verification, and complete audit |
 | BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve settings proposal; D-009 no false save/current callback scope selected via delegation | [Exact evidence and case links](behavior-ledger.md#br-009--scoped-settings-language-and-menus) | Validated settings with predictable scope and menus |
-| BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve classifier capability; Change unsafe output parsing; content eligibility pending | [Exact evidence and case links](behavior-ledger.md#br-010--adsguard-classification-and-eligibility) | One explainable decision per eligible logical item |
-| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Approved D-002/D-005 and D-007 automatic guard mode rule; remaining eligibility/grace/manual-mute contracts pending | [Exact evidence and case links](behavior-ledger.md#br-011--modes-forwardcaption-guards-profiles-and-mute) | Exact per-group enforcement; exhaustion never promotes warning or no-action to deletion; automatic deletion requires zero false deletions in the approved test corpus and separate owner activation approval |
-| BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve durable work; approved D-003; Change state-reset/cache hazards (proposal) | [Exact evidence and case links](behavior-ledger.md#br-012--pending-moderation-and-album-recovery) | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
-| BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve tools proposal; D-009 scoped authorization selected via delegation; exact aliases/privacy lifecycles pending | [Exact evidence and case links](behavior-ledger.md#br-013--examples-allowlists-and-diagnostics) | Tenant-scoped tools; diagnostics do not moderate content, change policy or spend tokens; ancillary effects declared |
-| BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve wallets; numeric grant/carry/period/eligibility policy pending | [Exact evidence and case links](behavior-ledger.md#br-014--wallet-balance-weekly-grants-and-carry) | One grant per tenant/user/week and accurate balance |
-| BR-015 | Token spending, logical-message deduplication, and ledger history | Preserve ledger invariants; approved D-008 no-action/no-charge Change; failed-outcome/expiry and other token policies remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-015--token-spending-and-ledger-outcomes) | At most one approved charge; zero AdsGuard no-action debits; non-negative balance and reconcilable ledger |
+| BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve classifier capability; Change strict score/eligibility/exemptions (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-010--adsguard-classification-and-eligibility) | One explainable decision per eligible logical item |
+| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | D-002/D-005/D-007; Change structural-only deletion and presets; Retire hidden mute cleanup (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-011--modes-forwardcaption-guards-profiles-and-mute) | Exact per-group enforcement; exhaustion never promotes warning or no-action to deletion; automatic deletion requires zero false deletions in the approved test corpus and separate owner activation approval |
+| BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve durable work; D-003; Change fenced recovery and finite NO_REPLAY proof (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-012--pending-moderation-and-album-recovery) | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
+| BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve scoped tools; Change exact aliases/provenance/lifecycles (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-013--examples-allowlists-and-diagnostics) | Tenant-scoped tools; diagnostics do not moderate content, change policy or spend tokens; ancillary effects declared |
+| BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve wallets; select +1 current-week grant/carry1, no implicit grant/backfill (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-014--wallet-balance-weekly-grants-and-carry) | One grant per tenant/user/week and accurate balance |
+| BR-015 | Token spending, logical-message deduplication, and ledger history | Preserve ledger invariants; D-008; Change confirmed-warning-only charge and outcome/fence (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-015--token-spending-and-ledger-outcomes) | At most one approved charge; zero AdsGuard no-action debits; non-negative balance and reconcilable ledger |
 | BR-016 | Database-first configuration with deployment fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-016--configuration-precedence-and-startup-seeding) | One uniform precedence chain with validation and safe defaults |
 | BR-017 | Persian, English, Arabic, Turkish, and Russian selectors and fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-017--localization-coverage-and-fallback) | Preserve selectors while requiring complete catalogs and no raw-key fallback |
-| BR-018 | Structured logging, metrics, health reporting, optional error reporting, provider warmup, and recurring cleanup | Preserve observable operations proposal; D-009 redacted health selected via delegation; failure/retention contracts pending | [Exact evidence and case links](behavior-ledger.md#br-018--operations-health-and-recurring-work) | Redacted, actionable operations with idempotent jobs |
-| BR-019 | Legacy operational data and schema history | Change; D-001 history exclusion and D-011 validated wallet/ledger continuity intent approved; actual maps and other imports remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-019--candidate-imports-and-schema-drift) | Import only validated business data into one approved data contract |
+| BR-018 | Structured logging, metrics, health reporting, optional error reporting, provider warmup, and recurring cleanup | Preserve operations; Change mandatory evidence fail-closed and finite lifecycles (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-018--operations-health-and-recurring-work) | Redacted, actionable operations with idempotent jobs |
+| BR-019 | Legacy operational data and schema history | Conditional selected per-entity import intentions; actual maps/reconciliation unapproved (working recommendation; whole-scope approval pending) | [Exact evidence and case links](behavior-ledger.md#br-019--candidate-imports-and-schema-drift) | Import only validated business data into one approved data contract |
 | BR-020 | Schema upgrades during application startup and competing migration entry points | Retire competing ownership proposal | [Exact evidence and case links](behavior-ledger.md#br-020--migration-ownership) | One separately controlled, observable migration owner |
 | BR-021 | Committed credentials, mutable release inputs, host-specific paths, fixed identifiers, and shared global deployment assumptions | Retire unsafe values/couplings proposal | [Exact evidence and case links](behavior-ledger.md#br-021--unsafe-and-nonportable-release-inputs) | Rotated secrets and isolated, portable project configuration |
 | BR-022 | Large mixed-responsibility modules and direct coupling between transport, policy, provider calls, and data access | Retire internal coupling proposal | [Exact evidence and case links](behavior-ledger.md#br-022--mixed-internal-responsibilities) | Preserve outcomes without preserving unsafe internal structure |
@@ -627,15 +636,13 @@ architecture or implementing tests:
   definitions are now selected via owner-delegated recommendation; corpus coverage,
   independent gold labels and final bounded manifests remain separately reviewed.
   These selected definitions are not measurements or passing results.
-- [Decision register](decision-register.md): accepted D-001–D-005, D-006's private
-  access policy, the D-007 automatic guard mode rule and D-008's no-action/no-charge
-  rule; remaining D-006 interaction/import, D-007 contracts, other D-008 token
-  policies and D-009–D-013 remain wholly or partly pending. D-009's security
-  normalization and D-012's Standard reference definitions are selected via owner
-  delegation, not whole-spec approval. D-011 selects validated
-  wallet/ledger continuity intent only; actual mappings and other entity imports
-  remain separately gated. It does not authorize executing imports,
-  deletion activation, the complete specification or the future plan.
+- [Decision register](decision-register.md): historical explicit decisions remain
+  scoped; all remaining working D-006–D-013 policy recommendations are selected
+  under owner delegation in [recommended-contracts.md](recommended-contracts.md).
+  [Review summary](review-summary.md) exposes tradeoffs and actual evidence gates.
+  Whole-spec/plan approval, actual import maps/processor agreements, independent
+  corpus sign-off, passing evaluation and deletion activation remain absent.
+
 
 Source-level review surfaced differences requiring explicit disposition: legacy
 block only revokes a database allow entry; group admins can reach global allow
@@ -650,7 +657,8 @@ These are pinned-source observations, not implemented fixes or confirmed live
 failures. D-002 did not resolve forward/caption/mute/cleanup policy. The later
 D-007 answer approves respecting the current group mode for automatic
 forward/caption deletion; independent deletion outside delete mode is not allowed.
-Remaining eligibility/grace/manual-mute/user-cleanup contracts stay pending.
+Remaining working eligibility/grace/mute/cleanup choices are selected in D-007
+of recommended-contracts.md; they are not individual answers or deletion activation.
 Every automatic AdsGuard user-content deletion remains subject to D-005.
 
 Complete the remaining owner choices and approve corpus/workload definitions
@@ -688,9 +696,9 @@ branch as well: AdsGuard no-action consumes no tokens, regardless of balance,
 token switches, single/album shape or repeated processing. FR-039/040, US4.8,
 US6.6 and SC-005/006 verify this scoped difference. Tell group administrators and
 affected users before later authorized activation; no legacy debit is rewritten
-or refunded by this answer. Warning/deletion charging, numerical economic rules
-and replay/correction contracts remain separate pending choices. The source table
-above is unchanged historical evidence, not the new approved policy.
+or refunded by this answer. Subsequent delegated D-008 recommendations select
+warning-only confirmed charging and numerical/grant/replay/correction contracts.
+The source table above stays unchanged historical evidence, not the rewrite policy.
 
 
 ### Functional Requirements
@@ -736,15 +744,21 @@ above is unchanged historical evidence, not the new approved policy.
   MUST have one correlated outcome: a confirmed reply, a safe failure outcome, or
   an unresolved operator-review state under FR-064. An unresolved delivery MUST
   NOT be reported as a received reply.
+  All plain-private, /ask arguments, reply text/caption and bound prompts use one pipeline; arguments take precedence, empty /ask opens a five-minute prompt without provider work. Exact aliases/routes and deliberate repairs are D-010 in recommended-contracts.md, not assumed working source branches.
+
 - **FR-010**: Each group MUST independently support disabled, explicit-address, and
   all-eligible-message conversation behavior, plus an optional
   administrators-only restriction and bounded response frequency.
+  Current off/address/all/admin-only gates apply to EVERY route including /ask; exact addressing/topic/fresh role evidence, no anonymous-ID or forward-origin bypass. Original-user AI/command cleanup is retired initially; only positively identified bot-owned cleanup is eligible.
+
 - **FR-011**: Conversation context MUST be isolated by tenant, user, and applicable
   topic or session so that content cannot cross those boundaries. Retained history
   used as context MUST satisfy FR-058's owner opt-in, scope, and expiry rules;
   cleared or expired text and context-bearing references MUST NOT restore it.
   Without history opt-in, processing the current exchange MUST NOT create durable
   conversation history.
+  Without opt-in use current exchange only; context <=20 own live entries/16,000 Unicode scalars. An exchange borrowing others' text including derived answer stays transient unless EVERY contributing owner has valid scope/consent/eligible source. /start resets context/home, not history/consent/ledger; /clear removes own retained history and resets context. Prior generations invalidate so late results cannot restore erased text.
+
 - **FR-012**: Users MUST be able to clear and export only the conversation history
   they own and are permitted to access, with an explicit result. Exports MUST
   include only eligible retained, unexpired text; empty history MUST produce an
@@ -752,6 +766,8 @@ above is unchanged historical evidence, not the new approved policy.
   30-day expiry and turn off future text storage. Clearing MUST NOT erase
   token-ledger or audit records. For the new deployment, history starts empty at
   the first cutover; legacy history MUST NOT appear through these journeys.
+  Group export is private-only to verified owner; failed/unavailable/unknown delivery never falls back to public transcript or false success. Conversation denial does not remove independently authorized self-service. Anonymous principals own no personal history.
+
 - **FR-013**: Accepted requests MUST provide timely progress indication without
   producing unbounded or orphaned activity indicators.
 - **FR-014**: Provider timeout, invalid output, rate limit, or outage MUST result in
@@ -763,22 +779,28 @@ above is unchanged historical evidence, not the new approved policy.
   within their authorized scope. Feedback or unknown-item records MUST NOT bypass
   FR-058 by retaining unconsented, cleared, or expired conversation text; eligible
   non-content metadata remains distinct from raw conversation content.
+  Feedback only for confirmed logical answers: private owner or one immutable vote per currently verified named group member. Unknown reports owner-only; bind original answer/tenant/topic/actor, identical repeats idempotent, conflicting second vote rejected. Final confirmed chunk alone carries controls.
 
 #### Identity, Administration, and Tenancy
 
 - **FR-016**: The product MUST distinguish regular users, group administrators,
   anonymous group administrators, and superadmins with deny-by-default privileges.
+  Anonymous authority needs current exact-group platform evidence, not special user ID/forward origin; group-only ephemeral behavior, no named wallet/history/vote/global privilege. Quota principals tenant-bound.
+
 - **FR-017**: Authorization MUST be re-evaluated against current scope for every
   privileged command, callback, force-reply, and delayed action. A force-reply or
   callback MUST remain bound to its original actor, target tenant and operation;
   switching active group MUST NOT silently retarget an outstanding interaction.
   Revoked, expired or mismatched authority MUST deny it without cross-scope reads
-  or writes. Exact expiry/interaction names remain D-010/D-012.
+  or writes. Exact topic/generation/prompt binding and expiry are now selected
+  in D-010/D-012 of recommended-contracts.md.
 - **FR-018**: A verified administrator MUST be able to open a private group picker,
   select an active manageable group, and see which group a subsequent action will
   affect.
 - **FR-019**: Active-group and panel state MUST be isolated per administrator and
   MUST expire or fail safely when stale, malformed, or no longer authorized.
+  Bind actor/tenant/topic/operation/exact prompt/answer ID/generation; prompts-confirmations five-minute absolute, panels15-minute idle/one-hour absolute. Expiry prevents new submission, not safe disposition of admitted work; stale replies never fall through to AI.
+
 - **FR-020**: Group administrators MUST be able to view and change the approved
   chat, AdsGuard, token, language, and cleanup settings for their own group.
 - **FR-021**: Superadmins MUST be able to view and manage global direct-message
@@ -786,13 +808,15 @@ above is unchanged historical evidence, not the new approved policy.
   approved diagnostic controls only from an authorized context. Explicit private
   conversation block/unblock changes MUST be currently superadmin-authorized,
   idempotent and audited; group-admin status alone MUST NOT grant global authority.
-  Exact supported unblock command/panel naming remains a separately approved
-  interaction contract, not an assumed new command.
+  The selected NEW route is a private current-superadmin DM-policy panel,
+  numeric user ID, explicit-denial unblock, and bound confirmation. No existing
+  /unblock command is claimed; this clears denial only, granting no allowance.
 - **FR-022**: Command menus and management entry points MUST reflect the actor's
   current scope without granting authority by visibility alone.
 - **FR-023**: Every privileged attempt, whether accepted or denied, MUST produce a
   redacted audit event with actor, target scope, action, result, reason, time, and
   correlation identifier.
+  Durable redacted attempt evidence precedes privileged processing. Mandatory audit/business-outcome failure blocks affected admission/dispatch; no silent swallow/fake recorded denial/success. Raw arrival is not admission. Required redacted correlation/telemetry production remains mandatory during optional exporter outage; no new Telegram notice without safe outcome tracking. D-009 defines in-flight uncertainty.
 
 #### AdsGuard
 
@@ -811,14 +835,20 @@ above is unchanged historical evidence, not the new approved policy.
   independently authorize deletion in another mode. Queued and recovered guard
   actions MUST re-check the effective mode at execution; scheduling under a prior
   deletion mode is not permission after the mode or enablement changes. The
-  warning response, caption/grace values and manual-mute/chat-cleanup contracts
-  remain separately scoped decisions; this answer does not activate deletion.
+  remaining warning, caption/grace, mute and cleanup working choices are now
+  selected under D-007; no choice here activates deletion.
+  Defaults: Ads OFF, enabling-without-action none; AD finite numeric [0,1] score>=0.90; gap 2s (0–3600), few-shots 10 (0–50). Presets preview exact changes: free none/guards OFF, medium warn/caption ON, strict warn/both guards ON; preserve other valid values, never activate deletion.
+
 - **FR-025**: AdsGuard MUST evaluate all approved eligible content forms and MUST
   apply administrator, user, domain, reply, contact-like, and other approved
   exemptions before any destructive action.
+  Attributable text/captions including edits/manualforwards, not binary/OCR/transcription/URL fetch. Unknown role/scope/exemption and invalid scores cannot destroy/debit. D-007 defines exact all-host domain and short-reply exemptions. Structural forward/caption violation ALONE NEVER deletes: independently qualifying AD plus all current delete safeguards required.
+
 - **FR-026**: Every decision MUST record the logical content identity, tenant,
   policy revision, classification outcome, confidence when available, exemption or
   action reason, and final status without retaining unnecessary message content.
+  Strict AD/NOT_AD plus finite numeric score; malformed/boolean/string/missing becomes UNKNOWN. Final outcome, raw content and external execution proof are distinct.
+
 - **FR-027**: Missing, malformed, untrusted, timed-out, or insufficient-confidence
   classification MUST NOT trigger deletion or another destructive action.
   Automatic AdsGuard deletion of user content MUST remain disabled until an
@@ -841,6 +871,8 @@ above is unchanged historical evidence, not the new approved policy.
   interactions MUST be authorized, localized, bounded, and applied at most once per
   logical content item. Token exhaustion MUST NOT introduce a destructive action
   or escalate the configured moderation mode for either a single message or album.
+  Warn at most one correlated notice/logicalitem; off/none none. Original-creation caption/forwardgrace300s/120s (0–3600), reply-as-captionOFF, minimum 10 words (0–100), explicit alternate character metric. Deadline correction wins; correction before authorization cancels stale structural grounds not validAD. Confirmed manual mute 24h (1–168) NO associated user deletion. Usercleanup/escalation retired; bot-owned cleanupOFF or30–3600s.
+
 - **FR-029**: Delayed moderation work MUST survive process interruption, have
   exclusive ownership while executing, recover abandoned claims, and expose
   terminal failure for operator action. Recovery MUST check trustworthy available
@@ -852,11 +884,15 @@ above is unchanged historical evidence, not the new approved policy.
   enablement, eligibility, authorization, exemptions, and FR-027's quality and
   activation gate, including automatic forward/caption guards;
   recovering a claim is not permission to bypass it. FR-064 applies.
+  Runnable admission-to-first-dispatch cap 120s, no progress reset. Scheduled grace wait becomes runnable at original due time; recheck current edits/policy/roles/exemptions. Unknown lifecycle never expiry-to-retry.
+
 - **FR-030**: A media album MUST be aggregated and deduplicated as one logical
   moderation item while preserving the identifiers required to apply or recover
   the final action. Known and unknown outcomes of its affected message identifiers
   MUST remain distinguishable; recovery MUST NOT replay completed or unresolved
   parts of an album in violation of FR-029.
+  Album<=10, quiet 2s, absolute 5s collection; incomplete/uncertain/oversize blocks destruction. Exact member dispositions/IDs cannot hide legitimate/unknown members or append late members/replies to old delete sets.
+
 - **FR-031**: Administrators MUST be able to list, add, and remove group-scoped
   user and domain allowlist entries with validation and audit.
 - **FR-032**: Administrators MUST be able to add positive and negative examples,
@@ -866,17 +902,24 @@ above is unchanged historical evidence, not the new approved policy.
 - **FR-034**: Moderation diagnostics MUST minimize retained content and MUST NOT
   reveal private message text, provider credentials, or another tenant's examples
   or decisions.
+  Bounded diagnostic/example data follows D-013 provenance/expiry, never a private-text side channel.
 
 #### Tokens and Ledger
 
 - **FR-035**: Token functionality MUST have an auditable global enablement state
   and an explicit effective state for each eligible group journey.
+  Global and tenant token switches default OFF; both ON for grants/debits. Disabled balance lookup grants nothing/resets no period.
+
 - **FR-036**: A wallet MUST be uniquely scoped to one tenant and one user, and
   balance lookup MUST NOT create or expose another scope's balance.
 - **FR-037**: An eligible user MUST receive at most one weekly grant per tenant and
   grant period, whether triggered lazily, on schedule, or concurrently.
+  Grant +1 once CURRENT Monday00:00UTC week to attributable non-bot verified member. Scheduled eligibility checks and explicit balance queries only; AI/Ads/spend never grants implicitly. First eligible grant or SKIPPED_CAP closes week; no later spend/rejoin/restart/toggle reopening or old-period catch-up.
+
 - **FR-038**: A grant MUST NOT raise a wallet above the group's approved carry
   limit.
+  Carrydefault 1 integer0–100; cap reduction/import above-cap valid balance never burns/clamps existing balance.
+
 - **FR-039**: A token-consuming logical message or album MUST reduce the wallet at
   most once even when requests, callbacks, or updates repeat concurrently.
   AdsGuard processing in effective no-action mode MUST NOT consume tokens or
@@ -885,19 +928,23 @@ above is unchanged historical evidence, not the new approved policy.
   edited, queued and recovered processing MUST preserve that no-charge rule.
   Before a not-yet-committed debit, the current effective mode MUST be re-checked;
   a profile or stale prior-mode admission cannot authorize charging in no-action
-  mode. Replaying a recorded no-action outcome MUST NOT retro-charge it. Whether
-  a later distinct approved warning/deletion journey may consume tokens remains
-  a separate policy/identity decision. Mode changes MUST NOT automatically refund
+  mode. Replaying a recorded no-action outcome MUST NOT retro-charge it. The
+  selected D-008 working contract defines truly distinct identities and charges. Mode changes MUST NOT automatically refund
   historical/already-committed charges; independent authorized grants/corrections
   follow their own approved contracts.
+  Only confirmed eligible AD warning/known update costs 1, current warn/both switches ON/atomic balance>=1, at mostonce. none/off/delete/exempt/NON_AD/UNKNOWN/guard-only/mute/diagnostic/AI costs 0. Exhausted warn still warns, no escalation. UNKNOWN forbids NEW debit/repeat, never refunds/resets proven committed debit; preserve delivery/debit separately.
+
 - **FR-040**: Wallet balances MUST never become negative, and every grant, spend,
   correction, or approved reversal MUST have an immutable, reconcilable ledger
   event. An insufficient-balance spending attempt MUST NOT debit the wallet or
   create a successful-spend event; it MUST NOT authorize a moderation-mode override.
   A no-action AdsGuard evaluation MUST NOT create a successful-spend ledger event
   or a debit; zero-spend outcome metadata MUST NOT misrepresent a paid action.
+  Trusted origin epoch+tenant+original author+message/albumID stable across edits/caption replies/settings. New admission original NEW Telegrammessage age<=24h/current preservedfence, not forwarded-source date. Recorded insufficient/none/disabled/unknown never retrocharges aftergrant. Compactproof 365d purge only tested input/currentperiod barriers; restart/restore never relabels old inputs.
+
 - **FR-041**: Users MUST be able to view the current tenant balance and, when a
   future grant can change it, a localized indication of the next grant window.
+  Explicit confirmed current superadmin correction requires proven erroneous original event, exact linked immutable compensation, redacted reason/audit/nonnegative balance. No automatic old/unknown refund, arbitrary topup/sales feature.
 
 #### Configuration and Localization
 
@@ -918,6 +965,7 @@ above is unchanged historical evidence, not the new approved policy.
 - **FR-047**: Messages MUST support Unicode, correct right-to-left or left-to-right
   presentation, locale-aware numbers and time, safe interpolation, and an explicit
   locale fallback chain.
+  Locale explicituser/group→managed global→deployment→supported initiating user hint→Persian. Complete five validated catalogs; unsupported choice rejects, corruption safe validated generic localized message+alert never raw key. Administrator-private locale names target group.
 
 #### Data Migration and Cutover
 
@@ -932,15 +980,18 @@ above is unchanged historical evidence, not the new approved policy.
   only necessary validated linked grant/deduplication evidence that prevents
   duplicate grants or debits. Promotion requires separately approved sanitized
   actual-schema mappings and exact tenant/user reconciliation; this intent alone
-  is not permission to execute an import. Other entity imports, processing and
-  retention remain separately approved, including any supporting identity data.
+  is not permission to execute an import. D-011 now selects other working
+  per-entity dispositions, conditional on actual mapping/authority/reconciliation
+  approval; D-013 selects separate lifecycle requirements.
   Associated token records MUST NOT promote raw text-bearing notes, credentials
   or context-bearing references merely because they are attached to a ledger.
   The owner-approved first-cutover baseline MUST start with empty conversation
   history and fresh conversational context. Legacy conversation messages, history,
   and session/provider references that would restore historical context MUST be
   intentionally excluded with a reconciliation reason. This exclusion MUST NOT
-  delete or modify legacy source data or imply approval of other entity imports.
+  delete or modify legacy source data or imply approval of actual import maps.
+  D-011 conditional minimal validated IDs/ownership/membership/locale, typed settings, proved DMstates/tenant allowlists; rebuild current roles and reviewed superadmin bootstrap. Start panels/prompts/sessions/history consent/examples empty. Historicalredacted audit grants no current authority; pending metadata NO_EXECUTE/NO_REPLAY not runnable. Actual sanitized maps/reconciliation approval separate.
+
 - **FR-050**: Each imported record MUST pass type, encoding, ownership, tenant,
   timestamp, referential-integrity, and business-invariant validation before
   promotion. Missing/conflicting token identities, schema, ownership, timestamps
@@ -949,6 +1000,8 @@ above is unchanged historical evidence, not the new approved policy.
   fabricated identities, opening balances or balancing events MUST NOT conceal
   discrepancies. A validated opening baseline may be used only when its actual
   evidence and reconciliation method are separately approved.
+  Quarantineexpiry never erases unexplaineddifferences. Missing current authority/input-fence/checkpoint blocks affected readiness; fresh timestamps/epochs cannot replace proof.
+
 - **FR-051**: Credentials, tokens, passwords, private keys, credential-like values,
   host-specific deployment values, generated artifacts, and corrupt records MUST
   NOT be promoted as business data.
@@ -975,6 +1028,8 @@ above is unchanged historical evidence, not the new approved policy.
 - **FR-056**: Commands, callbacks, deep links, imported data, provider input and
   output, URLs, and configuration MUST be treated as untrusted and constrained by
   approved size, format, rate, and destination policies.
+  D-012 selects finite input/rate/prompt/queue/album/chunk/resource-test bounds in recommended-contracts.md; unsafe input rejects before provider/effect. Product/reference definitions, not topology/live upstream capacity/provideragreement.
+
 - **FR-057**: Any credential-like value ever committed to a source repository MUST
   be treated as compromised, excluded from migration, and independently revoked or
   rotated before its integration is enabled.
@@ -994,13 +1049,16 @@ above is unchanged historical evidence, not the new approved policy.
   history, AI context, exports, feedback, diagnostics, or restored copies.
   Recovery MUST enforce consent, expiry, and clearing before exposing restored
   history. Separate ledger and audit retention MUST NOT become a store for raw
-  conversation text. This policy does not set ledger or audit retention, approve provider-
-  managed text retention or a backup retention duration, or authorize deletion of
-  original Telegram messages. Any provider or backup text-retention contract MUST
-  be separately reviewed before its content path is enabled and MUST NOT bypass
-  the approved history policy.
+  conversation text. Separate D-013 lifecycles and metadata-only backup terms
+  are now selected without changing the accepted history rule. Actual processor
+  agreement/region/subprocessor evidence remains required before integration;
+  no deletion of original Telegram messages is authorized.
+  D-013 selects ordinary metadata30d, logs14d, anonymous aggregates90d, audit/ledger/safety 365d, verifiedoperationalclosure 7d, future staging 7d, quarantine payload 30d. Imported ledger original event clock plus>=365d cutoverterm; exact independently reconciled NON_EVENT checkpoint before expiry. Curated synthetic yearlyreview; permitted own personal example 30d. Encrypted metadata-onlybackups<=30d EXCLUDE history/context/rawexamples/providerpayload: losthistory cannotrestore.
+
 - **FR-059**: Audit evidence MUST be tamper-evident and privacy-preserving, and its
   retention MUST be distinct from optional conversation-history retention.
+  Mandatory audit distinct optionalexporters, scoped redacted365d/append-onlycorrection. Outages/unknown effects D-009/013, no fabricatedevidence.
+
 - **FR-060**: Specification, build, test, migration, and runtime tooling MUST remain
   scoped to this project and MUST NOT require host-global installation or alter
   unrelated server services. Current changes MUST be made only in the GitHub
@@ -1015,6 +1073,8 @@ above is unchanged historical evidence, not the new approved policy.
 - **FR-063**: User requests, provider calls, privileged actions, migrations, and
   jobs MUST be correlated through redacted logs, metrics, traces, and actionable
   alerts.
+  Actionable alert PRODUCTION<=300s distinctdelivery/resolution; failed deliveryNOT_DELIVERED, all-sink loss cannotpasscoverage. Required boundedredactedcorrelation remainsmandatory.
+
 - **FR-064**: Dependency outage, quota exhaustion, overload, shutdown, and restart
   MUST degrade safely, preserve accepted durable work, and avoid duplicate
   user-visible outcomes. If the execution result of a Telegram reply, warning, or
@@ -1029,6 +1089,8 @@ above is unchanged historical evidence, not the new approved policy.
   not itself authorize manual replay, a destructive action, or a token refund; any
   separately authorized follow-up MUST remain audited and preserve current
   authorization, policy, and ledger deduplication safeguards.
+  Current scopedSA/operator ownsreview; groupadmin onlyownmoderationmetadata. After30d archive UNRESOLVED_NO_REPLAY; compact365d expiry behind proven age/origin/currentperiod barriers. Critical acknowledged wallet/audit/replay/security/privacy/policyRPO 0 withinapprovedfailureenvelope; ordinary metadata RPO <=24h excludescriticalstates. Missing proof fails closed; lost consent defaultsOFF. Restore requires exact critical checkpoint/fence reconciliation, metadata-only backup cannot restore lost history.
+
 - **FR-065**: Each release MUST be repeatable from reviewed project inputs and MUST
   include owned deployment, backup, restore, incident-response, reconciliation,
   and rollback procedures that do not depend on mutable host state.
@@ -1171,14 +1233,15 @@ above is unchanged historical evidence, not the new approved policy.
   successful token debit on insufficient-balance attempts. No-action processing
   MUST also produce zero AdsGuard debit/successful-spend events with sufficient
   balance, token switches, singles/albums and duplicate/edit/recovered variants.
-  This does not prescribe warning/deletion charging. Zero observed corpus
+  The delegated working contract additionally selects confirmed-warning-only
+  charging and zero delete charges. Zero observed corpus
   errors is an activation criterion, not a guarantee of zero real-world errors.
   Automatic forbidden-forward and captionless-media guard tests MUST produce zero
   user-content deletions in disabled/off, no-action or warning states, including
   profile combinations and queued/recovered actions whose effective mode changes
   before execution. Deletion-mode cases remain conditional on all normal safeguards
-  and the separate quality/activation gate; pending grace/eligibility oracles MUST
-  NOT be guessed as approved.
+  and the separate quality/activation gate; D-007 supplies the exact working
+  grace/eligibility matrix, not permission to activate or guessed gold labels.
 - **SC-006**: Across concurrent grant and spending tests, wallet balances never
   become negative, each eligible weekly grant occurs at most once, each logical
   spend occurs at most once, and ledger totals reconcile exactly to wallet changes.
@@ -1196,13 +1259,18 @@ above is unchanged historical evidence, not the new approved policy.
   actual-schema evidence per tenant/user; required linked grant/deduplication
   evidence prevents duplicate grant/debit and preserves actual failed outcomes.
   Unknown mappings, fabricated balancing events or unexplained differences cannot
-  pass; other entity imports are not implied.
+  pass. D-011 selects other conditional per-entity dispositions, not actual
+  source maps, evidence or import execution approval.
 - **SC-008**: A full backup restoration and cutover rollback drill completes within
   the D-012 selected 60-minute combined test window, from operator go through
   verified readiness including reconciliation and traffic gating, and restores all
   release-critical user,
   tenant, moderation, token, and audit invariants while enforcing conversation
-  consent, expiry, and earlier clearing before restored history becomes available.
+  consent, expiry, clearing, current denials/revocations and deletion-safety gates
+  before traffic. Metadata-only backups intentionally contain no history/context;
+  lost history cannot be recovered from them. Critical acknowledged invariants
+  target RPO0 within the plan-approved failure envelope, ordinary metadata <=24h;
+  missing critical evidence fails closed and lost consent defaults OFF.
 - **SC-009**: 100% of user-visible keys used by approved launch journeys are
   complete and format-valid in Persian, English, Arabic, Turkish, and Russian, with
   zero raw keys or developer-only messages visible in acceptance testing.
@@ -1221,9 +1289,12 @@ above is unchanged historical evidence, not the new approved policy.
   and duplicate updates. If sufficient evidence is unavailable within the recovery
   target, a durable review disposition is valid; referral is not proof of external
   completion and does not set a five-minute deadline for human resolution.
-- **SC-012**: Every simulated critical dependency, security, queue-age, migration,
-  or reconciliation failure produces an owned, actionable alert within 5 minutes
-  without exposing private content or credentials.
+- **SC-012**: Every critical dependency/security/privacy/queue-age/migration/
+  reconciliation injection produces an owned redacted actionable alert within
+  300 seconds of its declared detectable threshold. Production, delivery and
+  human resolution are distinct; failed delivery is NOT_DELIVERED. All-sink loss
+  cannot earn audit/alert coverage. Queue age is 120s for runnable work; required
+  observability/admission evidence must operate or affected work stops.
 - **SC-013**: A release and rollback can each be completed from reviewed
   project-scoped inputs within 30 minutes, without installing host-global tools or
   changing unrelated server services.
@@ -1296,8 +1367,8 @@ above is unchanged historical evidence, not the new approved policy.
   administrator/user communication before later authorized activation. Historical
   absence/deletion of an allow row is not proof of a block; source data remains
   untouched and any initial access-state import still requires D-011 approval.
-  Exact command/panel naming and other unresolved interaction contracts remain
-  subject to D-010; group roles, moderation and history rights are not revoked by
+  D-010 now selects the new private unblock panel and exact working interaction
+  contracts; group roles, moderation and history rights are not revoked by
   this private-conversation decision. No application code or deployment is approved.
 - The owner approved D-007's automatic forward/caption mode rule: these guards
   respect the group's current effective mode and cannot independently delete in
@@ -1307,7 +1378,8 @@ above is unchanged historical evidence, not the new approved policy.
   pre-mode deletion bypasses; group administrators and affected users must be
   informed before later authorized activation. No legacy data changes, deletion
   activation or manual-mute/user-chat-cleanup approval follows from this answer;
-  remaining D-007 content/grace/notice contracts remain pending.
+  remaining D-007 content/grace/notice/mute/cleanup working choices are selected
+  under recommendation delegation, not this historical individual answer.
 - The owner approved D-008's no-action/no-charge rule: AdsGuard in no-action
   mode spends no tokens even for trusted eligible ads with sufficient balance.
   Single/album, duplicate/edit, queued/recovered and current-mode-at-debit cases
@@ -1315,8 +1387,9 @@ above is unchanged historical evidence, not the new approved policy.
   AdsGuard off; this answer does not authorize a provider-processing/privacy path
   or decide classification itself. Independent approved grants are not prohibited;
   historical/already-committed debits are not automatically refunded. Remaining
-  warning/deletion charges, amounts, grant/carry/period/eligibility, replay horizon
-  and correction rules stay pending. Publication does not implement or activate it.
+  economic/replay/correction working choices are now selected by delegated
+  D-008: only confirmed eligible warning costs1, grants+1/currentweek/carry1,
+  no implicit grant/backfill or retro-charge. Publication does not implement it.
 - The owner selected D-011 token continuity: preserve validated legacy wallet
   balances and associated ledger records, plus only necessary validated linked
   grant/deduplication evidence, conditional on separately approved actual sanitized
@@ -1338,8 +1411,8 @@ above is unchanged historical evidence, not the new approved policy.
   normalization is selected: current scoped authorization for reads/writes,
   callbacks/prompts/jobs; original target-bound replies; superadmin-only global
   writes; scoped unknown review; no false save confirmation; redacted health.
-  Exact interaction/bounds, audit/telemetry-outage disposition, review ownership
-  and evidence lifecycles still require concrete reviewed contracts. Security
+  D-009/010/012/013 now define exact working interactions, bounds, outage,
+  review ownership and evidence lifecycles, pending whole-spec approval. Security
   invariants are not weakened and no silent failure/bypass is approved.
 - Under the same delegation, select D-012's Standard synthetic substitute and
   existing numerical counting/clocks, three independent base/2× repetitions,
@@ -1347,8 +1420,10 @@ above is unchanged historical evidence, not the new approved policy.
   restore/rollback test window; separate release/rollback tests remain 30 minutes
   each. These are definition choices, NOT RUN/PASS or real capacity claims. The
   2× profile doubles rates, tenant/user population and synthetic data, not an
-  unknown legacy peak. Final payload/rate/resource/queue/grace/route manifests,
-  corpus population/coverage and independent labels still need reviewed evidence.
+  unknown legacy peak. D-012 now supplies finite payload/rate/resource/queue/
+  grace and route definitions and >=1,000 held-out corpus coverage targets;
+  actual frozen manifest/gold labels and independently approved evidence remain
+  future evaluation gates.
   Corpus owner sign-off, actual passing evaluations and separate deletion
   activation are later gates; delegation does not supply them. Full spec and
   architecture/migration plan remain unapproved, with no code/server permission.
