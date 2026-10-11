@@ -65,6 +65,16 @@ material owner choices and corpus/workload approval remain open.
   not caption/grace defaults, manual mute-associated deletion, ordinary chat cleanup,
   corpus labels/evaluation, activation, the whole specification or the later plan.
 
+- Q: Should /block explicitly deny private conversation even when global access
+  is enabled or another allowance exists, or merely remove one allowance? → A:
+  Explicit denial (Option A): /block denies private conversation access regardless
+  of ordinary global, environment or managed allowances until a currently
+  authorized superadmin explicitly unblocks the user. An ordinary allow action or
+  policy toggle does not clear the denial; unblocking does not itself grant access
+  or bypass other conversation gates. This is D-006's access policy only, not
+  Telegram user blocking, group moderation, role revocation, legacy-state import,
+  approval of command naming, the whole specification, plan or implementation.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Approve a Traceable Rewrite Contract (Priority: P1)
@@ -161,6 +171,16 @@ non-resurrection of content after recovery.
     export, or AI context. Reads, edits, exports, and repeated processing do not
     restart its retention clock; metadata-only audit and ledger records are not
     removed by this expiry.
+
+11. **Given** a private-conversation user is explicitly blocked, **When** global
+    access is on, environment/managed allowances exist, a private input route is
+    invoked or previously admitted work later dispatches, **Then** no new provider
+    call/private answer bypasses the current denial. Only a currently authorized
+    superadmin's explicit unblock can remove it; a plain allow or global toggle
+    cannot. Unblock still requires ordinary access/feature gates to pass, repeated
+    block/unblock is idempotent/audited, and an already unknown Telegram result is
+    held under FR-064. No group-message deletion, role revocation or history
+    erasure follows from this private-conversation policy.
 
 ---
 
@@ -432,7 +452,9 @@ and rollback under the approved production-equivalent security boundary.
 - A group is upgraded, renamed, migrated to a new identifier, deleted, or removes
   the bot while an administrator still has an active private-panel context.
 - A user opens multiple panel messages or switches the active group while a prior
-  force-reply or callback remains outstanding.
+  force-reply or callback remains outstanding, or a private-conversation user is
+  blocked after admission but before delayed provider/answer dispatch. Current
+  scope/access is re-checked; stale acceptance is not authority.
 - A group administrator becomes a regular member between authorization display and
   action submission, or sends as an anonymous administrator or channel.
 - A forwarded message, automatic channel forward, edited message, service message,
@@ -475,8 +497,9 @@ The following classification is the proposed rewrite baseline. `Preserve` means
 retain the approved externally observable capability, not every unsafe legacy
 branch or the old internal design. The whole proposed scope, including listed
 Changes and Retirements, requires explicit owner approval. The five earlier
-answers and the D-007 automatic forward/caption mode rule are already approved
-within their stated limits; D-007's remaining contracts are not. Mixed records expose proposed security/product differences rather than silently treating
+answers, D-006's explicit private-conversation deny rule and the D-007 automatic
+forward/caption mode rule are approved within their stated limits. Remaining
+D-006 interaction/import and D-007 content/grace/manual-action choices are not. Mixed records expose proposed security/product differences rather than silently treating
 them as Preserve; surfaced subbehavior decisions remain open in the decision
 register. Exact source spans, impacts, owner status and case IDs are in the ledger.
 
@@ -487,7 +510,7 @@ register. Exact source spans, impacts, owner status and case IDs are in the ledg
 | BR-003 | Group AI enablement, mention/all modes, administrator-only mode, throttling, and autocleanup | Preserve modes; role/address and user-message cleanup contracts pending | [Exact evidence and case links](behavior-ledger.md#br-003--group-conversation-and-cleanup) | Per-group policy with no response outside eligible triggers |
 | BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; approved D-001/D-004; reset differences pending | [Exact evidence and case links](behavior-ledger.md#br-004--sessions-history-clear-and-export) | Fresh initial AI context; default-off text storage, explicit owner opt-in after notice, per-message 30-day deletion, and owner-scoped export or earlier clear |
 | BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve feedback/report utility; Change scope/privacy and broken paths (proposal) | [Exact evidence and case links](behavior-ledger.md#br-005--feedback-unknown-reporting-and-review) | Traceable feedback without cross-tenant disclosure |
-| BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve access controls; Change global mutation scope; block meaning pending | [Exact evidence and case links](behavior-ledger.md#br-006--direct-message-access-and-user-listing) | Deny-by-default access with explicit, auditable exceptions |
+| BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve access controls; approved D-006 explicit deny precedence; global mutation/UI/import details remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-006--direct-message-access-and-user-listing) | Deny-by-default access with explicit, auditable exceptions |
 | BR-007 | Private management panel, group binding, active-group selection, deep-link management, and force-reply editing | Preserve private management; Change stale authorization and prompt binding (proposal) | [Exact evidence and case links](behavior-ledger.md#br-007--private-management-and-bound-prompts) | Fresh authorization and isolated administrator context |
 | BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve scoped roles; Change incomplete audit and authorization (proposal) | [Exact evidence and case links](behavior-ledger.md#br-008--roles-superadmins-and-privileged-audit) | Least privilege, current-role verification, and complete audit |
 | BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve settings; Change false-save success and callback scope (proposal) | [Exact evidence and case links](behavior-ledger.md#br-009--scoped-settings-language-and-menus) | Validated settings with predictable scope and menus |
@@ -549,8 +572,9 @@ architecture or implementing tests:
   results are available. Distinguish interactive requests from passive moderation:
   no extra acknowledgment spam is authorized. That counting interpretation,
   profiles and sample/window values still require owner approval.
-- [Decision register](decision-register.md): accepted D-001–D-005 and the D-007
-  automatic guard mode rule; D-006, remaining D-007 contracts and D-008–D-013
+- [Decision register](decision-register.md): accepted D-001–D-005, D-006's private
+  access policy and the D-007 automatic guard mode rule; remaining D-006
+  interaction/import choices, remaining D-007 contracts and D-008–D-013 are
   pending, with their scope limits and phase gates. It does not approve imports,
   deletion activation, the complete specification or the future plan.
 
@@ -626,6 +650,18 @@ escalation, the other observed token branches, or the full specification.
   private, group, administrator, or superadmin scope.
 - **FR-008**: Private-message access MUST follow the approved global policy and
   explicit allow/block decisions, with denial that reveals no protected data.
+  An explicit private-conversation block MUST override ordinary global-on,
+  environment and managed-user allowances on every private conversation route,
+  including /ask and replies. Only a currently authorized superadmin's explicit
+  unblock action may clear that denial; adding an allowance, toggling global
+  access or restarting MUST NOT silently clear it. Without an explicit denial,
+  normal approved access and feature gates still apply; unblocking is not itself
+  an allowance. Not-yet-executed queued/recovered private provider work and answer
+  delivery MUST re-check current access before dispatch; stale admission cannot
+  bypass a later block. Unknown earlier Telegram effects still obey FR-064 and
+  MUST NOT be automatically repeated. This rule does not block Telegram users at
+  the platform level, moderate group messages, remove roles or erase history;
+  management/self-service actions retain their independent authorization rules.
 - **FR-009**: Authorized users MUST be able to submit questions through ordinary
   eligible messages, `/ask`, and supported reply journeys. Each accepted request
   MUST have one correlated outcome: a confirmed reply, a safe failure outcome, or
@@ -674,7 +710,11 @@ escalation, the other observed token branches, or the full specification.
   chat, AdsGuard, token, language, and cleanup settings for their own group.
 - **FR-021**: Superadmins MUST be able to view and manage global direct-message
   policy, explicit user access, superadmin membership, global feature switches, and
-  approved diagnostic controls only from an authorized context.
+  approved diagnostic controls only from an authorized context. Explicit private
+  conversation block/unblock changes MUST be currently superadmin-authorized,
+  idempotent and audited; group-admin status alone MUST NOT grant global authority.
+  Exact supported unblock command/panel naming remains a separately approved
+  interaction contract, not an assumed new command.
 - **FR-022**: Command menus and management entry points MUST reflect the actor's
   current scope without granting authority by visibility alone.
 - **FR-023**: Every privileged attempt, whether accepted or denied, MUST produce a
@@ -908,8 +948,11 @@ escalation, the other observed token branches, or the full specification.
 ### Key Entities
 
 - **User**: A Telegram participant with identity, locale hints, direct-message
-  access state, tenant-specific participation, and an explicit owner-scoped
-  history-storage choice with policy-notice acknowledgment; absence of a choice
+  allowance state and a distinct explicit private-conversation denial. Denial
+  overrides ordinary allowances until current superadmin explicit unblock;
+  absence of an allowance is not evidence of a historical block. Tenant-specific
+  participation and an explicit owner-scoped history-storage choice with policy-
+  notice acknowledgment remain independent; absence of explicit history opt-in
   means text storage is off.
 - **Tenant / Group**: The isolation boundary for members, administrators, policy,
   configuration, conversation behavior, moderation, tokens, and reporting.
@@ -989,6 +1032,11 @@ escalation, the other observed token branches, or the full specification.
   verify automatic deletion at each message's 30-day boundary or earlier clearing,
   and expose zero expired or cleared records through history, exports, AI context,
   or restore. Those checks preserve separately governed ledger and audit records.
+  Explicit private-conversation denial tests MUST deny every ordinary
+  global/environment/managed allowance combination, every private input route
+  and not-yet-executed delayed dispatch; only current superadmin explicit unblock
+  clears denial. Plain allow/global changes, restart and unauthorized unblock
+  produce zero bypasses. Other access/feature gates still apply after unblock.
 - **SC-005**: Across the independently labelled, project-owner-approved moderation
   corpus, proposed delete decisions yield zero false deletions of legitimate
   items, every exempt or insufficient-confidence item avoids destructive action,
@@ -1094,6 +1142,17 @@ escalation, the other observed token branches, or the full specification.
   this clarification. The corpus and tested decision scope still need definition
   and approval; provider confidence alone is insufficient, and zero observed
   test errors does not imply zero real-world errors.
+- The owner approved D-006's explicit private-conversation deny rule: /block
+  overrides ordinary global/environment/managed allowances until current
+  superadmin explicit unblock. Plain allow/global toggles and cached admissions
+  cannot bypass it; unblock does not grant an allowance or remove other gates.
+  This intentionally changes legacy revocation-only behavior and requires clear
+  administrator/user communication before later authorized activation. Historical
+  absence/deletion of an allow row is not proof of a block; source data remains
+  untouched and any initial access-state import still requires D-011 approval.
+  Exact command/panel naming and other unresolved interaction contracts remain
+  subject to D-010; group roles, moderation and history rights are not revoked by
+  this private-conversation decision. No application code or deployment is approved.
 - The owner approved D-007's automatic forward/caption mode rule: these guards
   respect the group's current effective mode and cannot independently delete in
   disabled/off, no-action or warning states. Delete-mode eligibility, exemptions,

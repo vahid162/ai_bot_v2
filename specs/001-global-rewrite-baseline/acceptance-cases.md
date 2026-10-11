@@ -2,7 +2,7 @@
 
 Status: Draft, documentation only; no tests implemented or executed. These supplement, not replace, the numbered Given/When/Then scenarios in [spec.md](spec.md). Source/actor/impact trace: [behavior-ledger.md](behavior-ledger.md). Pending owner decisions: [decision-register.md](decision-register.md). Content fixtures: [test-corpus.md](test-corpus.md). Timing, samples and denominators: [measurement-contract.md](measurement-contract.md).
 
-A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005 and D-007's automatic guard mode rule, their exact scope and limits apply now; remaining D-007 contracts are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
+A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, D-006's private access policy and D-007's automatic guard mode rule, their exact scope and limits apply now; remaining D-007 contracts are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
 
 ## Governance
 
@@ -73,9 +73,9 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-006--direct-m
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR006-01 — Access truth table | Given global on/off, environment allow, database allow and a block choice, when private access is requested, then D-006's approved truth table governs every input route. |
-| AC-BR006-02 — Global authorization | Given a group admin without superadmin authority, when global allow/block/dm actions are attempted, then no global state changes and the denied attempt is audited. |
-| AC-BR006-03 — Access targets | Given malformed, repeated and cross-scope targets, when explicit access is changed, then validation and idempotent outcomes preserve unrelated access. |
+| AC-BR006-01 — Access truth table | Given explicit private denial and all eight global-on/off × environment-allow yes/no × managed-allow yes/no combinations, when ordinary private/ask/reply or not-yet-executed queued provider/answer work dispatches, then denial wins in every combination. If denial is absent, no allowance means deny and any approved allowance remains subject to ordinary feature/access gates. Unblock alone grants no allowance. Restart/ordinary allow/global changes cannot clear denial; earlier unknown Telegram effects stay held. |
+| AC-BR006-02 — Global authorization | Given group/admin/forged/stale-superadmin actors, when global allow/block/unblock/dm actions are attempted, then only current authorized superadmin scope can change the explicit private denial. Unauthorized attempts produce no mutation and are audited; group role or a visible menu grants no global authority. |
+| AC-BR006-03 — Access targets | Given malformed/cross-scope targets, repeated authorized block/unblock and a prior failed write, when access is changed, then validated idempotent audited outcomes preserve unrelated users, failed writes are not reported as success, and only an explicit authorized unblock clears denial. A normal allow is not unblock, and a missing historical allow row is not inferred block/import permission. Exact interaction naming/migration oracle remains D-010/D-011. |
 | AC-BR006-04 — User list | Given empty and populated approved user-list fields, when an authorized list is requested, then fields render safely and no wrong-scope/raw-content values are returned. |
 
 ## BR-007 — Private management and bound prompts
