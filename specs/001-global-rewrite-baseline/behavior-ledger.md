@@ -162,7 +162,7 @@ Evidence: [telegram_bot/ads_commands.py:128–175](https://github.com/vahid162/a
 
 Classification: Preserve classifier capability; Change strict scores, eligible text/captions and exemptions (selected working recommendation for owner review).
 
-User/data/security impact: Structured AD/NOT_AD finite score>=threshold0.90; malformed becomes UNKNOWN. No binary/OCR/URL fetch. Known same-scope identity/admin/user/domain/short-reply exemptions before action; unknown authority blocks destruction/debit. Structural violation never replaces positive AD evidence. Exact supported origins and domain all-host rules are selected. Exact ranges/transitions: recommended-contracts.md (D-007/012/013). No legacy/source/server data is changed.
+User/data/security impact: Structured AD/NOT_AD finite score >= configured threshold (default 0.90); malformed becomes UNKNOWN. No binary/OCR/URL fetch. Known same-scope identity/admin/user/domain/short-reply exemptions before action; unknown authority blocks destruction/debit. Structural violation never replaces positive AD evidence. Exact supported origins and domain all-host rules are selected. Exact ranges/transitions: recommended-contracts.md (D-007/012/013). No legacy/source/server data is changed.
 
 Transition communication: Before later authorized rollout, show affected users/admins/operators the D-007/012/013 selected differences above, including removed implicit behavior, privacy/retention and safety/recovery limits. Obtain whole-spec/plan approval; mapping/evaluation/activation remain separate. Publication is not rollout permission.
 
@@ -400,3 +400,5 @@ Additional candidate evidence: [telegram_bot/alembic/versions/1a4ae0c10a8c_confi
 ## Evidence limitations
 
 No tracked measured 30-day workload/peak or benchmark report was found in the pinned source tree. Monitoring declarations prove observation capability, not utilization. No live metric endpoint, production database, server or provider was queried. Five locale selectors do not prove five complete translations: pinned fa has 170 top-level keys, en has 21, and en/ar/tr/ru share blob `5f127caf037680043562c4fbe4dfdebbc8861fd4`. This is source-catalog evidence, not the final launch-key manifest. BR-023's 28 bytecode blobs are tree evidence, not fabricated binary line citations. Approval/evaluation gaps are tracked in the decision register and measurement contract.
+
+Consolidated boundary review: EVERY settled NON_AD/EXEMPT/GUARD_ONLY/DISABLED outcome is terminal like NO_ACTION/INSUFFICIENT/UNKNOWN_HELD; edits/reclassification never reopen payment. Above-cap valid balances stay intact with SKIPPED_CAP. Exact scope/list/gap/retry and dependent-text expiry contracts are in recommended-contracts.md; these are working definitions, not verified production behavior.
