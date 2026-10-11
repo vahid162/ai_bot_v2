@@ -46,6 +46,12 @@ the requirements checklist records those limits.
   policy notice; automatically delete each message 30 days after its original
   creation. The owner can clear eligible history earlier or export it. This
   decision does not set token-ledger or audit-record retention.
+- Q: What safety criterion permits automatic AdsGuard deletion? → A: Zero false
+  deletions in an independently labelled, project-owner-approved test corpus,
+  followed by separate explicit project-owner approval to activate the tested
+  deletion policy. Automatic deletion remains disabled until both conditions are
+  met. Zero observed test errors is not a guarantee of zero real-world errors;
+  approving this requirement is not approval to activate deletion.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -190,16 +196,24 @@ duplicate enforcement.
 **Why this priority**: AdsGuard is a core moderation capability with destructive
 actions and therefore needs precise, independently verifiable behavior.
 
-**Independent Test**: Run a labeled corpus of text, captions, replies, forwards,
-contact-like content, allowlisted content, and albums through each policy mode,
-including provider failure, exhausted wallets in each mode, and repeated delivery
-of both single messages and albums.
+**Independent Test**: Run an independently labelled, project-owner-approved
+corpus of eligible advertisements, legitimate non-exempt content, text, captions,
+replies, forwards, contact-like content, allowlisted content, and albums through
+each policy mode, including provider failure, exhausted wallets, repeated
+delivery, and pending-action recovery. Evaluate proposed delete decisions against
+the approved labels independently of the disabled activation gate: no legitimate
+item may be proposed for deletion, and advertisement cases must pass their
+expected functional scenarios. Record the tested policy and corpus revisions;
+simulation does not execute moderation actions or spend tokens.
 
 **Acceptance Scenarios**:
 
 1. **Given** AdsGuard is enabled with a configured threshold, **When** eligible
-   content is classified above that threshold, **Then** exactly the configured
-   action is scheduled or applied and the decision is recorded.
+   content is classified above that threshold, **Then** the configured action
+   follows current authorization, exemptions, and the recorded policy. Automatic
+   deletion is scheduled or applied only if the FR-027 quality gate and separate
+   project-owner activation approval are valid; otherwise deletion is blocked
+   with a traceable reason. A confidence threshold alone is not deletion approval.
 2. **Given** content from an exempt administrator or allowlisted user, or content
    matching an approved domain or reply exemption, **When** it is evaluated,
    **Then** no destructive moderation action occurs and the exemption reason is
@@ -231,9 +245,16 @@ of both single messages and albums.
    deletion, mute, or token charge.
 9. **Given** an exhausted wallet in deletion mode, **When** a single message or
    album is evaluated, **Then** deletion is permitted only if the configured
-   policy, current authorization, exemptions, and approved classification-quality
-   gates allow it; exhaustion alone is not a deletion trigger, and repeated
-   delivery must not duplicate the action or charge.
+   policy, current authorization, exemptions, the FR-027 quality gate, and separate
+   project-owner activation approval allow it; exhaustion alone is not a deletion
+   trigger, and repeated delivery must not duplicate the action or charge.
+10. **Given** deletion mode is selected but the approved corpus, successful
+    zero-false-deletion evaluation, or separate project-owner activation approval
+    is missing or no longer valid for the tested scope, **When** a new, queued, or
+    recovered deletion is considered, **Then** no automatic user-content deletion
+    is attempted, regardless of wallet balance or provider confidence, and the
+    blocked reason is recorded. An unknown external result still follows FR-064;
+    activation approval does not authorize a repeat of an unresolved action.
 
 ---
 
@@ -442,7 +463,7 @@ become binding.
 | BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve | `admin_commands.py` and `shared_utils.py` | Least privilege, current-role verification, and complete audit |
 | BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve | `panel_ui.py`, `bot.py`, and admin commands | Validated settings with predictable scope and menus |
 | BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve | `ads_guard.py` and AdsGuard command registration | One explainable decision per eligible logical item |
-| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Preserve except owner-approved Change removing the token-exhaustion deletion override | `ads_guard.py`, `ads_commands.py`, and `panel_ui.py` | Exact per-group enforcement; exhausted wallets never promote warning or no-action to deletion; existing safety gates still apply |
+| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Preserve except owner-approved Change removing the token-exhaustion deletion override; owner-approved deletion activation gate | `ads_guard.py`, `ads_commands.py`, and `panel_ui.py` | Exact per-group enforcement; exhaustion never promotes warning or no-action to deletion; automatic deletion requires zero false deletions in the approved test corpus and separate owner activation approval |
 | BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve proposal; owner clarified unknown-result recovery | `ads_pending_jobs.py` and `ads_album_jobs.py` | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
 | BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve | `ads_commands.py` registrations | Tenant-scoped admin tools; diagnostic actions remain side-effect free |
 | BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve | `tokens/handlers.py`, `tokens/jobs.py`, and `tokens/models.py` | One grant per tenant/user/week and accurate balance |
@@ -465,10 +486,12 @@ each entry needs an exact source location at the pinned revision, acceptance
 scenario references, the deciding owner, and the impact/transition details required
 by FR-005. Capability classifications remain proposals except the owner-approved
 BR-004 first-cutover history exclusion and opt-in 30-day new-history policy, and
-the BR-011 token-exhaustion mode-precedence Change recorded in Clarifications. The owner also clarified unknown-result
-recovery for replies and BR-012 moderation work; this policy is not evidence of a
-verified legacy difference. These decisions do not approve the full capability
-inventory or change BR-015's grant, spending, or ledger invariants.
+the BR-011 token-exhaustion mode-precedence Change recorded in Clarifications.
+The owner also clarified unknown-result recovery for replies and BR-012 moderation
+work and approved the BR-011 automatic-deletion quality and activation gate.
+These clarified policies are not evidence of verified legacy differences and do
+not approve the full capability inventory, activate deletion, or change BR-015's
+grant, spending, or ledger invariants.
 
 #### Verified Legacy AdsGuard / Token Interaction
 
@@ -582,7 +605,9 @@ escalation, the other observed token branches, or the full specification.
   confidence threshold, request frequency, training-example limit, and cleanup
   policy. Insufficient token balance MUST NOT override the effective action mode:
   warning permits only a warning, no-action permits no moderation action, and
-  deletion is permitted only in deletion mode subject to the normal safeguards.
+  deletion is permitted only in deletion mode subject to the normal safeguards,
+  FR-027's quality gate, and separate project-owner activation approval. Group
+  mode selection or a token balance MUST NOT bypass that activation gate.
 - **FR-025**: AdsGuard MUST evaluate all approved eligible content forms and MUST
   apply administrator, user, domain, reply, contact-like, and other approved
   exemptions before any destructive action.
@@ -591,6 +616,22 @@ escalation, the other observed token branches, or the full specification.
   action reason, and final status without retaining unnecessary message content.
 - **FR-027**: Missing, malformed, untrusted, timed-out, or insufficient-confidence
   classification MUST NOT trigger deletion or another destructive action.
+  Automatic AdsGuard deletion of user content MUST remain disabled until an
+  independently labelled, project-owner-approved corpus evaluation records zero
+  false deletions and the project owner separately approves activation for the
+  tested policy and scope. A false deletion is a proposed delete decision for a
+  logical item labelled legitimate/non-advertising by the approved corpus, not
+  merely a count of live deletions. The corpus MUST include legitimate non-exempt
+  negatives, exemptions, and eligible advertisement positives; positive functional
+  scenarios MUST also pass, so disabling all detection cannot satisfy the gate.
+  The corpus, labels, tested decision configuration, evaluation result, and
+  activation decision MUST be versioned and auditable. Missing, failed, or
+  out-of-scope evidence MUST block automatic deletion, including pending and
+  recovered work; decision-affecting changes outside the approved tested scope
+  require revalidation and separate activation approval. Provider confidence,
+  group-admin mode selection, specification approval, or publishing this document
+  alone MUST NOT satisfy this gate. Zero false deletions observed in the approved
+  test corpus MUST NOT be represented as a zero-error guarantee in real groups.
 - **FR-028**: Warning, deletion, mute-related, informational, rules, and wallet
   interactions MUST be authorized, localized, bounded, and applied at most once per
   logical content item. Token exhaustion MUST NOT introduce a destructive action
@@ -601,7 +642,9 @@ escalation, the other observed token branches, or the full specification.
   evidence before repeating a warning or deletion: confirmed completion MUST NOT
   be repeated; confirmed non-execution permits bounded retry only with current
   authorization and policy safeguards; a still-unknown result MUST be recorded for
-  operator review and MUST NOT be retried automatically. FR-064 applies.
+  operator review and MUST NOT be retried automatically. Every pending or
+  recovered deletion MUST also re-check FR-027's quality and activation gate;
+  recovering a claim is not permission to bypass it. FR-064 applies.
 - **FR-030**: A media album MUST be aggregated and deduplicated as one logical
   moderation item while preserving the identifiers required to apply or recover
   the final action. Known and unknown outcomes of its affected message identifiers
@@ -796,7 +839,9 @@ escalation, the other observed token branches, or the full specification.
 - **Configuration Value**: A typed value with scope, precedence, revision, actor,
   validation result, and effective period.
 - **Ads Policy**: Per-tenant moderation enablement, action, threshold, exemption,
-  cooldown, cleanup, and provider-selection rules.
+  cooldown, cleanup, and provider-selection rules. Automatic deletion additionally
+  depends on auditable, scope-matching corpus evaluation and separate project-owner
+  activation approval; an enabled group or delete-mode setting is not that approval.
 - **Ads Decision**: The explainable classification and policy outcome for one
   logical content item, including exemption, confidence, status, and correlation.
 - **Ads Example**: A tenant-scoped labeled example used to improve classification,
@@ -850,12 +895,18 @@ escalation, the other observed token branches, or the full specification.
   verify automatic deletion at each message's 30-day boundary or earlier clearing,
   and expose zero expired or cleared records through history, exports, AI context,
   or restore. Those checks preserve separately governed ledger and audit records.
-- **SC-005**: Across the approved moderation corpus, every exempt or
-  insufficient-confidence item avoids destructive action, every expected action
-  occurs at most once, and repeated delivery creates zero duplicate warnings,
-  deletions, or charges. Exhausted-wallet tests for single messages and albums
-  produce zero deletions in warning or no-action mode, no moderation action in
-  no-action mode, and no successful token debit on insufficient-balance attempts.
+- **SC-005**: Across the independently labelled, project-owner-approved moderation
+  corpus, proposed delete decisions yield zero false deletions of legitimate
+  items, every exempt or insufficient-confidence item avoids destructive action,
+  and eligible advertisement cases pass their expected functional scenarios.
+  Every expected action occurs at most once; repeated delivery creates zero
+  duplicate warnings, deletions, or charges. Gate tests produce zero automatic
+  deletion attempts for new, queued, or recovered content when quality evidence or
+  separate project-owner activation approval is missing, failed, or out of scope.
+  Exhausted-wallet tests for single messages and albums produce zero deletions in
+  warning or no-action mode, no moderation action in no-action mode, and no
+  successful token debit on insufficient-balance attempts. Zero observed corpus
+  errors is an activation criterion, not a guarantee of zero real-world errors.
 - **SC-006**: Across concurrent grant and spending tests, wallet balances never
   become negative, each eligible weekly grant occurs at most once, each logical
   spend occurs at most once, and ledger totals reconcile exactly to wallet changes.
@@ -932,11 +983,14 @@ escalation, the other observed token branches, or the full specification.
 - The owner has approved respecting AdsGuard's configured mode when tokens are
   exhausted: warning only warns, no-action performs no moderation action, and
   deletion remains limited to deletion mode with the normal safeguards. This
-  intentionally changes the legacy exhaustion override; other token branches and
-  automatic-deletion quality gates remain unapproved.
-  [NEEDS CLARIFICATION: What independently measured classification quality and
-  false-positive limits permit automatic deletion?] A provider's confidence value
-  alone does not settle the acceptable product error rate.
+  intentionally changes the legacy exhaustion override; other token branches
+  remain unapproved. The owner also approved zero false deletions in an
+  independently labelled, owner-approved test corpus and separate explicit
+  owner activation approval as necessary conditions for automatic deletion.
+  Neither a corpus evaluation result nor an activation approval is provided by
+  this clarification. The corpus and tested decision scope still need definition
+  and approval; provider confidence alone is insufficient, and zero observed
+  test errors does not imply zero real-world errors.
 - The owner has approved checking available trustworthy evidence for a Telegram
   reply, warning, or deletion whose result is unknown, then holding a still-unknown
   result for operator review without automatic retry. Unknown is neither completed
@@ -946,11 +1000,15 @@ escalation, the other observed token branches, or the full specification.
   completion or a human-resolution deadline. Internal grants, spends, and ledger
   reconciliation retain their existing deduplication invariants; uncertainty does
   not imply an automatic refund or reversal.
-- SC-003, SC-005, SC-008, SC-010, and SC-014 are proposed targets pending an
-  owner-approved workload, independently labelled moderation corpus and quality
-  limits, maintenance window, participant/sample definition, and measured legacy
-  peak or approved substitute. These measurement contracts must be recorded
-  before specification approval; no production values have been inferred.
+- SC-003, SC-008, SC-010, and SC-014 remain proposed targets pending an
+  owner-approved workload, maintenance window, participant/sample definition, and
+  measured legacy peak or approved substitute. SC-005's zero-false-deletion test
+  criterion is owner-approved, but the independently labelled corpus, tested
+  decision scope, and coverage definition still require approval. These
+  measurement definitions must be recorded before specification approval; actual
+  passing evaluations and separate deletion activation approval are later
+  implementation/release gates, not results produced by this document. No
+  production values or real-world error guarantees have been inferred.
 
 ### Dependencies
 
