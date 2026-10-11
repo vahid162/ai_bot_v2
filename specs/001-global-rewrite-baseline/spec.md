@@ -84,6 +84,16 @@ material owner choices and corpus/workload approval remain open.
   warning/deletion charges, numeric grant/carry/spend rules, legacy corrections,
   automatic refunds, the whole specification, plan or implementation.
 
+- Q: Should the first cutover preserve validated legacy token balances and
+  associated token records or start new wallets without the old balance? → A:
+  Preserve them (Option A), after separate approval of actual sanitized schema
+  mappings and exact tenant/user reconciliation. Include associated ledger records
+  and only necessary validated grant/deduplication evidence to prevent a second
+  grant or debit. Missing/conflicting evidence is rejected or quarantined, not
+  guessed or repaired by fabricated events. This selects D-011's token-continuity
+  intent only, not other entity imports, retention, migration execution, legacy
+  deletion, whole-spec/plan approval or implementation.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Approve a Traceable Rewrite Contract (Priority: P1)
@@ -345,10 +355,15 @@ exercise rollback.
 4. **Given** migration validation fails or reconciliation exceeds an approved
    threshold, **When** cutover is evaluated, **Then** release is aborted and the
    prior service and data state remain recoverable.
-5. **Given** a successful cutover, **When** post-cutover checks run, **Then** the
-   separately approved balances, grants, moderation work, roles, tenant counts, and
-   non-content session metadata reconcile to their approved baselines, while new
-   conversation history and conversational context start empty.
+5. **Given** a successful cutover with separately approved actual token mappings,
+   **When** post-cutover checks run, **Then** validated legacy wallet balances and
+   associated ledger records preserve their approved tenant/user identities and
+   reconcile exactly to approved evidence. Necessary validated grant/deduplication
+   state prevents a second grant or debit; its mere existence cannot turn a failed
+   spend into success. Missing/conflicting evidence blocks promotion/cutover rather
+   than creating guessed balances or synthetic balancing events. Other entities
+   reconcile only if separately selected and mapped; their import is not approved
+   by token continuity. Conversation history and AI context start empty.
 6. **Given** a sanitized legacy fixture containing conversation messages and
    context-bearing session or provider references, **When** first-cutover exclusion
    is verified, **Then** no legacy conversation appears in new-bot history, export,
@@ -521,7 +536,10 @@ Changes and Retirements, requires explicit owner approval. The five earlier
 answers, D-006's explicit private-conversation deny rule, the D-007 automatic
 forward/caption mode rule and D-008's no-action/no-charge rule are approved within
 their stated limits. Remaining interaction/import, content/grace/manual-action
-and other token-policy choices are not. Mixed records expose proposed security/product differences rather than silently treating
+and other token-policy choices are not. D-011 now selects validated wallet/ledger
+continuity only, conditional on separately approved actual mappings and exact
+reconciliation; other entity imports remain undecided. Mixed records expose
+proposed security/product differences rather than silently treating
 them as Preserve; surfaced subbehavior decisions remain open in the decision
 register. Exact source spans, impacts, owner status and case IDs are in the ledger.
 
@@ -545,7 +563,7 @@ register. Exact source spans, impacts, owner status and case IDs are in the ledg
 | BR-016 | Database-first configuration with deployment fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-016--configuration-precedence-and-startup-seeding) | One uniform precedence chain with validation and safe defaults |
 | BR-017 | Persian, English, Arabic, Turkish, and Russian selectors and fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-017--localization-coverage-and-fallback) | Preserve selectors while requiring complete catalogs and no raw-key fallback |
 | BR-018 | Structured logging, metrics, health reporting, optional error reporting, provider warmup, and recurring cleanup | Preserve observable operations proposal; failure/retention policies pending | [Exact evidence and case links](behavior-ledger.md#br-018--operations-health-and-recurring-work) | Redacted, actionable operations with idempotent jobs |
-| BR-019 | Legacy operational data and schema history | Change proposal; D-001 history exclusion approved; no other imports approved | [Exact evidence and case links](behavior-ledger.md#br-019--candidate-imports-and-schema-drift) | Import only validated business data into one approved data contract |
+| BR-019 | Legacy operational data and schema history | Change; D-001 history exclusion and D-011 validated wallet/ledger continuity intent approved; actual maps and other imports remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-019--candidate-imports-and-schema-drift) | Import only validated business data into one approved data contract |
 | BR-020 | Schema upgrades during application startup and competing migration entry points | Retire competing ownership proposal | [Exact evidence and case links](behavior-ledger.md#br-020--migration-ownership) | One separately controlled, observable migration owner |
 | BR-021 | Committed credentials, mutable release inputs, host-specific paths, fixed identifiers, and shared global deployment assumptions | Retire unsafe values/couplings proposal | [Exact evidence and case links](behavior-ledger.md#br-021--unsafe-and-nonportable-release-inputs) | Rotated secrets and isolated, portable project configuration |
 | BR-022 | Large mixed-responsibility modules and direct coupling between transport, policy, provider calls, and data access | Retire internal coupling proposal | [Exact evidence and case links](behavior-ledger.md#br-022--mixed-internal-responsibilities) | Preserve outcomes without preserving unsafe internal structure |
@@ -597,7 +615,9 @@ architecture or implementing tests:
 - [Decision register](decision-register.md): accepted D-001–D-005, D-006's private
   access policy, the D-007 automatic guard mode rule and D-008's no-action/no-charge
   rule; remaining D-006 interaction/import, D-007 contracts, other D-008 token
-  policies and D-009–D-013 are pending, with their scope limits and phase gates. It does not approve imports,
+  policies and D-009–D-013 remain wholly or partly pending. D-011 selects validated
+  wallet/ledger continuity intent only; actual mappings and other entity imports
+  remain separately gated. It does not authorize executing imports,
   deletion activation, the complete specification or the future plan.
 
 Source-level review surfaced differences requiring explicit disposition: legacy
@@ -884,7 +904,15 @@ above is unchanged historical evidence, not the new approved policy.
 - **FR-049**: Migration scope MUST account for candidate users, tenant and role
   relationships, settings, non-content session metadata, feedback and unknown
   items, AdsGuard policies and operational work, wallets, grants, ledger events,
-  deduplication state, and audit records; their imports require separate approval.
+  deduplication state, and audit records. D-011 selects preservation of validated
+  legacy wallet balances and associated ledger records at first cutover, plus
+  only necessary validated linked grant/deduplication evidence that prevents
+  duplicate grants or debits. Promotion requires separately approved sanitized
+  actual-schema mappings and exact tenant/user reconciliation; this intent alone
+  is not permission to execute an import. Other entity imports, processing and
+  retention remain separately approved, including any supporting identity data.
+  Associated token records MUST NOT promote raw text-bearing notes, credentials
+  or context-bearing references merely because they are attached to a ledger.
   The owner-approved first-cutover baseline MUST start with empty conversation
   history and fresh conversational context. Legacy conversation messages, history,
   and session/provider references that would restore historical context MUST be
@@ -892,16 +920,28 @@ above is unchanged historical evidence, not the new approved policy.
   delete or modify legacy source data or imply approval of other entity imports.
 - **FR-050**: Each imported record MUST pass type, encoding, ownership, tenant,
   timestamp, referential-integrity, and business-invariant validation before
-  promotion.
+  promotion. Missing/conflicting token identities, schema, ownership, timestamps
+  or event outcomes MUST be rejected or quarantined until approved evidence and
+  mappings resolve them. Record existence alone MUST NOT prove grant/spend success;
+  fabricated identities, opening balances or balancing events MUST NOT conceal
+  discrepancies. A validated opening baseline may be used only when its actual
+  evidence and reconciliation method are separately approved.
 - **FR-051**: Credentials, tokens, passwords, private keys, credential-like values,
   host-specific deployment values, generated artifacts, and corrupt records MUST
   NOT be promoted as business data.
 - **FR-052**: Every rehearsal and cutover MUST produce source counts, accepted
   counts, transformed counts, rejected or quarantined counts, integrity totals,
   checksums where applicable, and documented discrepancies by entity and tenant.
+  Selected token continuity MUST reconcile preserved balances and associated
+  mapped ledger events per tenant/user to their approved actual evidence, with
+  independent source/target counts and no unexplained difference. Repeated import,
+  lazy/scheduled grants and replay MUST NOT produce a second grant/debit or convert
+  a recorded failed spend into success.
 - **FR-053**: Production cutover MUST require an approved compatibility window,
   restore-tested backup, rehearsal duration, acceptance thresholds, abort criteria,
-  rollback or forward-recovery procedure, and post-cutover sign-off.
+  rollback or forward-recovery procedure, and post-cutover sign-off. An unresolved
+  token mapping or reconciliation discrepancy MUST block promotion/cutover; the
+  legacy source MUST remain unchanged and recoverable.
 - **FR-054**: Migration or release interruption MUST NOT allow two owners to apply
   incompatible data changes or allow traffic to use a partially accepted contract.
 
@@ -1038,6 +1078,8 @@ above is unchanged historical evidence, not the new approved policy.
   external result held for operator review; an unresolved result is not success
   or permission to repeat the action.
 - **Wallet**: A non-negative balance uniquely owned by one tenant and one user.
+  First-cutover continuity preserves validated legacy balances only after actual
+  identity/schema mapping and exact reconciliation are separately approved.
 - **Weekly Grant**: An idempotent grant eligibility and outcome for one tenant,
   user, and grant period.
 - **Ledger Event**: An immutable grant, spend, correction, or reversal with amount,
@@ -1115,7 +1157,12 @@ above is unchanged historical evidence, not the new approved policy.
   as imported, transformed, rejected, quarantined, or excluded; zero secret values
   or legacy conversation histories are promoted, no historical conversational context is
   restored, and all separately approved financial-like totals reconcile without
-  unexplained difference.
+  unexplained difference. D-011 token continuity preserves validated source
+  wallet balances and associated ledger records against separately approved
+  actual-schema evidence per tenant/user; required linked grant/deduplication
+  evidence prevents duplicate grant/debit and preserves actual failed outcomes.
+  Unknown mappings, fabricated balancing events or unexplained differences cannot
+  pass; other entity imports are not implied.
 - **SC-008**: A full backup restoration and cutover rollback drill completes within
   the owner-approved maintenance window and restores all release-critical user,
   tenant, moderation, token, and audit invariants while enforcing conversation
@@ -1225,6 +1272,14 @@ above is unchanged historical evidence, not the new approved policy.
   historical/already-committed debits are not automatically refunded. Remaining
   warning/deletion charges, amounts, grant/carry/period/eligibility, replay horizon
   and correction rules stay pending. Publication does not implement or activate it.
+- The owner selected D-011 token continuity: preserve validated legacy wallet
+  balances and associated ledger records, plus only necessary validated linked
+  grant/deduplication evidence, conditional on separately approved actual sanitized
+  mappings and exact tenant/user reconciliation. Missing/conflicting evidence is
+  rejected/quarantined, not fabricated; historical debits are not rewritten or
+  automatically refunded. No other entity import, retention policy, source deletion
+  or actual migration is approved by this selection. Old history/context remains
+  excluded and unresolved Telegram effects remain held under FR-064.
 - The owner has approved checking available trustworthy evidence for a Telegram
   reply, warning, or deletion whose result is unknown, then holding a still-unknown
   result for operator review without automatic retry. Unknown is neither completed

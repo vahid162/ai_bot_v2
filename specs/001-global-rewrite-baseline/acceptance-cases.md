@@ -2,7 +2,7 @@
 
 Status: Draft, documentation only; no tests implemented or executed. These supplement, not replace, the numbered Given/When/Then scenarios in [spec.md](spec.md). Source/actor/impact trace: [behavior-ledger.md](behavior-ledger.md). Pending owner decisions: [decision-register.md](decision-register.md). Content fixtures: [test-corpus.md](test-corpus.md). Timing, samples and denominators: [measurement-contract.md](measurement-contract.md).
 
-A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, D-006's private access policy, D-007's automatic guard mode and D-008's no-action/no-charge rules, their exact scope and limits apply now; remaining D-007 contracts are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
+A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, D-006's private access policy, D-007's automatic guard mode and D-008's no-action/no-charge rules and D-011's conditional token-continuity intent, their exact scope and limits apply now; remaining D-007 contracts and actual import mappings are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
 
 ## Governance
 
@@ -222,7 +222,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-019--candidat
 | AC-BR019-02 — Ownership conflict | Given missing/conflicting owner/tenant/role relationships, when mapped, then no ambiguous row is promoted or treated as current authority. |
 | AC-BR019-03 — Complete accounting | Given every candidate source row, when rehearsal is authorized, then exactly one disposition and reason is counted per source identity with independent totals. |
 | AC-BR019-04 — Excluded history | Given legacy history/provider references and source checksum, when cutover is rehearsed, then no old text/context is restored and legacy source checksums remain unchanged. |
-| AC-BR019-05 — Business reconciliation | Given separately approved wallet/grant/ledger/allowlist/pending mappings, when imported, then exact totals/scopes/outcomes reconcile without second grant/spend or unknown-action replay. |
+| AC-BR019-05 — Business reconciliation | Given D-011 selected validated wallet/ledger continuity plus separately approved actual sanitized schema/identity mappings, necessary linked grant/dedupe evidence and actual opening-baseline evidence, when a future authorized import is repeated and lazy/scheduled grants or replay follow, then source balances and mapped associated ledger records reconcile exactly per tenant/user, without a second grant/debit or false successful-spend outcome from mere row existence. Missing/conflicting evidence is rejected/quarantined and blocks promotion/cutover; never fabricate balances or balancing events. Historic debits are not rewritten/refunded. Other entity imports, including allowlist/pending work, still require separate selection/mapping; unknown external effects remain held and history/context/secrets are excluded. No import or tests run now. |
 
 ## BR-020 — Migration ownership
 
