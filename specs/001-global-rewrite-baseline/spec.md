@@ -75,6 +75,15 @@ material owner choices and corpus/workload approval remain open.
   Telegram user blocking, group moderation, role revocation, legacy-state import,
   approval of command naming, the whole specification, plan or implementation.
 
+- Q: When AdsGuard is in no-action mode and trusted eligible content is classified
+  as advertising, should the user's tokens be spent? → A: No (Option A): AdsGuard
+  in no-action mode consumes no tokens, including with sufficient balance. This
+  applies to singles/albums, repeated or edited inputs and queued/recovered
+  processing; it must not produce a debit or successful-spend event for that
+  no-action journey. This approves only D-008's no-action charging branch, not
+  warning/deletion charges, numeric grant/carry/spend rules, legacy corrections,
+  automatic refunds, the whole specification, plan or implementation.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Approve a Traceable Rewrite Contract (Priority: P1)
@@ -271,10 +280,14 @@ simulation does not execute moderation actions or spend tokens.
    **When** the configured policy is applied to a single message or album,
    **Then** only the configured warning is applied, no message is deleted, and
    repeated delivery produces no duplicate warning or token charge.
-8. **Given** eligible advertising and an exhausted wallet in no-action mode,
-   **When** the configured policy is evaluated for a single message or album,
-   **Then** no moderation action occurs; exhaustion does not authorize a warning,
-   deletion, mute, or token charge.
+8. **Given** eligible advertising in no-action mode with sufficient or exhausted
+   balance and any token-switch combination, **When** AdsGuard evaluates a single
+   message or album, including duplicate/edit or queued/recovered processing,
+   **Then** no moderation action occurs and this AdsGuard journey creates zero
+   token debit or successful-spend events. Repeated processing cannot turn that
+   recorded no-charge outcome into a spend; unrelated authorized grants remain
+   separate. Warning/deletion charging and later distinct-journey eligibility
+   are not decided by this rule.
 9. **Given** an exhausted wallet in deletion mode, **When** a single message or
    album is evaluated, **Then** deletion is permitted only if the configured
    policy, current authorization, exemptions, the FR-027 quality gate, and separate
@@ -374,6 +387,14 @@ concurrent requests for the same user in two groups.
    no-action, and deletion still requires the normal policy safeguards.
 5. **Given** the same user participates in two groups, **When** balances are
    viewed, **Then** each tenant's wallet, grant, and ledger remain independent.
+
+6. **Given** AdsGuard's effective mode is no-action before a not-yet-committed
+   charge, **When** trusted eligible advertising is processed for a single item
+   or album with any balance, **Then** no token is spent and no successful-spend
+   ledger event is recorded. Profiles, stale admission, duplicate/edit processing,
+   restart and recovery cannot bypass the no-charge rule. Independent authorized
+   grants may still change the wallet; this decision neither refunds an already
+   committed/historical charge nor approves warning/deletion charging.
 
 ---
 
@@ -497,9 +518,10 @@ The following classification is the proposed rewrite baseline. `Preserve` means
 retain the approved externally observable capability, not every unsafe legacy
 branch or the old internal design. The whole proposed scope, including listed
 Changes and Retirements, requires explicit owner approval. The five earlier
-answers, D-006's explicit private-conversation deny rule and the D-007 automatic
-forward/caption mode rule are approved within their stated limits. Remaining
-D-006 interaction/import and D-007 content/grace/manual-action choices are not. Mixed records expose proposed security/product differences rather than silently treating
+answers, D-006's explicit private-conversation deny rule, the D-007 automatic
+forward/caption mode rule and D-008's no-action/no-charge rule are approved within
+their stated limits. Remaining interaction/import, content/grace/manual-action
+and other token-policy choices are not. Mixed records expose proposed security/product differences rather than silently treating
 them as Preserve; surfaced subbehavior decisions remain open in the decision
 register. Exact source spans, impacts, owner status and case IDs are in the ledger.
 
@@ -519,7 +541,7 @@ register. Exact source spans, impacts, owner status and case IDs are in the ledg
 | BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve durable work; approved D-003; Change state-reset/cache hazards (proposal) | [Exact evidence and case links](behavior-ledger.md#br-012--pending-moderation-and-album-recovery) | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
 | BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve tools; Change route authorization/aliases and privacy (proposal) | [Exact evidence and case links](behavior-ledger.md#br-013--examples-allowlists-and-diagnostics) | Tenant-scoped tools; diagnostics do not moderate content, change policy or spend tokens; ancillary effects declared |
 | BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve wallets; numeric grant/carry/period/eligibility policy pending | [Exact evidence and case links](behavior-ledger.md#br-014--wallet-balance-weekly-grants-and-carry) | One grant per tenant/user/week and accurate balance |
-| BR-015 | Token spending, logical-message deduplication, and ledger history | Preserve ledger invariants; Change false duplicate-success/unsafe expiry (proposal) | [Exact evidence and case links](behavior-ledger.md#br-015--token-spending-and-ledger-outcomes) | Exactly-once charge, non-negative balance, auditable ledger |
+| BR-015 | Token spending, logical-message deduplication, and ledger history | Preserve ledger invariants; approved D-008 no-action/no-charge Change; failed-outcome/expiry and other token policies remain separately gated | [Exact evidence and case links](behavior-ledger.md#br-015--token-spending-and-ledger-outcomes) | At most one approved charge; zero AdsGuard no-action debits; non-negative balance and reconcilable ledger |
 | BR-016 | Database-first configuration with deployment fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-016--configuration-precedence-and-startup-seeding) | One uniform precedence chain with validation and safe defaults |
 | BR-017 | Persian, English, Arabic, Turkish, and Russian selectors and fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-017--localization-coverage-and-fallback) | Preserve selectors while requiring complete catalogs and no raw-key fallback |
 | BR-018 | Structured logging, metrics, health reporting, optional error reporting, provider warmup, and recurring cleanup | Preserve observable operations proposal; failure/retention policies pending | [Exact evidence and case links](behavior-ledger.md#br-018--operations-health-and-recurring-work) | Redacted, actionable operations with idempotent jobs |
@@ -573,9 +595,9 @@ architecture or implementing tests:
   no extra acknowledgment spam is authorized. That counting interpretation,
   profiles and sample/window values still require owner approval.
 - [Decision register](decision-register.md): accepted D-001–D-005, D-006's private
-  access policy and the D-007 automatic guard mode rule; remaining D-006
-  interaction/import choices, remaining D-007 contracts and D-008–D-013 are
-  pending, with their scope limits and phase gates. It does not approve imports,
+  access policy, the D-007 automatic guard mode rule and D-008's no-action/no-charge
+  rule; remaining D-006 interaction/import, D-007 contracts, other D-008 token
+  policies and D-009–D-013 are pending, with their scope limits and phase gates. It does not approve imports,
   deletion activation, the complete specification or the future plan.
 
 Source-level review surfaced differences requiring explicit disposition: legacy
@@ -623,6 +645,16 @@ exhaustion no longer causes implicit deletion before this change is activated;
 legacy data is not modified and wallet integrity controls remain unchanged.
 This clarification does not approve unsolicited exhaustion notices, mute
 escalation, the other observed token branches, or the full specification.
+
+The later D-008 answer intentionally changes the sufficient-balance no-action
+branch as well: AdsGuard no-action consumes no tokens, regardless of balance,
+token switches, single/album shape or repeated processing. FR-039/040, US4.8,
+US6.6 and SC-005/006 verify this scoped difference. Tell group administrators and
+affected users before later authorized activation; no legacy debit is rewritten
+or refunded by this answer. Warning/deletion charging, numerical economic rules
+and replay/correction contracts remain separate pending choices. The source table
+above is unchanged historical evidence, not the new approved policy.
+
 
 ### Functional Requirements
 
@@ -806,10 +838,23 @@ escalation, the other observed token branches, or the full specification.
   limit.
 - **FR-039**: A token-consuming logical message or album MUST reduce the wallet at
   most once even when requests, callbacks, or updates repeat concurrently.
+  AdsGuard processing in effective no-action mode MUST NOT consume tokens or
+  debit its user's wallet, even for a trusted eligible advertisement with
+  sufficient balance, any token switches, or a single item/album. Duplicate,
+  edited, queued and recovered processing MUST preserve that no-charge rule.
+  Before a not-yet-committed debit, the current effective mode MUST be re-checked;
+  a profile or stale prior-mode admission cannot authorize charging in no-action
+  mode. Replaying a recorded no-action outcome MUST NOT retro-charge it. Whether
+  a later distinct approved warning/deletion journey may consume tokens remains
+  a separate policy/identity decision. Mode changes MUST NOT automatically refund
+  historical/already-committed charges; independent authorized grants/corrections
+  follow their own approved contracts.
 - **FR-040**: Wallet balances MUST never become negative, and every grant, spend,
   correction, or approved reversal MUST have an immutable, reconcilable ledger
   event. An insufficient-balance spending attempt MUST NOT debit the wallet or
   create a successful-spend event; it MUST NOT authorize a moderation-mode override.
+  A no-action AdsGuard evaluation MUST NOT create a successful-spend ledger event
+  or a debit; zero-spend outcome metadata MUST NOT misrepresent a paid action.
 - **FR-041**: Users MUST be able to view the current tenant balance and, when a
   future grant can change it, a localized indication of the next grant window.
 
@@ -1047,7 +1092,10 @@ escalation, the other observed token branches, or the full specification.
   separate project-owner activation approval is missing, failed, or out of scope.
   Exhausted-wallet tests for single messages and albums produce zero deletions in
   warning or no-action mode, no moderation action in no-action mode, and no
-  successful token debit on insufficient-balance attempts. Zero observed corpus
+  successful token debit on insufficient-balance attempts. No-action processing
+  MUST also produce zero AdsGuard debit/successful-spend events with sufficient
+  balance, token switches, singles/albums and duplicate/edit/recovered variants.
+  This does not prescribe warning/deletion charging. Zero observed corpus
   errors is an activation criterion, not a guarantee of zero real-world errors.
   Automatic forbidden-forward and captionless-media guard tests MUST produce zero
   user-content deletions in disabled/off, no-action or warning states, including
@@ -1058,6 +1106,11 @@ escalation, the other observed token branches, or the full specification.
 - **SC-006**: Across concurrent grant and spending tests, wallet balances never
   become negative, each eligible weekly grant occurs at most once, each logical
   spend occurs at most once, and ledger totals reconcile exactly to wallet changes.
+  No-action AdsGuard tests MUST produce zero attributable spend/debit and zero
+  successful-spend events for sufficient/zero wallets, any token switches,
+  singles/albums, duplicate/edit processing and queued/recovered mode changes.
+  Independent authorized grants are separately reconciled; an overall wallet
+  change is not confused with a charge caused by the no-action journey.
 - **SC-007**: Every migration rehearsal accounts for 100% of source rows in scope
   as imported, transformed, rejected, quarantined, or excluded; zero secret values
   or legacy conversation histories are promoted, no historical conversational context is
@@ -1134,8 +1187,9 @@ escalation, the other observed token branches, or the full specification.
 - The owner has approved respecting AdsGuard's configured mode when tokens are
   exhausted: warning only warns, no-action performs no moderation action, and
   deletion remains limited to deletion mode with the normal safeguards. This
-  intentionally changes the legacy exhaustion override; other token branches
-  remain unapproved. The owner also approved zero false deletions in an
+  intentionally changes the legacy exhaustion override. The later D-008 answer
+  separately approves no token consumption by no-action AdsGuard; warning/deletion
+  charges and other economic/replay/correction rules remain unapproved. The owner also approved zero false deletions in an
   independently labelled, owner-approved test corpus and separate explicit
   owner activation approval as necessary conditions for automatic deletion.
   Neither a corpus evaluation result nor an activation approval is provided by
@@ -1162,6 +1216,15 @@ escalation, the other observed token branches, or the full specification.
   informed before later authorized activation. No legacy data changes, deletion
   activation or manual-mute/user-chat-cleanup approval follows from this answer;
   remaining D-007 content/grace/notice contracts remain pending.
+- The owner approved D-008's no-action/no-charge rule: AdsGuard in no-action
+  mode spends no tokens even for trusted eligible ads with sufficient balance.
+  Single/album, duplicate/edit, queued/recovered and current-mode-at-debit cases
+  preserve that scoped zero-charge outcome. No-action is not the same as turning
+  AdsGuard off; this answer does not authorize a provider-processing/privacy path
+  or decide classification itself. Independent approved grants are not prohibited;
+  historical/already-committed debits are not automatically refunded. Remaining
+  warning/deletion charges, amounts, grant/carry/period/eligibility, replay horizon
+  and correction rules stay pending. Publication does not implement or activate it.
 - The owner has approved checking available trustworthy evidence for a Telegram
   reply, warning, or deletion whose result is unknown, then holding a still-unknown
   result for operator review without automatic retry. Unknown is neither completed

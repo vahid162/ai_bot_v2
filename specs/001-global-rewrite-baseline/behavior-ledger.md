@@ -4,7 +4,7 @@ Status: Draft proposals, reviewed 2026-10-11. Decision owner for every record: p
 
 ## Reading this ledger
 
-Evidence below is static source-path verification, not an executed runtime test. A registered command, unreachable branch, comment or intended helper call does not prove a working journey. Preserve means preserving the approved observable capability, not every unsafe source branch. Mixed capability/change records deliberately expose differences rather than hiding them under Preserve. D-001–D-005, D-006's private access policy and D-007's automatic forward/caption mode rule are approved within their stated limits; remaining D-007 contracts and every other preserve/change/retire proposal or surfaced subbehavior await owner scope approval. Publishing this ledger is not approval. No source/server data was inspected or changed.
+Evidence below is static source-path verification, not an executed runtime test. A registered command, unreachable branch, comment or intended helper call does not prove a working journey. Preserve means preserving the approved observable capability, not every unsafe source branch. Mixed capability/change records deliberately expose differences rather than hiding them under Preserve. D-001–D-005, D-006's private access policy, D-007's automatic forward/caption mode and D-008's no-action/no-charge rules are approved within their stated limits; remaining D-007 contracts and every other preserve/change/retire proposal or surfaced subbehavior await owner scope approval. Publishing this ledger is not approval. No source/server data was inspected or changed.
 
 The 23 families are an indexed discovery inventory, not proof that all observable behavior has been discovered or that SC-001 passes. Each record lists actor, exact evidence, proposal, impact, communication and verification. Newly discovered differences must be appended and approved. Application implementation, architecture choice, corpus execution, migration and deployment remain outside this document change.
 
@@ -234,19 +234,19 @@ Verification: AC-BR014-01, AC-BR014-02, AC-BR014-03, AC-BR014-04; US6.1/2/5; FR-
 
 ## BR-015 — Token spending and ledger outcomes
 
-Actors: tenant wallet owner; reconciliation operator. Owner: project owner. Approval: pending scope approval.
+Actors: tenant wallet owner; reconciliation operator. Owner: project owner. Approval: D-008 no-action/no-charge rule approved; warning/deletion and remaining economic/replay/correction contracts pending.
 
 Observed: Dedupe identity is inserted before checking balance. An insufficient-balance attempt returns false but its later duplicate can return true without a debit. Dedupe cleanup defaults to seven days, allowing old replay without durable outcome proof. Delete-mode bypass and spending in none with sufficient balance are observed, not approved by D-002.
 
 Evidence: [telegram_bot/tokens/models.py:245–333](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/tokens/models.py#L245-L333); [telegram_bot/ads_guard.py:2789–2815](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L2789-L2815); [telegram_bot/tokens/jobs.py:37–58](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/tokens/jobs.py#L37-L58).
 
-Classification: Preserve invariants; Change false duplicate-success and unsafe expiry (proposal).
+Classification: Preserve invariants; approved Change D-008: no-action AdsGuard consumes no tokens, removing legacy sufficient-balance none-mode spending. False duplicate-success/unsafe-expiry and remaining economic contracts stay separately gated.
 
-User/data/security impact: Preserve nonnegative balances/exact reconciliation and actual failure outcome under repeat delivery. D-008 governs consuming journeys, amount, correction and replay horizon; unknown Telegram outcome is not automatic refund authority.
+User/data/security impact: Preserve nonnegative balances/exact reconciliation and actual outcomes. No-action AdsGuard yields zero attributable spend/debit and no successful-spend event, including sufficient/zero wallets, token switches, singles/albums, duplicate/edit and queued/recovered execution. Current mode before an uncommitted debit prevents stale prior-mode charging; replay cannot retro-charge the recorded no-action outcome. Independent authorized grants remain separate. D-008's remaining warning/deletion charges, amounts, grant/carry/period/eligibility, later distinct-journey rules, correction and replay horizon are pending; no historical/already-committed refund or unknown-Telegram refund authority is inferred.
 
-Transition communication: Explain approved charging journeys and no fabricated successful-spend events.
+Transition communication: Tell group administrators and affected users that no-action AdsGuard no longer consumes tokens before later authorized activation. Explain remaining approved charging journeys only after their separate decisions; no fabricated successful-spend events, source debit rewrite or automatic historical refund.
 
-Verification: AC-BR015-01, AC-BR015-02, AC-BR015-03, AC-BR015-04, AC-BR015-05; US6.3–5; US4.7–9; FR-039, FR-040, FR-062, FR-064. Cases are definitions only, not executed/passed.
+Verification: AC-BR015-01, AC-BR015-02, AC-BR015-03, AC-BR015-04, AC-BR015-05; US6.3–6; US4.7–9; FR-039, FR-040, FR-062, FR-064. Cases are definitions only, not executed/passed.
 
 ## BR-016 — Configuration precedence and startup seeding
 

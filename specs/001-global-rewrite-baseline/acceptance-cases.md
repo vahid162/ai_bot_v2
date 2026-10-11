@@ -2,7 +2,7 @@
 
 Status: Draft, documentation only; no tests implemented or executed. These supplement, not replace, the numbered Given/When/Then scenarios in [spec.md](spec.md). Source/actor/impact trace: [behavior-ledger.md](behavior-ledger.md). Pending owner decisions: [decision-register.md](decision-register.md). Content fixtures: [test-corpus.md](test-corpus.md). Timing, samples and denominators: [measurement-contract.md](measurement-contract.md).
 
-A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, D-006's private access policy and D-007's automatic guard mode rule, their exact scope and limits apply now; remaining D-007 contracts are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
+A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, D-006's private access policy, D-007's automatic guard mode and D-008's no-action/no-charge rules, their exact scope and limits apply now; remaining D-007 contracts are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
 
 ## Governance
 
@@ -128,7 +128,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-011--modes-fo
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR011-01 — Mode and wallet | Given modes off/none/warn/delete, token switches and sufficient/exhausted wallets for singles/albums, when a trusted eligible ad is processed, then D-002 governs exhaustion and no invalid spend is successful. |
+| AC-BR011-01 — Mode and wallet | Given modes off/none/warn/delete, token switches and sufficient/exhausted wallets for singles/albums, when a trusted eligible ad is processed, then D-002 governs exhaustion and D-008's no-action branch has zero AdsGuard spend/debit or successful-spend event. Duplicate/edit/queued/recovered work and current-mode checks cannot charge a no-action evaluation. No invalid spend is successful; warning/deletion charges and other economic rules remain pending. |
 | AC-BR011-02 — Forward and caption guards | Given eligible disallowed forwards or captionless singles/albums under each mode/profile, when automatic guard/grace work evaluates or executes, then current disabled/off and no-action states have no moderation action, warning never deletes user content, and deletion mode only permits deletion with current eligibility/authorization/exemptions and D-005 quality plus separate owner activation. Profiles and queued/recovered jobs cannot bypass a change away from deletion mode; unknown prior results stay held under D-003. Exact eligibility/grace/notice oracles remain pending in D-007. |
 | AC-BR011-03 — Caption race | Given caption edit/reply before/at/after grace and concurrent execution, when cancel/recovery occurs, then at most one authorized effect follows current mode and known/unknown result separation; a queued deletion cannot execute after switching to off/none/warn. The exact grace/edit/cancel boundary oracle remains pending; this approved mode rule does not invent it. |
 | AC-BR011-04 — Manual mute | Given forged/stale/exempt/authorized mute targets including an album, when invoked, then only D-007-approved associated actions occur and partial/unknown external effects are not repeated. |
@@ -143,7 +143,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-012--pending-
 | AC-BR012-01 — Crash disposition | Given interruption before send/after confirmed completion/confirmed non-execution/unknown execution, when restarted, then only confirmed non-execution permits bounded authorized retry; unknown results are durably held. |
 | AC-BR012-02 — Partial album | Given completed, not-executed and unknown member results, when album work recovers, then no completed or unknown member action is repeated and the logical outcome remains accurate. |
 | AC-BR012-03 — Upsert state | Given cancelled/completed/unknown work and duplicate inputs, when upsert or recurring recovery occurs, then no terminal state or unknown hold is silently reset. |
-| AC-BR012-04 — Policy recheck | Given changed mode/enablement/role/exemption/deletion gate, when pending work runs, then current safeguards apply and outdated permission cannot authorize destruction. |
+| AC-BR012-04 — Policy recheck | Given changed mode/enablement/role/exemption/deletion gate, when pending work runs, then current safeguards apply and outdated permission cannot authorize destruction. No-action AdsGuard before an uncommitted debit also prevents spending under stale prior-mode admission; no automatic refund of already committed debit or repeat of unknown Telegram action follows. |
 | AC-BR012-05 — Preserved identifiers | Given cache cleanup/restart, when unresolved album work remains, then required non-content identifiers remain available or the action is safely held; no new spend/refund is inferred. |
 
 ## BR-013 — Examples, allowlists and diagnostics
@@ -175,7 +175,7 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-015--token-sp
 
 | Case | Given / When / Then contract |
 | --- | --- |
-| AC-BR015-01 — Spend concurrency | Given repeated concurrent logical single/album spending, when processed, then at most one debit and matching immutable ledger event occurs within tenant/user scope. |
+| AC-BR015-01 — Spend concurrency | Given repeated concurrent logical singles/albums, when AdsGuard's effective mode is no-action before an uncommitted debit, then zero attributable token spend/debit or successful-spend events occur with any balance/switches, including duplicate/edit, restart and queued/recovered processing. Current mode prevents stale charging and a recorded no-action outcome is not retro-charged. Independent authorized grants may change balance separately; other approved consuming journeys still have at most one matching debit/ledger event. Warning/deletion/later-distinct-journey oracles remain pending. |
 | AC-BR015-02 — Failed spend replay | Given zero balance and an insufficient attempt, when redelivered before or after a later grant, then the original attempt never becomes a fictitious success or unapproved retroactive charge. |
 | AC-BR015-03 — Long replay | Given an old logical spend after cleanup/restart/restore, when redelivered, then the approved replay contract prevents a second charge and identifies the original outcome. |
 | AC-BR015-04 — Scoped keys | Given equal logical keys in different tenants/users, when spent, then each approved wallet outcome remains isolated. |
@@ -307,8 +307,8 @@ Each of the 65 existing requirements has explicit supplementary case pointers. T
 | FR-036 | AC-BR014-01, AC-BR015-04 |
 | FR-037 | AC-BR014-02, AC-BR014-03 |
 | FR-038 | AC-BR014-03 |
-| FR-039 | AC-BR015-01, AC-BR015-03 |
-| FR-040 | AC-BR015-02, AC-BR015-05, AC-BR014-02 |
+| FR-039 | AC-BR011-01, AC-BR015-01, AC-BR015-03, AC-BR012-04 |
+| FR-040 | AC-BR015-01, AC-BR015-02, AC-BR015-05, AC-BR014-02 |
 | FR-041 | AC-BR014-01, AC-BR014-04 |
 | FR-042 | AC-BR016-01, AC-BR016-03 |
 | FR-043 | AC-BR009-01, AC-BR016-02 |
