@@ -1,0 +1,17 @@
+#!/bin/sh
+set -eu
+
+project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+cd "$project_dir"
+
+if docker info >/dev/null 2>&1; then
+    exec docker compose \
+        -p guardbot-specify \
+        -f compose.specify.yaml \
+        run --rm --no-deps specify "$@"
+fi
+
+exec sudo -n docker compose \
+    -p guardbot-specify \
+    -f compose.specify.yaml \
+    run --rm --no-deps specify "$@"

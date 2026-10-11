@@ -1,0 +1,37 @@
+name: guardbot-specify
+
+services:
+  specify:
+    image: guardbot/specify-cli:0.16.4
+    pull_policy: never
+    build:
+      context: ./tools/specify
+      dockerfile: Dockerfile
+      args:
+        SPECIFY_CLI_VERSION: "0.16.4"
+    user: "1000:1000"
+    working_dir: /workspace
+    read_only: true
+    network_mode: none
+    init: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 512m
+    cpus: "1.0"
+    environment:
+      HOME: /tmp/home
+      XDG_CACHE_HOME: /tmp/cache
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=64m,mode=1777
+      - /workspace/backup:rw,noexec,nosuid,nodev,size=64k,mode=0000
+    stdin_open: true
+    tty: true
