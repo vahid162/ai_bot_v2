@@ -55,6 +55,16 @@ material owner choices and corpus/workload approval remain open.
   met. Zero observed test errors is not a guarantee of zero real-world errors;
   approving this requirement is not approval to activate deletion.
 
+- Q: Should automatic deletion of forbidden forwards and captionless media also
+  respect the group's AdsGuard mode? → A: Yes (Option A): respect the group mode;
+  automatic user-content deletion is permitted only in deletion mode, with current
+  eligibility, authorization, exemptions, the FR-027 quality gate and separate
+  project-owner activation approval. Disabled, no-action and warning states do not
+  permit these guards to delete user content. Profiles and queued/recovered work
+  cannot bypass the current effective mode. This approves only D-007's mode rule,
+  not caption/grace defaults, manual mute-associated deletion, ordinary chat cleanup,
+  corpus labels/evaluation, activation, the whole specification or the later plan.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Approve a Traceable Rewrite Contract (Priority: P1)
@@ -258,6 +268,17 @@ simulation does not execute moderation actions or spend tokens.
     blocked reason is recorded. An unknown external result still follows FR-064;
     activation approval does not authorize a repeat of an unresolved action.
 
+11. **Given** an automatic forbidden-forward or captionless-media guard for a
+    single message or album, **When** its action is evaluated under disabled/off,
+    no-action, warning or deletion policy, **Then** it respects the current group
+    mode: no automatic user-content deletion outside deletion mode, and no-action
+    performs no moderation action. A deletion-mode candidate is permitted only
+    with current eligibility, authorization, exemptions, FR-027 quality evidence
+    and separate owner activation approval. Profiles or pending work scheduled
+    before a mode change cannot override the mode at execution/recovery; an unknown
+    prior external result remains held under FR-064. Exact grace/cancel boundaries,
+    supported origins and warning output remain unapproved, not assumed.
+
 ---
 
 ### User Story 5 - Migrate and Cut Over without Data Corruption (Priority: P1)
@@ -422,7 +443,9 @@ and rollback under the approved production-equivalent security boundary.
   output, embeds an unsafe URL, repeats a response, or returns content for a
   different request.
 - A configuration value changes while requests or pending moderation actions are
-  already in flight.
+  already in flight, including a queued forward/caption deletion whose group is
+  disabled or switches to warning/no-action before execution. The current mode
+  blocks that deletion; an unknown prior result remains held, not retried.
 - Weekly grant, lazy grant, token spend, and duplicate cleanup run concurrently
   across multiple workers, or a wallet remains exhausted when AdsGuard evaluates
   warning, no-action, or deletion policy for a single message or album.
@@ -451,9 +474,9 @@ and rollback under the approved production-equivalent security boundary.
 The following classification is the proposed rewrite baseline. `Preserve` means
 retain the approved externally observable capability, not every unsafe legacy
 branch or the old internal design. The whole proposed scope, including listed
-Changes and Retirements, requires explicit owner approval. Only the five recorded
-clarification answers are already approved within their stated limits. Mixed
-records expose proposed security/product differences rather than silently treating
+Changes and Retirements, requires explicit owner approval. The five earlier
+answers and the D-007 automatic forward/caption mode rule are already approved
+within their stated limits; D-007's remaining contracts are not. Mixed records expose proposed security/product differences rather than silently treating
 them as Preserve; surfaced subbehavior decisions remain open in the decision
 register. Exact source spans, impacts, owner status and case IDs are in the ledger.
 
@@ -469,7 +492,7 @@ register. Exact source spans, impacts, owner status and case IDs are in the ledg
 | BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve scoped roles; Change incomplete audit and authorization (proposal) | [Exact evidence and case links](behavior-ledger.md#br-008--roles-superadmins-and-privileged-audit) | Least privilege, current-role verification, and complete audit |
 | BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve settings; Change false-save success and callback scope (proposal) | [Exact evidence and case links](behavior-ledger.md#br-009--scoped-settings-language-and-menus) | Validated settings with predictable scope and menus |
 | BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve classifier capability; Change unsafe output parsing; content eligibility pending | [Exact evidence and case links](behavior-ledger.md#br-010--adsguard-classification-and-eligibility) | One explainable decision per eligible logical item |
-| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Approved D-002/D-005; forward/caption/manual-mute contracts pending | [Exact evidence and case links](behavior-ledger.md#br-011--modes-forwardcaption-guards-profiles-and-mute) | Exact per-group enforcement; exhaustion never promotes warning or no-action to deletion; automatic deletion requires zero false deletions in the approved test corpus and separate owner activation approval |
+| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Approved D-002/D-005 and D-007 automatic guard mode rule; remaining eligibility/grace/manual-mute contracts pending | [Exact evidence and case links](behavior-ledger.md#br-011--modes-forwardcaption-guards-profiles-and-mute) | Exact per-group enforcement; exhaustion never promotes warning or no-action to deletion; automatic deletion requires zero false deletions in the approved test corpus and separate owner activation approval |
 | BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve durable work; approved D-003; Change state-reset/cache hazards (proposal) | [Exact evidence and case links](behavior-ledger.md#br-012--pending-moderation-and-album-recovery) | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
 | BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve tools; Change route authorization/aliases and privacy (proposal) | [Exact evidence and case links](behavior-ledger.md#br-013--examples-allowlists-and-diagnostics) | Tenant-scoped tools; diagnostics do not moderate content, change policy or spend tokens; ancillary effects declared |
 | BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve wallets; numeric grant/carry/period/eligibility policy pending | [Exact evidence and case links](behavior-ledger.md#br-014--wallet-balance-weekly-grants-and-carry) | One grant per tenant/user/week and accurate balance |
@@ -526,8 +549,9 @@ architecture or implementing tests:
   results are available. Distinguish interactive requests from passive moderation:
   no extra acknowledgment spam is authorized. That counting interpretation,
   profiles and sample/window values still require owner approval.
-- [Decision register](decision-register.md): accepted D-001–D-005, unapproved
-  D-006–D-013, their scope limits and phase gates. It does not approve imports,
+- [Decision register](decision-register.md): accepted D-001–D-005 and the D-007
+  automatic guard mode rule; D-006, remaining D-007 contracts and D-008–D-013
+  pending, with their scope limits and phase gates. It does not approve imports,
   deletion activation, the complete specification or the future plan.
 
 Source-level review surfaced differences requiring explicit disposition: legacy
@@ -540,7 +564,10 @@ before classification; malformed scores can be treated as ads; failed token spen
 can later appear successful solely from a dedupe row; dedupe expiry can allow an
 old replay; and declared migration columns/keys differ from runtime assumptions.
 These are pinned-source observations, not implemented fixes or confirmed live
-failures. D-002 does not resolve independent forward/caption/mute/cleanup policy.
+failures. D-002 did not resolve forward/caption/mute/cleanup policy. The later
+D-007 answer approves respecting the current group mode for automatic
+forward/caption deletion; independent deletion outside delete mode is not allowed.
+Remaining eligibility/grace/manual-mute/user-cleanup contracts stay pending.
 Every automatic AdsGuard user-content deletion remains subject to D-005.
 
 Complete the remaining owner choices and approve corpus/workload definitions
@@ -663,6 +690,16 @@ escalation, the other observed token branches, or the full specification.
   deletion is permitted only in deletion mode subject to the normal safeguards,
   FR-027's quality gate, and separate project-owner activation approval. Group
   mode selection or a token balance MUST NOT bypass that activation gate.
+  Automatic forbidden-forward and captionless-media guards MUST also respect the
+  current effective group mode: disabled/off and no-action produce no moderation
+  action, warning MUST NOT delete user content, and deletion mode permits deletion
+  only when current eligibility, authorization, exemptions and FR-027's quality
+  and separate owner-activation gates allow it. Guard/profile switches MUST NOT
+  independently authorize deletion in another mode. Queued and recovered guard
+  actions MUST re-check the effective mode at execution; scheduling under a prior
+  deletion mode is not permission after the mode or enablement changes. The
+  warning response, caption/grace values and manual-mute/chat-cleanup contracts
+  remain separately scoped decisions; this answer does not activate deletion.
 - **FR-025**: AdsGuard MUST evaluate all approved eligible content forms and MUST
   apply administrator, user, domain, reply, contact-like, and other approved
   exemptions before any destructive action.
@@ -698,7 +735,9 @@ escalation, the other observed token branches, or the full specification.
   be repeated; confirmed non-execution permits bounded retry only with current
   authorization and policy safeguards; a still-unknown result MUST be recorded for
   operator review and MUST NOT be retried automatically. Every pending or
-  recovered deletion MUST also re-check FR-027's quality and activation gate;
+  recovered deletion MUST also re-check the current effective deletion mode,
+  enablement, eligibility, authorization, exemptions, and FR-027's quality and
+  activation gate, including automatic forward/caption guards;
   recovering a claim is not permission to bypass it. FR-064 applies.
 - **FR-030**: A media album MUST be aggregated and deduplicated as one logical
   moderation item while preserving the identifiers required to apply or recover
@@ -962,6 +1001,12 @@ escalation, the other observed token branches, or the full specification.
   warning or no-action mode, no moderation action in no-action mode, and no
   successful token debit on insufficient-balance attempts. Zero observed corpus
   errors is an activation criterion, not a guarantee of zero real-world errors.
+  Automatic forbidden-forward and captionless-media guard tests MUST produce zero
+  user-content deletions in disabled/off, no-action or warning states, including
+  profile combinations and queued/recovered actions whose effective mode changes
+  before execution. Deletion-mode cases remain conditional on all normal safeguards
+  and the separate quality/activation gate; pending grace/eligibility oracles MUST
+  NOT be guessed as approved.
 - **SC-006**: Across concurrent grant and spending tests, wallet balances never
   become negative, each eligible weekly grant occurs at most once, each logical
   spend occurs at most once, and ledger totals reconcile exactly to wallet changes.
@@ -1049,6 +1094,15 @@ escalation, the other observed token branches, or the full specification.
   this clarification. The corpus and tested decision scope still need definition
   and approval; provider confidence alone is insufficient, and zero observed
   test errors does not imply zero real-world errors.
+- The owner approved D-007's automatic forward/caption mode rule: these guards
+  respect the group's current effective mode and cannot independently delete in
+  disabled/off, no-action or warning states. Delete-mode eligibility, exemptions,
+  authorization and the separate quality/activation gate still apply, including
+  at queued/recovered execution. This intentional change removes legacy
+  pre-mode deletion bypasses; group administrators and affected users must be
+  informed before later authorized activation. No legacy data changes, deletion
+  activation or manual-mute/user-chat-cleanup approval follows from this answer;
+  remaining D-007 content/grace/notice contracts remain pending.
 - The owner has approved checking available trustworthy evidence for a Telegram
   reply, warning, or deletion whose result is unknown, then holding a still-unknown
   result for operator review without automatic retry. Unknown is neither completed

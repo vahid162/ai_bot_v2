@@ -4,7 +4,7 @@ Status: Draft proposals, reviewed 2026-10-11. Decision owner for every record: p
 
 ## Reading this ledger
 
-Evidence below is static source-path verification, not an executed runtime test. A registered command, unreachable branch, comment or intended helper call does not prove a working journey. Preserve means preserving the approved observable capability, not every unsafe source branch. Mixed capability/change records deliberately expose differences rather than hiding them under Preserve. Only D-001–D-005 are approved decisions; every other preserve/change/retire proposal and surfaced subbehavior awaits owner scope approval. Publishing this ledger is not approval. No source/server data was inspected or changed.
+Evidence below is static source-path verification, not an executed runtime test. A registered command, unreachable branch, comment or intended helper call does not prove a working journey. Preserve means preserving the approved observable capability, not every unsafe source branch. Mixed capability/change records deliberately expose differences rather than hiding them under Preserve. D-001–D-005 and D-007's automatic forward/caption mode rule are approved within their stated limits; remaining D-007 contracts and every other preserve/change/retire proposal or surfaced subbehavior await owner scope approval. Publishing this ledger is not approval. No source/server data was inspected or changed.
 
 The 23 families are an indexed discovery inventory, not proof that all observable behavior has been discovered or that SC-001 passes. Each record lists actor, exact evidence, proposal, impact, communication and verification. Newly discovered differences must be appended and approved. Application implementation, architecture choice, corpus execution, migration and deployment remain outside this document change.
 
@@ -170,17 +170,17 @@ Verification: AC-BR010-01, AC-BR010-02, AC-BR010-03, AC-BR010-04; US4.1–6/10; 
 
 ## BR-011 — Modes, forward/caption guards, profiles and mute
 
-Actors: group member/admin; owner for deletion activation. Owner: project owner. Approval: only specifically referenced D-001–D-005 decisions approved; remaining proposal pending.
+Actors: group member/admin; owner for deletion activation. Owner: project owner. Approval: D-002/D-005 and D-007 automatic guard mode rule approved; remaining eligibility/grace/notice/manual-mute/cleanup contracts pending.
 
 Observed: Disallowed entity-forwards can delete before classifier/action lookup. Captionless-media grace can schedule deletion before mode lookup. Profiles combine caption/forward switches with none/delete. Non-delete paths spend tokens; insufficient balance forces deletion. Manual mute callbacks may also delete associated user content.
 
 Evidence: [telegram_bot/ads_commands.py:325–541](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_commands.py#L325-L541); [telegram_bot/ads/profiles.py:44–123](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads/profiles.py#L44-L123); [telegram_bot/ads_guard.py:2445–2473](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L2445-L2473); [telegram_bot/ads_guard.py:2509–2608](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L2509-L2608); [telegram_bot/ads_guard.py:1143–1169](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L1143-L1169); [telegram_bot/ads_guard.py:2783–2840](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L2783-L2840); [telegram_bot/ads_guard.py:2981–2990](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L2981-L2990); [telegram_bot/ads_guard.py:3064–3167](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L3064-L3167); [telegram_bot/ads_guard.py:1321–1448](https://github.com/vahid162/ai_bot6/blob/cdb0efd4b39eaafd1265822350606887fe3b40b3/telegram_bot/ads_guard.py#L1321-L1448).
 
-Classification: Approved Changes D-002/D-005; preserve controls; other destructive guards pending D-007.
+Classification: Approved Changes D-002/D-005 and D-007 automatic guard mode precedence (remove pre-mode deletion bypass); preserve controls; remaining D-007 contracts pending.
 
-User/data/security impact: Exhaustion cannot escalate warn/none; all automatic AdsGuard user deletions need the quality/owner activation gate. This does not settle independent forward/caption behavior, manual-mute deletion or ordinary user-message cleanup.
+User/data/security impact: Exhaustion cannot escalate warn/none. Automatic forward/caption guards respect current effective mode: off/none/warn cannot delete user content; none performs no moderation; deletion mode is conditional on eligibility/authorization/exemptions and the quality/owner activation gate. Profiles and queued/recovered execution cannot bypass current mode or unknown-result holds. This settles only mode precedence, not exact content/grace/notice rules, manual-mute deletion or ordinary user-message cleanup. No source data is changed.
 
-Transition communication: Explain exhaustion change and separately approved guard/profile/mute behavior; no automatic deletion is activated by documentation.
+Transition communication: Explain the exhaustion change and removal of automatic forward/caption pre-mode deletion bypasses to group administrators/affected users before any later authorized activation. Distinguish still-pending guard/grace/manual-mute behavior. No automatic deletion is activated by this answer or documentation.
 
 Verification: AC-BR011-01, AC-BR011-02, AC-BR011-03, AC-BR011-04, AC-BR011-05; US4.1/3/7–10; US6.4; FR-024, FR-025, FR-027, FR-028, FR-030, FR-053, FR-064. Cases are definitions only, not executed/passed.
 

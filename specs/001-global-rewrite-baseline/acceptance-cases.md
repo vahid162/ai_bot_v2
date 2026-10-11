@@ -2,7 +2,7 @@
 
 Status: Draft, documentation only; no tests implemented or executed. These supplement, not replace, the numbered Given/When/Then scenarios in [spec.md](spec.md). Source/actor/impact trace: [behavior-ledger.md](behavior-ledger.md). Pending owner decisions: [decision-register.md](decision-register.md). Content fixtures: [test-corpus.md](test-corpus.md). Timing, samples and denominators: [measurement-contract.md](measurement-contract.md).
 
-A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005, their exact scope and limits apply now. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
+A case with an unresolved D-006–D-013 dependency is not a complete approved test oracle. Expected policy choices must be resolved before claiming ready-for-plan or a passing test. For approved D-001–D-005 and D-007's automatic guard mode rule, their exact scope and limits apply now; remaining D-007 contracts are not approved. Scope security/privacy requirements remain constraints; legacy unsafe output is not an expected pass. No unsupported Telegram lookup, exactly-once delivery or real deployment identity is assumed.
 
 ## Governance
 
@@ -129,8 +129,8 @@ Actor, evidence and impacts: [ledger record](behavior-ledger.md#br-011--modes-fo
 | Case | Given / When / Then contract |
 | --- | --- |
 | AC-BR011-01 — Mode and wallet | Given modes off/none/warn/delete, token switches and sufficient/exhausted wallets for singles/albums, when a trusted eligible ad is processed, then D-002 governs exhaustion and no invalid spend is successful. |
-| AC-BR011-02 — Forward and caption guards | Given disallowed forwards or captionless media under each mode/profile, when guard/grace processing runs, then D-007's owner-selected behavior applies; no implicit ungated automatic user deletion occurs. |
-| AC-BR011-03 — Caption race | Given caption edit/reply before/at/after grace and concurrent execution, when cancel/recovery occurs, then the approved contract applies at most once with current policy and known/unknown result separation. |
+| AC-BR011-02 — Forward and caption guards | Given eligible disallowed forwards or captionless singles/albums under each mode/profile, when automatic guard/grace work evaluates or executes, then current disabled/off and no-action states have no moderation action, warning never deletes user content, and deletion mode only permits deletion with current eligibility/authorization/exemptions and D-005 quality plus separate owner activation. Profiles and queued/recovered jobs cannot bypass a change away from deletion mode; unknown prior results stay held under D-003. Exact eligibility/grace/notice oracles remain pending in D-007. |
+| AC-BR011-03 — Caption race | Given caption edit/reply before/at/after grace and concurrent execution, when cancel/recovery occurs, then at most one authorized effect follows current mode and known/unknown result separation; a queued deletion cannot execute after switching to off/none/warn. The exact grace/edit/cancel boundary oracle remains pending; this approved mode rule does not invent it. |
 | AC-BR011-04 — Manual mute | Given forged/stale/exempt/authorized mute targets including an album, when invoked, then only D-007-approved associated actions occur and partial/unknown external effects are not repeated. |
 | AC-BR011-05 — Deletion gate | Given absent/failed/out-of-scope/revoked evidence or activation for new/queued/recovered work, when automatic deletion would run, then zero attempts occur; only matching approved evidence and separate owner activation can permit it. |
 
@@ -292,11 +292,11 @@ Each of the 65 existing requirements has explicit supplementary case pointers. T
 | FR-021 | AC-BR006-02, AC-BR008-03, AC-BR013-05 |
 | FR-022 | AC-BR001-02, AC-BR009-02 |
 | FR-023 | AC-BR008-04, AC-BR006-02, AC-BR009-04 |
-| FR-024 | AC-BR011-01, AC-BR009-03 |
+| FR-024 | AC-BR011-01, AC-BR011-02, AC-BR012-04, AC-BR009-03 |
 | FR-025 | AC-BR010-01, AC-BR010-03 |
 | FR-026 | AC-BR010-04, AC-BR012-02 |
 | FR-027 | AC-BR010-02, AC-BR011-05 |
-| FR-028 | AC-BR011-01, AC-BR011-03, AC-BR011-04, AC-BR003-04 |
+| FR-028 | AC-BR011-01, AC-BR011-02, AC-BR011-03, AC-BR011-04, AC-BR003-04 |
 | FR-029 | AC-BR012-01, AC-BR012-03, AC-BR012-04 |
 | FR-030 | AC-BR010-04, AC-BR012-02, AC-BR012-05 |
 | FR-031 | AC-BR013-02, AC-BR013-03 |
