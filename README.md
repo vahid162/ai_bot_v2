@@ -1,8 +1,9 @@
 # ai_bot_v2
 
 Standardized rewrite of the legacy Telegram bot. Application implementation has
-not started: the behavioral specification and the later architecture/migration
-plan both require explicit project-owner approval.
+not started. The owner approved specification commit
+`53b8c117d9309fffbfeb41ca2df682fc41e779be`; architecture/migration planning is now
+published as a draft, with explicit blocking gates. Plan approval is still required.
 
 ## Source of truth and workflow
 
@@ -15,11 +16,16 @@ plan both require explicit project-owner approval.
 - `vahid162/ai_bot6` is an immutable, read-only behavioral reference. Do not
   modify its source, GitHub metadata, or live deployment.
 - Current constitution: [.specify/memory/constitution.md](.specify/memory/constitution.md).
-- Current draft specification: [specs/001-global-rewrite-baseline/spec.md](specs/001-global-rewrite-baseline/spec.md).
+- Approved specification baseline (53b8c117): [specs/001-global-rewrite-baseline/spec.md](specs/001-global-rewrite-baseline/spec.md).
 - Readiness: [requirements checklist](specs/001-global-rewrite-baseline/checklists/requirements.md).
-- Next: resolve specification questions and evidence coverage, obtain owner
-  approval, prepare the architecture and migration plan, obtain plan approval,
-  then generate tasks and implement. Publishing a draft is not approval.
+- Current status: [approval record](specs/001-global-rewrite-baseline/approval-record.md).
+- Architecture draft: [plan](specs/001-global-rewrite-baseline/plan.md),
+  [migration](specs/001-global-rewrite-baseline/migration-plan.md) and
+  [Persian owner review / open gates](specs/001-global-rewrite-baseline/plan-review.md).
+- Next: resolve real Flowise maintenance/privacy incompatibility and documented
+  schema/erasure/egress/recovery/cost gates, review the draft, and obtain explicit
+  plan approval. Only a later requested workflow may generate tasks/implement.
+  No source, executable tests, server sync or deployment is authorized now.
 
 The owner has selected an empty conversation history for the first cutover.
 Legacy conversation content and historical conversational context are not imported; old data
