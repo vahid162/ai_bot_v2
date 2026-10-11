@@ -32,25 +32,42 @@
 
 ## Notes
 
-- Re-review: 9 checks pass and 7 remain open. This draft is not ready for
-  specification approval or dependent planning. The prior all-pass claim is
-  superseded by this review.
-- Source filenames and the pinned legacy revision appear only as read-only
-  traceability evidence; they do not prescribe the new implementation.
-- The specification contains 8 independently testable user stories, 23 behavior
-  classifications, 65 functional requirements, 16 explicit edge cases, and 14
-  proposed success criteria; their measurement contracts are not all approved.
-- Three clarification markers cover legacy history/privacy, AdsGuard token
-  behavior and deletion quality, and recovery of uncertain external outcomes.
-- Complete the BR-to-source/acceptance/owner ledger and change/retirement impact
-  records before approval. File-level inventory entries alone do not prove
-  complete behavioral coverage.
-- Record the approved workload, labelled moderation corpus and error limits,
-  maintenance window, representative participant sample, and legacy peak or
-  approved substitute before marking measurement checks passed.
-- The verified legacy AdsGuard/token branches are evidence, not an owner-approved
-  choice to preserve or change them.
-- Constitution v1.1.0 remains the governing baseline. No architecture-simplification
-  amendment was adopted during this review; amendments require owner approval.
-- Publishing these documents to GitHub and syncing the checkout does not approve
-  the specification, the future plan, or application implementation.
+- Specification-completion re-review: 10/16 checks pass, unchanged from the actual
+  prior checkbox state; six remain open. This replaces stale historical notes
+  that said 9/16 and three unresolved markers. Marker absence is not decision
+  completeness: D-006–D-013 remain explicitly pending in the decision register.
+- Current definitions: eight user stories, 23 indexed behavioral families, 65 FRs,
+  14 SCs; 93 supplementary Given/When/Then cases explicitly map all FRs. The ledger
+  now records exact pinned source spans, actors, proposals, owner states, impacts,
+  transition communication and cases; source-query/schema mismatches are static
+  evidence, not live database diagnosis or proof of exhaustive parity.
+- Validation passes: (1) source/branch and per-family traceability review,
+  (2) individual FR/case and draft fixture/measurement review, (3) independent
+  non-vacuity/privacy/counting review. Six quality items remain open because an
+  unapproved expected oracle is not complete testability, a coverage pointer is
+  not comprehensive acceptance, and proposed metrics are not approved contracts.
+- "Requirements are testable and unambiguous" / "All acceptance scenarios are
+  defined" / "All functional requirements have clear acceptance criteria":
+  D-006 block precedence; D-007 forward/caption/mute/user-cleanup; D-008 token
+  amounts/journeys/period/carry/replay; D-009 security/failure policy; D-010 route,
+  aliases/content and fallback; D-011 per-entity import disposition; D-013 other
+  lifecycle contracts still affect required expectations. Corresponding cases
+  explicitly say pending rather than guessing a pass.
+- "Success criteria are measurable" / "Feature meets measurable outcomes":
+  measurement-contract.md defines proposed denominators/clocks and reference
+  profiles, but D-012 approval of corpus coverage/independent gold labels,
+  workload/envelope/interactive counting, samples and window is missing. The
+  corpus is a 30-item proposed seed with 12 variants/four boundary fixtures, not
+  independent safety evidence. Actual evaluation results are later release gates,
+  not a requirement to implement code before approving this specification.
+- "Scope is clearly bounded": source families are indexed, but newly surfaced
+  observable changes/retirements and non-history import scope are not approved;
+  no exhaustive-discovery claim or owner sign-off is made (SC-001 still open).
+- Source files/line spans are read-only traceability evidence only. No framework,
+  package layout, storage/provider product or deployment topology was selected.
+  Constitution v1.1.0 is unchanged. D-001–D-005 remain approved only within their
+  recorded limits; no corpus evaluation or deletion activation is approved.
+- GitHub ai_bot_v2 is the only write target. No server/checkouts/Docker/data,
+  ai_bot6, application code or migration was changed; no tests were executed.
+  Publication does not approve this specification or the later architecture and
+  migration plan. Next: separate Speckit Clarify review, not Speckit Plan/code.

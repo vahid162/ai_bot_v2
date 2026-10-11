@@ -19,8 +19,10 @@ including `/www/dk_project/dk_app/guardbot`, may be changed or synchronized.
 Server synchronization or deployment requires new explicit project-owner
 authorization; if later authorized, it must consume a reviewed GitHub commit.
 Publication of this draft does not approve its scope or authorize implementation.
-Evidence-to-scenario coverage and the owner decisions below remain incomplete;
-the requirements checklist records those limits.
+The branch-level evidence ledger, supplementary cases, synthetic corpus seed and
+proposed measurement contracts are linked below. Static discovery and case
+pointers do not prove exhaustive coverage, approved scope or passing evaluation;
+material owner choices and corpus/workload approval remain open.
 
 ## Clarifications
 
@@ -447,35 +449,39 @@ and rollback under the approved production-equivalent security boundary.
 ### Behavioral Scope and Classification
 
 The following classification is the proposed rewrite baseline. `Preserve` means
-retain the approved externally observable outcome, not the legacy internal design.
-`Change` and `Retire` entries require explicit project-owner approval before they
-become binding.
+retain the approved externally observable capability, not every unsafe legacy
+branch or the old internal design. The whole proposed scope, including listed
+Changes and Retirements, requires explicit owner approval. Only the five recorded
+clarification answers are already approved within their stated limits. Mixed
+records expose proposed security/product differences rather than silently treating
+them as Preserve; surfaced subbehavior decisions remain open in the decision
+register. Exact source spans, impacts, owner status and case IDs are in the ledger.
 
 | ID | Legacy capability or element | Proposed classification | Source evidence | Required outcome |
 |----|------------------------------|-------------------------|-----------------|------------------|
-| BR-001 | Start, help, identity, scoped command menus, and health journeys | Preserve | `bot.py` and user command registrations | Equivalent discoverability and safe responses by user scope |
-| BR-002 | Private AI questions, `/ask`, reply input, typing state, and direct answers | Preserve | `user_commands.py` | One isolated, localized outcome per accepted request |
-| BR-003 | Group AI enablement, mention/all modes, administrator-only mode, throttling, and autocleanup | Preserve | `user_commands.py` and `panel_ui.py` | Per-group policy with no response outside eligible triggers |
-| BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; owner approved empty first-cutover history and opt-in 30-day new-history policy | `user_commands.py` and `shared_utils.py` | Fresh initial AI context; default-off text storage, explicit owner opt-in after notice, per-message 30-day deletion, and owner-scoped export or earlier clear |
-| BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve | callback registrations and user/admin commands | Traceable feedback without cross-tenant disclosure |
-| BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve | `admin_commands.py` | Deny-by-default access with explicit, auditable exceptions |
-| BR-007 | Private management panel, group binding, active-group selection, deep-link management, and force-reply editing | Preserve | `user_commands.py` and `panel_ui.py` | Fresh authorization and isolated administrator context |
-| BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve | `admin_commands.py` and `shared_utils.py` | Least privilege, current-role verification, and complete audit |
-| BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve | `panel_ui.py`, `bot.py`, and admin commands | Validated settings with predictable scope and menus |
-| BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve | `ads_guard.py` and AdsGuard command registration | One explainable decision per eligible logical item |
-| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Preserve except owner-approved Change removing the token-exhaustion deletion override; owner-approved deletion activation gate | `ads_guard.py`, `ads_commands.py`, and `panel_ui.py` | Exact per-group enforcement; exhaustion never promotes warning or no-action to deletion; automatic deletion requires zero false deletions in the approved test corpus and separate owner activation approval |
-| BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve proposal; owner clarified unknown-result recovery | `ads_pending_jobs.py` and `ads_album_jobs.py` | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
-| BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve | `ads_commands.py` registrations | Tenant-scoped admin tools; diagnostic actions remain side-effect free |
-| BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve | `tokens/handlers.py`, `tokens/jobs.py`, and `tokens/models.py` | One grant per tenant/user/week and accurate balance |
-| BR-015 | Token spending, logical-message deduplication, and ledger history | Preserve | `tokens/models.py` | Exactly-once charge, non-negative balance, auditable ledger |
-| BR-016 | Database-first configuration with deployment fallback | Change | configuration readers and startup seeding | One uniform precedence chain with validation and safe defaults |
-| BR-017 | Persian, English, Arabic, Turkish, and Russian selectors and fallback | Change | language callback and message catalogs | Preserve selectors while requiring complete catalogs and no raw-key fallback |
-| BR-018 | Structured logging, metrics, health reporting, optional error reporting, provider warmup, and recurring cleanup | Preserve | `bot.py`, logging, monitoring, and job modules | Redacted, actionable operations with idempotent jobs |
-| BR-019 | Legacy operational data and schema history | Change | migrations and runtime queries | Import only validated business data into one approved data contract |
-| BR-020 | Schema upgrades during application startup and competing migration entry points | Retire | deployment and migration startup configuration | One separately controlled, observable migration owner |
-| BR-021 | Committed credentials, mutable release inputs, host-specific paths, fixed identifiers, and shared global deployment assumptions | Retire | tracked deployment configuration | Rotated secrets and isolated, portable project configuration |
-| BR-022 | Large mixed-responsibility modules and direct coupling between transport, policy, provider calls, and data access | Retire | legacy module boundaries | Preserve outcomes without preserving unsafe internal structure |
-| BR-023 | Generated bytecode and other runtime artifacts tracked as source | Retire | legacy repository tree | Generated or local runtime artifacts never enter reviewed source |
+| BR-001 | Start, help, identity, scoped command menus, and health journeys | Preserve discovery; Change health disclosure (proposal) | [Exact evidence and case links](behavior-ledger.md#br-001--discovery-identity-menus-and-health) | Equivalent discoverability and safe responses by user scope |
+| BR-002 | Private AI questions, `/ask`, reply input, typing state, and direct answers | Preserve input capability; Change route/context inconsistency (proposal) | [Exact evidence and case links](behavior-ledger.md#br-002--private-questions-ask-and-chunked-replies) | One isolated, localized outcome per accepted request |
+| BR-003 | Group AI enablement, mention/all modes, administrator-only mode, throttling, and autocleanup | Preserve modes; role/address and user-message cleanup contracts pending | [Exact evidence and case links](behavior-ledger.md#br-003--group-conversation-and-cleanup) | Per-group policy with no response outside eligible triggers |
+| BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; approved D-001/D-004; reset differences pending | [Exact evidence and case links](behavior-ledger.md#br-004--sessions-history-clear-and-export) | Fresh initial AI context; default-off text storage, explicit owner opt-in after notice, per-message 30-day deletion, and owner-scoped export or earlier clear |
+| BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve feedback/report utility; Change scope/privacy and broken paths (proposal) | [Exact evidence and case links](behavior-ledger.md#br-005--feedback-unknown-reporting-and-review) | Traceable feedback without cross-tenant disclosure |
+| BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve access controls; Change global mutation scope; block meaning pending | [Exact evidence and case links](behavior-ledger.md#br-006--direct-message-access-and-user-listing) | Deny-by-default access with explicit, auditable exceptions |
+| BR-007 | Private management panel, group binding, active-group selection, deep-link management, and force-reply editing | Preserve private management; Change stale authorization and prompt binding (proposal) | [Exact evidence and case links](behavior-ledger.md#br-007--private-management-and-bound-prompts) | Fresh authorization and isolated administrator context |
+| BR-008 | Group-admin and superadmin roles, superadmin membership, and privileged audit | Preserve scoped roles; Change incomplete audit and authorization (proposal) | [Exact evidence and case links](behavior-ledger.md#br-008--roles-superadmins-and-privileged-audit) | Least privilege, current-role verification, and complete audit |
+| BR-009 | Per-group chat, AdsGuard, language, and command-menu controls | Preserve settings; Change false-save success and callback scope (proposal) | [Exact evidence and case links](behavior-ledger.md#br-009--scoped-settings-language-and-menus) | Validated settings with predictable scope and menus |
+| BR-010 | Ads classification of text, captions, replies, forwards, contact-like content, domains, and media albums | Preserve classifier capability; Change unsafe output parsing; content eligibility pending | [Exact evidence and case links](behavior-ledger.md#br-010--adsguard-classification-and-eligibility) | One explainable decision per eligible logical item |
+| BR-011 | AdsGuard off/none/warn/delete policy, threshold, cooldown, and cleanup behavior | Approved D-002/D-005; forward/caption/manual-mute contracts pending | [Exact evidence and case links](behavior-ledger.md#br-011--modes-forwardcaption-guards-profiles-and-mute) | Exact per-group enforcement; exhaustion never promotes warning or no-action to deletion; automatic deletion requires zero false deletions in the approved test corpus and separate owner activation approval |
+| BR-012 | Durable pending moderation, retries, stuck-work recovery, and album cleanup | Preserve durable work; approved D-003; Change state-reset/cache hazards (proposal) | [Exact evidence and case links](behavior-ledger.md#br-012--pending-moderation-and-album-recovery) | Bounded safe recovery; reconcile external results first and hold unresolved actions for operator review without automatic retry |
+| BR-013 | Ads examples, positive/negative labeling, user/domain allowlists, probe, statistics, simulation, and private debug control | Preserve tools; Change route authorization/aliases and privacy (proposal) | [Exact evidence and case links](behavior-ledger.md#br-013--examples-allowlists-and-diagnostics) | Tenant-scoped tools; diagnostics do not moderate content, change policy or spend tokens; ancillary effects declared |
+| BR-014 | Tenant wallets, balance aliases, weekly grants, and carry limits | Preserve wallets; numeric grant/carry/period/eligibility policy pending | [Exact evidence and case links](behavior-ledger.md#br-014--wallet-balance-weekly-grants-and-carry) | One grant per tenant/user/week and accurate balance |
+| BR-015 | Token spending, logical-message deduplication, and ledger history | Preserve ledger invariants; Change false duplicate-success/unsafe expiry (proposal) | [Exact evidence and case links](behavior-ledger.md#br-015--token-spending-and-ledger-outcomes) | Exactly-once charge, non-negative balance, auditable ledger |
+| BR-016 | Database-first configuration with deployment fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-016--configuration-precedence-and-startup-seeding) | One uniform precedence chain with validation and safe defaults |
+| BR-017 | Persian, English, Arabic, Turkish, and Russian selectors and fallback | Change proposal | [Exact evidence and case links](behavior-ledger.md#br-017--localization-coverage-and-fallback) | Preserve selectors while requiring complete catalogs and no raw-key fallback |
+| BR-018 | Structured logging, metrics, health reporting, optional error reporting, provider warmup, and recurring cleanup | Preserve observable operations proposal; failure/retention policies pending | [Exact evidence and case links](behavior-ledger.md#br-018--operations-health-and-recurring-work) | Redacted, actionable operations with idempotent jobs |
+| BR-019 | Legacy operational data and schema history | Change proposal; D-001 history exclusion approved; no other imports approved | [Exact evidence and case links](behavior-ledger.md#br-019--candidate-imports-and-schema-drift) | Import only validated business data into one approved data contract |
+| BR-020 | Schema upgrades during application startup and competing migration entry points | Retire competing ownership proposal | [Exact evidence and case links](behavior-ledger.md#br-020--migration-ownership) | One separately controlled, observable migration owner |
+| BR-021 | Committed credentials, mutable release inputs, host-specific paths, fixed identifiers, and shared global deployment assumptions | Retire unsafe values/couplings proposal | [Exact evidence and case links](behavior-ledger.md#br-021--unsafe-and-nonportable-release-inputs) | Rotated secrets and isolated, portable project configuration |
+| BR-022 | Large mixed-responsibility modules and direct coupling between transport, policy, provider calls, and data access | Retire internal coupling proposal | [Exact evidence and case links](behavior-ledger.md#br-022--mixed-internal-responsibilities) | Preserve outcomes without preserving unsafe internal structure |
+| BR-023 | Tracked generated bytecode; other runtime artifacts not yet proved by discovery | Retire tracked bytecode proposal | [Exact evidence and case links](behavior-ledger.md#br-023--generated-artifacts-tracked-as-source) | Generated or local runtime artifacts never enter reviewed source |
 
 Any newly discovered behavior is `Unclassified` by default and blocks dependent
 planning until it is added to this table or a child specification with evidence and
@@ -492,6 +498,55 @@ work and approved the BR-011 automatic-deletion quality and activation gate.
 These clarified policies are not evidence of verified legacy differences and do
 not approve the full capability inventory, activate deletion, or change BR-015's
 grant, spending, or ledger invariants.
+
+#### Evidence and Acceptance Package — 2026-10-11
+
+The current documentation set supplements this specification without selecting an
+architecture or implementing tests:
+
+- [Behavior ledger](behavior-ledger.md): 23 indexed families with branch-level
+  pinned source evidence, actors, proposed classifications, owner approval status,
+  user/data/security impacts, transition communication and verification pointers.
+  Source inspection is static; intended-but-broken calls and comments are not
+  asserted as verified working behavior or evidence of the live database schema.
+- [Additional acceptance cases](acceptance-cases.md): 93 supplementary
+  Given/When/Then definitions (90 behavior cases plus three governance cases),
+  with explicit pointers for all 65 FRs. A case whose oracle depends on an open
+  owner choice is incomplete, not passing or ready to implement.
+- [Synthetic corpus seed](test-corpus.md): 30 invented multilingual text/caption
+  items, 12 structural variants and four history/import boundary fixtures. Labels
+  are proposed, not independently labelled or owner-approved; visual content and
+  complete representative coverage are not established. Candidate evaluation must
+  exercise legitimate non-exempt negatives and eligible ad positives, not obtain
+  a vacuous zero-false-deletion result by disabling the detector or gate. Logical
+  albums and legitimate member effects are separately checked.
+- [Measurement contracts](measurement-contract.md): denominators/clocks for all
+  14 SCs and proposed substitute workload profiles, race samples, participant
+  definitions and a maintenance window. No measured legacy peak or passing
+  results are available. Distinguish interactive requests from passive moderation:
+  no extra acknowledgment spam is authorized. That counting interpretation,
+  profiles and sample/window values still require owner approval.
+- [Decision register](decision-register.md): accepted D-001–D-005, unapproved
+  D-006–D-013, their scope limits and phase gates. It does not approve imports,
+  deletion activation, the complete specification or the future plan.
+
+Source-level review surfaced differences requiring explicit disposition: legacy
+block only revokes a database allow entry; group admins can reach global allow
+mutations; some privileged reads/prompts/diagnostics lack equivalent fresh scope
+checks; context/export/unknown-review paths differ by route; failed writes can
+still appear successful; disallowed forwards and captionless-media guards can
+schedule/delete before AdsGuard mode lookup; edited non-media input can exit
+before classification; malformed scores can be treated as ads; failed token spend
+can later appear successful solely from a dedupe row; dedupe expiry can allow an
+old replay; and declared migration columns/keys differ from runtime assumptions.
+These are pinned-source observations, not implemented fixes or confirmed live
+failures. D-002 does not resolve independent forward/caption/mute/cleanup policy.
+Every automatic AdsGuard user-content deletion remains subject to D-005.
+
+Complete the remaining owner choices and approve corpus/workload definitions
+before claiming specification readiness. Actual evaluations, corpus passing,
+separate deletion activation and cutover rehearsals are later authorized gates;
+this document work does not require or permit premature application code.
 
 #### Verified Legacy AdsGuard / Token Interaction
 
@@ -952,7 +1007,10 @@ escalation, the other observed token branches, or the full specification.
   legacy changes are out of baseline until explicitly reviewed and added.
 - The rewrite remains a Telegram bot serving private chats, groups, supergroups,
   group topics, callbacks, and administrator private-panel journeys.
-- Preserve is the default proposal for observable product behavior; internal
+- Preserve is a capability-level default proposal only; surfaced source-branch
+  differences remain unresolved until recorded and approved. The behavior ledger
+  and decision register expose security, route, destructive-guard and spending
+  differences rather than silently accepting unsafe legacy choices. Internal
   structure and unsafe deployment behavior are not compatibility contracts.
 - The first cutover targets the currently represented legacy deployment and its
   approved tenants, while the resulting product must support independent future
@@ -1005,7 +1063,10 @@ escalation, the other observed token branches, or the full specification.
   measured legacy peak or approved substitute. SC-005's zero-false-deletion test
   criterion is owner-approved, but the independently labelled corpus, tested
   decision scope, and coverage definition still require approval. These
-  measurement definitions must be recorded before specification approval; actual
+  proposed definitions are now recorded in measurement-contract.md and
+  test-corpus.md, but their profiles, coverage, independent labels, denominator
+  interpretation, samples and window are not approved. Those definitions must be
+  approved before specification approval; actual
   passing evaluations and separate deletion activation approval are later
   implementation/release gates, not results produced by this document. No
   production values or real-world error guarantees have been inferred.
