@@ -6,9 +6,12 @@ plan both require explicit project-owner approval.
 
 ## Source of truth and workflow
 
-- This GitHub repository is the authoritative source. Publish reviewed changes
-  here first; then synchronize WebMaster at `/www/dk_project/dk_app/guardbot`
-  from the published Git commit. Do not deploy unpublished file copies.
+- This GitHub repository is the authoritative source and the only write target
+  for current work. Do not change WebMaster files, checkouts, containers, services,
+  or data, including `/www/dk_project/dk_app/guardbot`. Server synchronization and
+  deployment are paused until the owner explicitly authorizes them again. Any
+  later authorized synchronization must consume a reviewed GitHub commit, not
+  unpublished file copies.
 - `vahid162/ai_bot6` is an immutable, read-only behavioral reference. Do not
   modify its source, GitHub metadata, or live deployment.
 - Current constitution: [.specify/memory/constitution.md](.specify/memory/constitution.md).
@@ -18,9 +21,16 @@ plan both require explicit project-owner approval.
   approval, prepare the architecture and migration plan, obtain plan approval,
   then generate tasks and implement. Publishing a draft is not approval.
 
-Synchronize only a clean checkout using Git fetch and fast-forward-only updates;
-preserve local changes before updating. Do not use forced resets or replace
-unrelated server services.
+The owner has selected an empty conversation history for the first cutover.
+Legacy conversation content and historical conversational context are not imported; old data
+is not deleted. Other entity migrations remain subject to separate approval.
+
+Only after new server authorization, synchronize a clean checkout using Git fetch
+and fast-forward-only updates; preserve local changes before updating. Do not use
+forced resets or replace unrelated server services.
+
+The tooling commands below are documented for future authorized use; do not run
+containers or prepare the image on WebMaster during the current GitHub-only work.
 
 ## Project-local Spec Kit
 

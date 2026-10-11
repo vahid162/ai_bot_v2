@@ -13,11 +13,23 @@
 Define and approve behavior, security, data migration, testing, and operational
 expectations before architecture planning or implementation."
 
-GitHub `vahid162/ai_bot_v2` is the source of truth: publish changes there before
-synchronizing `/www/dk_project/dk_app/guardbot` from the published commit.
+GitHub `vahid162/ai_bot_v2` is the authoritative source and the only write target
+for the current work. No server files, checkout, containers, services, or data,
+including `/www/dk_project/dk_app/guardbot`, may be changed or synchronized.
+Server synchronization or deployment requires new explicit project-owner
+authorization; if later authorized, it must consume a reviewed GitHub commit.
 Publication of this draft does not approve its scope or authorize implementation.
 Evidence-to-scenario coverage and the owner decisions below remain incomplete;
 the requirements checklist records those limits.
+
+## Clarifications
+
+### Session 2026-10-11
+
+- Q: Should the first cutover migrate legacy conversation history or start the new
+  version with empty history? → A: Start the new version with empty conversation
+  history. This does not authorize deleting legacy data or migrating other entity
+  types.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -82,7 +94,9 @@ journeys while verifying tenant and user isolation.
    messages, leaked provider data, or cross-session history.
 6. **Given** a user requests history export or clearing, **When** ownership is
    verified, **Then** only that user's eligible history in the selected scope is
-   exported or cleared and the result is confirmed.
+   exported or cleared and the result is confirmed. At the first cutover, this
+   history starts empty; subsequent eligible exchanges in the new deployment
+   remain subject to the approved retention policy.
 
 ---
 
@@ -178,19 +192,26 @@ exercise rollback.
 1. **Given** a legacy snapshot, **When** a migration rehearsal runs, **Then** every
    source record is classified as imported, transformed, rejected, quarantined, or
    intentionally excluded with a reason.
-2. **Given** session, history, administration, AdsGuard, or ledger records whose
-   stored shape conflicts with runtime assumptions, **When** they are inspected,
-   **Then** they are transformed only through an approved mapping and never guessed
-   into a tenant or owner.
+2. **Given** legacy session, history, administration, AdsGuard, or ledger records
+   whose stored shape conflicts with runtime assumptions, **When** they are
+   inspected, **Then** legacy conversation content and context-bearing references
+   are intentionally excluded, and only separately approved non-history entities
+   are transformed through an approved mapping without guessing a tenant or owner.
 3. **Given** a credential or credential-like value in legacy source or data,
    **When** migration runs, **Then** it is excluded, reported without revealing its
    value, and replaced only by a separately rotated deployment secret.
 4. **Given** migration validation fails or reconciliation exceeds an approved
    threshold, **When** cutover is evaluated, **Then** release is aborted and the
    prior service and data state remain recoverable.
-5. **Given** a successful cutover, **When** post-cutover checks run, **Then**
-   balances, grants, moderation work, sessions, roles, and tenant counts reconcile
-   to the approved baseline before traffic is accepted.
+5. **Given** a successful cutover, **When** post-cutover checks run, **Then** the
+   separately approved balances, grants, moderation work, roles, tenant counts, and
+   non-content session metadata reconcile to their approved baselines, while new
+   conversation history and conversational context start empty.
+6. **Given** a sanitized legacy fixture containing conversation messages and
+   context-bearing session or provider references, **When** first-cutover exclusion
+   is verified, **Then** no legacy conversation appears in new-bot history, export,
+   or conversational AI context; exclusion counts record the reason, and legacy source data
+   remains unchanged.
 
 ---
 
@@ -332,7 +353,7 @@ become binding.
 | BR-001 | Start, help, identity, scoped command menus, and health journeys | Preserve | `bot.py` and user command registrations | Equivalent discoverability and safe responses by user scope |
 | BR-002 | Private AI questions, `/ask`, reply input, typing state, and direct answers | Preserve | `user_commands.py` | One isolated, localized outcome per accepted request |
 | BR-003 | Group AI enablement, mention/all modes, administrator-only mode, throttling, and autocleanup | Preserve | `user_commands.py` and `panel_ui.py` | Per-group policy with no response outside eligible triggers |
-| BR-004 | Conversation sessions, local history, clear, and export | Preserve | `user_commands.py` and `shared_utils.py` | Owner-scoped continuity, export, and deletion |
+| BR-004 | Conversation sessions, local history, clear, and export | Preserve capabilities; first-cutover history exclusion approved by owner | `user_commands.py` and `shared_utils.py` | Empty initial history and fresh AI context; owner-scoped continuity, export, and deletion for new-deployment history |
 | BR-005 | Feedback, unknown-question capture, user reporting, and administrator review | Preserve | callback registrations and user/admin commands | Traceable feedback without cross-tenant disclosure |
 | BR-006 | Global direct-message switch, allow/block policy, and user status listing | Preserve | `admin_commands.py` | Deny-by-default access with explicit, auditable exceptions |
 | BR-007 | Private management panel, group binding, active-group selection, deep-link management, and force-reply editing | Preserve | `user_commands.py` and `panel_ui.py` | Fresh authorization and isolated administrator context |
@@ -360,7 +381,9 @@ an owner-approved decision.
 The table is an inventory, not a completed traceability ledger. Before approval,
 each entry needs an exact source location at the pinned revision, acceptance
 scenario references, the deciding owner, and the impact/transition details required
-by FR-005. All classifications, including `Preserve`, remain proposals.
+by FR-005. Capability classifications remain proposals; the first-cutover history
+exclusion recorded in Clarifications is an owner-approved decision, not approval
+of the full capability inventory.
 
 #### Verified Legacy AdsGuard / Token Interaction
 
@@ -415,7 +438,9 @@ outcomes requires an explicit `Change` decision.
 - **FR-011**: Conversation context MUST be isolated by tenant, user, and applicable
   topic or session so that content cannot cross those boundaries.
 - **FR-012**: Users MUST be able to clear and export only the conversation history
-  they own and are permitted to access, with an explicit result.
+  they own and are permitted to access, with an explicit result. For the new
+  deployment, this starts empty at the first cutover; legacy history MUST NOT
+  appear through these journeys.
 - **FR-013**: Accepted requests MUST provide timely progress indication without
   producing unbounded or orphaned activity indicators.
 - **FR-014**: Provider timeout, invalid output, rate limit, or outage MUST result in
@@ -520,10 +545,15 @@ outcomes requires an explicit `Change` decision.
 - **FR-048**: Every retained entity MUST have one approved target data contract;
   conflicting legacy table, column, key, or row interpretations MUST be resolved
   explicitly before import.
-- **FR-049**: Migration scope MUST account for approved users, tenant and role
-  relationships, settings, sessions, eligible history, feedback and unknown items,
-  AdsGuard policies and operational work, wallets, grants, ledger events,
-  deduplication state, and audit records.
+- **FR-049**: Migration scope MUST account for candidate users, tenant and role
+  relationships, settings, non-content session metadata, feedback and unknown
+  items, AdsGuard policies and operational work, wallets, grants, ledger events,
+  deduplication state, and audit records; their imports require separate approval.
+  The owner-approved first-cutover baseline MUST start with empty conversation
+  history and fresh conversational context. Legacy conversation messages, history,
+  and session/provider references that would restore historical context MUST be
+  intentionally excluded with a reconciliation reason. This exclusion MUST NOT
+  delete or modify legacy source data or imply approval of other entity imports.
 - **FR-050**: Each imported record MUST pass type, encoding, ownership, tenant,
   timestamp, referential-integrity, and business-invariant validation before
   promotion.
@@ -556,7 +586,9 @@ outcomes requires an explicit `Change` decision.
   retention MUST be distinct from optional conversation-history retention.
 - **FR-060**: Specification, build, test, migration, and runtime tooling MUST remain
   scoped to this project and MUST NOT require host-global installation or alter
-  unrelated server services.
+  unrelated server services. Current changes MUST be made only in the GitHub
+  repository; no server modification, synchronization, container operation,
+  migration, or deployment is authorized without new explicit owner permission.
 - **FR-061**: Operators MUST be able to distinguish startup, alive, ready, and
   dependency-degraded states without receiving secrets or raw private content.
 - **FR-062**: Warmup, weekly grant, cleanup, album, pending moderation, and other
@@ -604,7 +636,9 @@ outcomes requires an explicit `Change` decision.
   administrator and one currently selected manageable group, including expiry and
   authorization state.
 - **Conversation Session**: An owner- and tenant-scoped continuity boundary with
-  lifecycle, provider correlation, and eligible history.
+  lifecycle, provider correlation, and eligible new-deployment history. The first
+  cutover uses fresh conversational context; no legacy context-bearing reference
+  may restore an old conversation.
 - **Conversation Record**: A user or assistant exchange retained according to
   approved privacy and history policy.
 - **Feedback / Unknown Item**: A response evaluation or unresolved question linked
@@ -666,8 +700,9 @@ outcomes requires an explicit `Change` decision.
   spend occurs at most once, and ledger totals reconcile exactly to wallet changes.
 - **SC-007**: Every migration rehearsal accounts for 100% of source rows in scope
   as imported, transformed, rejected, quarantined, or excluded; zero secret values
-  are promoted and all financial-like totals reconcile without unexplained
-  difference.
+  or legacy conversation histories are promoted, no historical conversational context is
+  restored, and all separately approved financial-like totals reconcile without
+  unexplained difference.
 - **SC-008**: A full backup restoration and cutover rollback drill completes within
   the owner-approved maintenance window and restores all release-critical user,
   tenant, moderation, token, and audit invariants.
@@ -706,12 +741,14 @@ outcomes requires an explicit `Change` decision.
 - Persian, English, Arabic, Turkish, and Russian are launch locales because the
   legacy interface exposes all five selectors. A locale is not considered supported
   until its complete catalog passes acceptance.
-- Legacy history preservation and the first-cutover history import scope are not
-  yet approved. BR-004 proposes retaining the product's history/export/clear
-  capabilities; it does not decide which existing content transfers.
-  [NEEDS CLARIFICATION: Which legacy conversation histories should transfer, which
-  should be excluded or expire, and what retention/deletion and user-notice rules
-  apply?] This product decision must precede its detailed migration design.
+- The owner has decided that the first cutover starts with empty conversation
+  history and fresh conversational context. Legacy history is intentionally
+  excluded without deleting or modifying the old data. BR-004 still proposes
+  history/export/clear capabilities for conversations created by the new bot;
+  other entity-import decisions remain separate.
+  [NEEDS CLARIFICATION: What collection, retention, deletion, and user-notice rules
+  apply to conversation content created by the new deployment?] Starting empty
+  does not settle these future-history privacy rules.
 - Legacy data access will use sanitized snapshots or controlled exports. Live
   production credentials and raw secrets are neither required nor permitted for
   specification and test work.
